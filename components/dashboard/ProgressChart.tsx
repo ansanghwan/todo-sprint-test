@@ -3,14 +3,15 @@
 import { useEffect, useState } from 'react';
 
 // 선을 조정해도 바깥 지름은 기존 92px을 유지합니다.
-const RADIUS = 39.9142;
-const BACKGROUND_STROKE_WIDTH = 12.1716;
-const PROGRESS_STROKE_WIDTH = 12.1716;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const DEFAULT_STROKE_WIDTH = 12.1716;
 
 type ProgressChartProps = {
   progress: number;
   className?: string;
+  /** 카드 색에 맞는 원의 바탕색. 기본값은 대시보드 청록색입니다. */
+  trackColor?: string;
+  /** 92px viewBox 기준 선 두께. 바깥 지름은 유지합니다. */
+  strokeWidth?: number;
 };
 
 /**
@@ -20,7 +21,11 @@ type ProgressChartProps = {
 export default function ProgressChart({
   progress,
   className,
+  trackColor = '#009D97',
+  strokeWidth = DEFAULT_STROKE_WIDTH,
 }: ProgressChartProps) {
+  const radius = (92 - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
   const safeProgress = Math.min(Math.max(progress, 0), 100);
   const [displayProgress, setDisplayProgress] = useState(0);
 
@@ -32,7 +37,7 @@ export default function ProgressChart({
     return () => cancelAnimationFrame(animationFrame);
   }, [safeProgress]);
 
-  const strokeDashoffset = CIRCUMFERENCE * (1 - displayProgress / 100);
+  const strokeDashoffset = circumference * (1 - displayProgress / 100);
 
   return (
     <svg
@@ -46,18 +51,18 @@ export default function ProgressChart({
         <circle
           cx="46"
           cy="46"
-          r={RADIUS}
-          stroke="#009D97"
-          strokeWidth={BACKGROUND_STROKE_WIDTH}
+          r={radius}
+          stroke={trackColor}
+          strokeWidth={strokeWidth}
         />
         <circle
           cx="46"
           cy="46"
-          r={RADIUS}
+          r={radius}
           stroke="white"
-          strokeWidth={PROGRESS_STROKE_WIDTH}
+          strokeWidth={strokeWidth}
           strokeLinecap="round"
-          strokeDasharray={CIRCUMFERENCE}
+          strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           transform="rotate(-90 46 46)"
           className="transition-[stroke-dashoffset] duration-700 ease-out"

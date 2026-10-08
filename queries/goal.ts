@@ -1,6 +1,5 @@
-import { infiniteQueryOptions } from '@tanstack/react-query';
-
-import { getGoals, type GetGoalsParams } from '@/lib/api/goals';
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
+import { getGoal, getGoals, type GetGoalsParams } from '@/lib/api/goals';
 
 export type GoalListParams = Omit<GetGoalsParams, 'cursor'>;
 
@@ -8,6 +7,7 @@ export const goalKeys = {
   all: ['goals'] as const,
   lists: () => [...goalKeys.all, 'list'] as const,
   list: (params: GoalListParams) => [...goalKeys.lists(), params] as const,
+  detail: (goalId: number) => [...goalKeys.all, 'detail', goalId] as const,
 };
 
 export const goalQueries = {
@@ -18,5 +18,10 @@ export const goalQueries = {
         getGoals({ ...params, cursor: pageParam }, signal),
       initialPageParam: undefined as number | undefined,
       getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    }),
+  detail: (goalId: number) =>
+    queryOptions({
+      queryKey: goalKeys.detail(goalId),
+      queryFn: ({ signal }) => getGoal(goalId, signal),
     }),
 };

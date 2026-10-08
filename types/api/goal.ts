@@ -22,3 +22,21 @@ export interface CreateGoalRequest {
 }
 
 export type CreatedGoalDto = Omit<GoalDto, 'todoCount' | 'completedCount'>;
+
+export interface GoalTodoDto {
+  id: number;
+  title: string;
+  done: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GoalDetailDto {
+  id: number;
+  teamId: string;
+  userId: number;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  todos: GoalTodoDto[];
+}
