@@ -2,10 +2,12 @@
 
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { useParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+import { todoQueries } from '@/queries/todo';
 import { goalQueries } from '@/queries/goal';
-import ProgressChart from '@/components/dashboard/ProgressChart';
+import { calculateProgress } from '@/lib/calculateProgress';
 import { Link } from '@/i18n/navigation';
+import ProgressChart from '@/components/dashboard/ProgressChart';
 import GoalTitleCard from '@/components/goal/GoalTitleCard';
 import Image from 'next/image';
 import Button from '@/components/ui/button/Button';
@@ -27,6 +29,38 @@ export default function GoalDetailPage() {
     enabled: Number.isInteger(id) && id > 0,
   });
 
+  // 현재 목표의 미완료·완료 목록을 10개씩 조회합니다. 다음 페이지는 더보기 버튼으로 연결할 예정입니다.
+  const todoQuery = useInfiniteQuery({
+    ...todoQueries.list({
+      goalId: id,
+      done: 'false',
+      limit: 10,
+      sort: 'latest',
+    }),
+    enabled: Number.isInteger(id) && id > 0,
+  });
+
+  const doneQuery = useInfiniteQuery({
+    ...todoQueries.list({
+      goalId: id,
+      done: 'true',
+      limit: 10,
+      sort: 'latest',
+    }),
+    enabled: Number.isInteger(id) && id > 0,
+  });
+
+  // 더보기로 받은 배열 길이가 아닌 서버의 전체 개수를 사용해, 펼친 항목 수가 진행률에 영향을 주지 않게 합니다.
+  const todoCount = todoQuery.data?.pages[0]?.totalCount;
+  const doneCount = doneQuery.data?.pages[0]?.totalCount;
+
+  // 두 개수가 준비되기 전에는 undefined로 두어, 조회 중인 상태를 실제 0%와 구분합니다.
+  // 목록 응답을 재사용하므로 진행률 계산을 위한 추가 API 요청은 없습니다.
+  const progress =
+    todoCount !== undefined && doneCount !== undefined
+      ? calculateProgress(todoCount + doneCount, doneCount)
+      : undefined;
+
   if (!Number.isInteger(id) || id <= 0) {
     return <p role="alert">올바르지 않은 목표 주소입니다.</p>;
   }
@@ -44,6 +78,7 @@ export default function GoalDetailPage() {
   if (isError || !goal) {
     return <DashboardEmptyState message="목표를 불러오지 못했습니다." />;
   }
+
   return (
     // 이곳에 꼭 해당 컨텐츠 영역의 width를 추가해주세요
     <div className="lg:mx-auto lg:w-full lg:max-w-328">
@@ -59,25 +94,40 @@ export default function GoalDetailPage() {
         <div className="min-w-0">
           <div className="gap-6 md:grid md:grid-cols-2 md:gap-5">
             <div className="relative isolate flex aspect-[343/160] min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-orange-500 text-white shadow-[0_0.625rem_2.5rem_0_#FF9E594D] max-md:mb-4 md:aspect-auto md:h-40 md:rounded-[2rem] md:pb-[2.1875rem]">
-              <div className="absolute top-1/2 left-0 z-10 flex w-full -translate-y-1/2 items-center gap-7.5 px-6">
-                <ProgressChart
-                  progress={10}
-                  trackColor="var(--color-orange-400)"
-                  strokeWidth={16}
-                  className="aspect-square w-[calc((100%+2.5rem)*0.268222)] shrink-0 md:size-23"
+              {/* 조회 실패·로딩을 먼저 처리하고, 숫자가 준비됐을 때만 차트와 퍼센트를 표시합니다. */}
+              {todoQuery.isError || doneQuery.isError ? (
+                <p
+                  role="alert"
+                  className="absolute inset-0 flex items-center justify-center p-6 text-center text-white"
+                >
+                  진행률을 불러오지 못했습니다.
+                </p>
+              ) : progress === undefined ? (
+                <DashboardLoading
+                  message="진행률을 불러오는 중입니다."
+                  className="absolute inset-0"
                 />
-                <div className="min-w-0 text-white">
-                  <p className="text-lg font-bold">목표진행도</p>
-                  <p className="flex items-baseline">
-                    <span className="text-display-lg leading-none font-bold">
-                      10
-                    </span>
-                    <span className="ml-1 text-xl leading-none font-semibold">
-                      %
-                    </span>
-                  </p>
+              ) : (
+                <div className="absolute top-1/2 left-0 z-10 flex w-full -translate-y-1/2 items-center gap-7.5 px-6">
+                  <ProgressChart
+                    progress={progress}
+                    trackColor="var(--color-orange-400)"
+                    strokeWidth={16}
+                    className="aspect-square w-[calc((100%+2.5rem)*0.268222)] shrink-0 md:size-23"
+                  />
+                  <div className="min-w-0 text-white">
+                    <p className="text-lg font-bold">목표진행도</p>
+                    <p className="flex items-baseline">
+                      <span className="text-display-lg leading-none font-bold">
+                        {progress}
+                      </span>
+                      <span className="ml-1 text-xl leading-none font-semibold">
+                        %
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <Link
