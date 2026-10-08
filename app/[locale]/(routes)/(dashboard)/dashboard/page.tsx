@@ -2,7 +2,7 @@
 
 import useCurrentUser from '@/hooks/useCurrentUser';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
@@ -575,9 +575,8 @@ export default function Dashboard() {
                         <div className="relative flex flex-wrap items-center gap-3 md:flex-nowrap lg:grid lg:grid-cols-2 lg:gap-8">
                           <div className="w-[calc(100%-3.25rem)] min-w-0 md:w-auto md:flex-1 lg:flex lg:items-center lg:gap-4">
                             <h3 className="text-base font-semibold text-foreground lg:min-w-0 lg:basis-2/5">
-                              {/* TODO: 담당자에게 목표 상세 경로를 확인한 뒤 goal.id로 연결합니다. */}
                               <Link
-                                href="/"
+                                href={`/goals/${goal.id}`}
                                 className="rounded-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                               >
                                 {goal.title}

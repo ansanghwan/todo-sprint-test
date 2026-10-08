@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { useParams } from 'next/navigation';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
@@ -17,6 +19,7 @@ import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
 export default function GoalDetailPage() {
   const goalSecTitle = 'text-base font-semibold text-heading md:text-lg';
   const { userName } = useCurrentUser();
+  const [isTodoCreateOpen, setIsTodoCreateOpen] = useState(false);
 
   const { goalId } = useParams<{ goalId: string }>();
   const id = Number(goalId);
@@ -157,10 +160,9 @@ export default function GoalDetailPage() {
               <h3 className={goalSecTitle}>TO DO</h3>
             </div>
             <div className="ml-auto">
-              <Button
-                variant="neutral"
-                size="sm"
-                className="w-30 gap-1 tracking-[-0.03em]"
+              <Link
+                href={`/calendar?goalId=${id}`}
+                className="inline-flex h-10 w-30 shrink-0 items-center justify-center gap-1 rounded-full border border-[#ccc] px-4 text-sm leading-none font-semibold tracking-[-0.03em] text-grayscale-500 transition-colors hover:border-[#bbb] hover:text-grayscale-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
               >
                 <Image
                   src="/icons/icon_calendar.svg"
@@ -169,8 +171,12 @@ export default function GoalDetailPage() {
                   alt=""
                 />
                 캘린더 보기
-              </Button>
-              <Button size="sm" className="ml-2 w-30 gap-1 tracking-[-0.03em]">
+              </Link>
+              <Button
+                size="sm"
+                className="ml-2 w-30 gap-1 tracking-[-0.03em]"
+                onClick={() => setIsTodoCreateOpen(true)}
+              >
                 <Image
                   src="/icons/icon_plus_white.svg"
                   width={20}
@@ -196,6 +202,12 @@ export default function GoalDetailPage() {
           </div>
         </div>
       </div>
+      {/* 현재 목표를 미리 선택합니다. 생성 후 목록 재조회는 기존 모달의 mutation이 처리합니다. */}
+      <TodoCreateModal
+        isOpen={isTodoCreateOpen}
+        onOpenChange={setIsTodoCreateOpen}
+        initialGoal={{ id: goal.id, title: goal.title }}
+      />
     </div>
   );
 }
