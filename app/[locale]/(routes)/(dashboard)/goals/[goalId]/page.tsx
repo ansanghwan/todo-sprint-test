@@ -9,6 +9,7 @@ import { calculateProgress } from '@/lib/calculateProgress';
 import { Link } from '@/i18n/navigation';
 import ProgressChart from '@/components/dashboard/ProgressChart';
 import GoalTitleCard from '@/components/goal/GoalTitleCard';
+import GoalTodoList from '@/components/goal/GoalTodoList';
 import Image from 'next/image';
 import Button from '@/components/ui/button/Button';
 import DashboardLoading from '@/components/dashboard/DashboardLoading';
@@ -29,7 +30,7 @@ export default function GoalDetailPage() {
     enabled: Number.isInteger(id) && id > 0,
   });
 
-  // 현재 목표의 미완료·완료 목록을 10개씩 조회합니다. 다음 페이지는 더보기 버튼으로 연결할 예정입니다.
+  // 현재 목표의 미완료·완료 목록을 10개씩 조회합니다. 다음 페이지는 각 목록의 더보기 버튼으로 조회합니다.
   const todoQuery = useInfiniteQuery({
     ...todoQueries.list({
       goalId: id,
@@ -131,7 +132,7 @@ export default function GoalDetailPage() {
             </div>
 
             <Link
-              href="/notes"
+              href={`/notes?goalId=${id}`}
               className="relative isolate flex aspect-[343/160] min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-blue-200 pb-8 pl-10 text-white shadow-[0_0.625rem_2.5rem_0_#00D4BE3D] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-[2rem] md:pb-[2.1875rem] md:before:size-[6.0625rem]"
             >
               <span className="relative z-10 inline-flex items-center gap-1.5 text-2xl font-bold">
@@ -150,7 +151,7 @@ export default function GoalDetailPage() {
       </div>
 
       <div className="mt-12 md:mt-16 lg:flex lg:flex-wrap lg:gap-8">
-        <div className="flex-1">
+        <div className="flex-1 lg:flex lg:min-w-0 lg:flex-col">
           <div className="mb-2.5 flex flex-wrap items-center">
             <div className="mr-auto flex-1">
               <h3 className={goalSecTitle}>TO DO</h3>
@@ -181,21 +182,17 @@ export default function GoalDetailPage() {
             </div>
           </div>
 
-          <div className="relative min-h-34 rounded-2xl bg-[#fff6df] p-4 lg:min-h-48 lg:p-6">
-            <ul>
-              <li></li>
-            </ul>
+          <div className="relative min-h-34 rounded-2xl bg-[#fff6df] p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6">
+            <GoalTodoList key={`todo-${id}`} query={todoQuery} goalId={id} />
           </div>
         </div>
 
-        <div className="flex-1">
-          <div className="mb-2.5">
+        <div className="flex-1 lg:flex lg:min-w-0 lg:flex-col">
+          <div className="mb-2.5 md:flex md:h-10 md:items-center">
             <h3 className={goalSecTitle}>DONE</h3>
           </div>
-          <div className="relative min-h-34 rounded-2xl bg-white-section p-4 lg:min-h-48 lg:p-6">
-            <ul>
-              <li>ddd</li>
-            </ul>
+          <div className="relative min-h-34 rounded-2xl bg-white-section p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6">
+            <GoalTodoList key={`done-${id}`} query={doneQuery} goalId={id} />
           </div>
         </div>
       </div>
