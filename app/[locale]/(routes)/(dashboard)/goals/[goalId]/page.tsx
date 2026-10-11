@@ -11,12 +11,35 @@ import { calculateProgress } from '@/lib/calculateProgress';
 import { Link } from '@/i18n/navigation';
 import ProgressChart from '@/components/dashboard/ProgressChart';
 import GoalTitleCard from '@/components/goal/GoalTitleCard';
-import GoalTodoList from '@/components/goal/GoalTodoList';
+import GoalDetailSkeleton from '@/components/goal/GoalDetailSkeleton';
+import { GoalTodoSkeletonRows } from '@/components/goal/GoalDetailSkeleton';
+import TodoItem from '@/components/todo/TodoItem';
+import TodoItemKebab from '@/components/todo/TodoItemKebab';
+import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
+import useMediaQuery from '@/hooks/useMediaQuery';
+import useTodoItemActions from '@/hooks/todo/useTodoItemActions';
+import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
+import { useRouter } from '@/i18n/navigation';
+import type { TodoDto } from '@/types/api/todo';
 import Image from 'next/image';
 import Button from '@/components/ui/button/Button';
 import DashboardLoading from '@/components/dashboard/DashboardLoading';
 import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
+// 대시보드와 같은 행 강조와 케밥 버튼 배경을 사용합니다. 키보드 포커스도 함께 처리합니다.
+const goalTodoItemClass =
+  'group/goal-todo rounded-lg transition-colors hover:bg-orange-alpha-20 focus-within:bg-orange-alpha-20 hover:[&>button:nth-of-type(2)]:text-orange-600 focus-within:[&>button:nth-of-type(2)]:text-orange-600';
+const goalTodoKebabClass =
+  'flex shrink-0 rounded-full transition-colors group-hover/goal-todo:bg-white group-focus-within/goal-todo:bg-white [&>button]:size-6 [&>button]:rounded-full [&>button[data-state=open]]:bg-white [&_svg>circle:first-child]:fill-transparent';
+
 export default function GoalDetailPage() {
+  const actions = useTodoItemActions();
+  const labels = useTodoItemLabels();
+  const isTablet = useMediaQuery('(min-width: 46.5rem)');
+  const router = useRouter();
+  const [deleteTarget, setDeleteTarget] = useState<Pick<
+    TodoDto,
+    'id' | 'title'
+  > | null>(null);
   const goalSecTitle = 'text-base font-semibold text-heading md:text-lg';
   const { userName } = useCurrentUser();
   const [isTodoCreateOpen, setIsTodoCreateOpen] = useState(false);
@@ -54,6 +77,10 @@ export default function GoalDetailPage() {
     enabled: Number.isInteger(id) && id > 0,
   });
 
+  // 더보기로 받아온 페이지를 합쳐 각 목록에 표시합니다.
+  const todoItems = todoQuery.data?.pages.flatMap((page) => page.todos) ?? [];
+  const doneItems = doneQuery.data?.pages.flatMap((page) => page.todos) ?? [];
+
   // 더보기로 받은 배열 길이가 아닌 서버의 전체 개수를 사용해, 펼친 항목 수가 진행률에 영향을 주지 않게 합니다.
   const todoCount = todoQuery.data?.pages[0]?.totalCount;
   const doneCount = doneQuery.data?.pages[0]?.totalCount;
@@ -69,14 +96,9 @@ export default function GoalDetailPage() {
     return <p role="alert">올바르지 않은 목표 주소입니다.</p>;
   }
 
-  if (isPending) {
-    return (
-      <DashboardLoading
-        message="목표를 불러오는 중입니다."
-        color="foreground"
-        className="min-h-48"
-      />
-    );
+  // 최초 조회에만 표시하고, 갱신 중에는 기존 콘텐츠를 유지합니다.
+  if (isPending || (!isError && (todoQuery.isPending || doneQuery.isPending))) {
+    return <GoalDetailSkeleton />;
   }
 
   if (isError || !goal) {
@@ -189,7 +211,105 @@ export default function GoalDetailPage() {
           </div>
 
           <div className="relative min-h-34 rounded-2xl bg-[#fff6df] p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6">
-            <GoalTodoList key={`todo-${id}`} query={todoQuery} goalId={id} />
+            {todoQuery.isPending ? (
+              <div role="status" aria-busy="true">
+                <span className="sr-only">할 일을 불러오는 중입니다.</span>
+                <GoalTodoSkeletonRows />
+              </div>
+            ) : !todoQuery.data ? (
+              <div className="flex items-center justify-center py-6 md:flex-1">
+                <p role="alert">할 일을 불러오지 못했습니다.</p>
+              </div>
+            ) : (
+              <div className="md:flex md:max-h-[calc(36rem-2rem)] md:min-h-0 md:flex-1 md:flex-col lg:max-h-[calc(36rem-3rem)]">
+                {/* 최대 576px에서 카드 패딩을 제외하고, 목록과 하단 버튼에 공간을 배분합니다. */}
+                <div className="max-h-69 scrollbar-thin overflow-y-auto md:max-h-none md:min-h-0 md:flex-1">
+                  {todoQuery.data.pages[0]?.totalCount === 0 ? (
+                    <div className="py-6">
+                      <DashboardEmptyState
+                        message="해야할 일이 아직 없어요"
+                        imageSrc="/images/dashboard/img_result_none02.svg"
+                      />
+                    </div>
+                  ) : (
+                    <ul className="flex flex-col gap-2">
+                      {todoItems.map((todo) => (
+                        <TodoItem
+                          key={todo.id}
+                          todo={todo}
+                          labels={labels}
+                          size={isTablet ? 'large' : 'small'}
+                          className={goalTodoItemClass}
+                          {...actions}
+                          // 할 일 상세 열기는 기존 다른 목록과 같이 별도 연동 단계에서 연결합니다.
+                          onOpenDetail={() => {}}
+                          onCreateNote={(todoId) =>
+                            router.push(`/notes/note/write?todoId=${todoId}`)
+                          }
+                          onViewNote={() => router.push(`/notes?goalId=${id}`)}
+                          kebabSlot={
+                            <span className={goalTodoKebabClass}>
+                              <TodoItemKebab
+                                isWhite
+                                onDelete={() => setDeleteTarget(todo)}
+                              />
+                            </span>
+                          }
+                        />
+                      ))}
+                    </ul>
+                  )}
+                  {todoQuery.isError && (
+                    <p role="alert" className="mt-3 text-sm text-danger">
+                      {todoQuery.isFetchNextPageError
+                        ? '추가 목록을 불러오지 못했습니다. 다시 시도해주세요.'
+                        : '목록 갱신에 실패했습니다.'}
+                    </p>
+                  )}
+                </div>
+                {(todoQuery.hasNextPage || todoQuery.isError) && (
+                  <div className="mt-4 flex shrink-0 justify-center">
+                    <button
+                      type="button"
+                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
+                      aria-busy={todoQuery.isFetching}
+                      aria-label={
+                        todoQuery.isError ? '목록 다시 시도' : '할 일 더보기'
+                      }
+                      disabled={todoQuery.isFetching}
+                      onClick={() => {
+                        if (
+                          todoQuery.isError &&
+                          !todoQuery.isFetchNextPageError
+                        )
+                          void todoQuery.refetch();
+                        else
+                          void todoQuery.fetchNextPage({
+                            cancelRefetch: false,
+                          });
+                      }}
+                    >
+                      {todoQuery.isFetching
+                        ? '불러오는 중…'
+                        : todoQuery.isError
+                          ? '다시 시도'
+                          : '더보기'}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                        className="size-6 shrink-0"
+                      >
+                        <path
+                          d="M17.293 9.29289C17.6835 8.90237 18.3165 8.90237 18.707 9.29289C19.0975 9.68342 19.0975 10.3164 18.707 10.707L12.707 16.707C12.3165 17.0975 11.6835 17.0975 11.293 16.707L5.29295 10.707C4.90243 10.3164 4.90243 9.68342 5.29295 9.29289C5.68348 8.90237 6.31649 8.90237 6.70702 9.29289L12 14.5859L17.293 9.29289Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -198,10 +318,112 @@ export default function GoalDetailPage() {
             <h3 className={goalSecTitle}>DONE</h3>
           </div>
           <div className="relative min-h-34 rounded-2xl bg-white-section p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6">
-            <GoalTodoList key={`done-${id}`} query={doneQuery} goalId={id} />
+            {doneQuery.isPending ? (
+              <div role="status" aria-busy="true">
+                <span className="sr-only">할 일을 불러오는 중입니다.</span>
+                <GoalTodoSkeletonRows />
+              </div>
+            ) : !doneQuery.data ? (
+              <div className="flex items-center justify-center py-6 md:flex-1">
+                <p role="alert">할 일을 불러오지 못했습니다.</p>
+              </div>
+            ) : (
+              <div className="md:flex md:max-h-[calc(36rem-2rem)] md:min-h-0 md:flex-1 md:flex-col lg:max-h-[calc(36rem-3rem)]">
+                {/* 최대 576px에서 카드 패딩을 제외하고, 목록과 하단 버튼에 공간을 배분합니다. */}
+                <div className="max-h-69 scrollbar-thin overflow-y-auto md:max-h-none md:min-h-0 md:flex-1">
+                  {doneQuery.data.pages[0]?.totalCount === 0 ? (
+                    <div className="py-6">
+                      <DashboardEmptyState
+                        message="완료한 일이 아직 없어요"
+                        imageSrc="/images/dashboard/img_result_none.svg"
+                      />
+                    </div>
+                  ) : (
+                    <ul className="flex flex-col gap-2">
+                      {doneItems.map((todo) => (
+                        <TodoItem
+                          key={todo.id}
+                          todo={todo}
+                          labels={labels}
+                          size={isTablet ? 'large' : 'small'}
+                          className={goalTodoItemClass}
+                          {...actions}
+                          // 할 일 상세 열기는 기존 다른 목록과 같이 별도 연동 단계에서 연결합니다.
+                          onOpenDetail={() => {}}
+                          onCreateNote={(todoId) =>
+                            router.push(`/notes/note/write?todoId=${todoId}`)
+                          }
+                          onViewNote={() => router.push(`/notes?goalId=${id}`)}
+                          kebabSlot={
+                            <span className={goalTodoKebabClass}>
+                              <TodoItemKebab
+                                isWhite
+                                onDelete={() => setDeleteTarget(todo)}
+                              />
+                            </span>
+                          }
+                        />
+                      ))}
+                    </ul>
+                  )}
+                  {doneQuery.isError && (
+                    <p role="alert" className="mt-3 text-sm text-danger">
+                      {doneQuery.isFetchNextPageError
+                        ? '추가 목록을 불러오지 못했습니다. 다시 시도해주세요.'
+                        : '목록 갱신에 실패했습니다.'}
+                    </p>
+                  )}
+                </div>
+                {(doneQuery.hasNextPage || doneQuery.isError) && (
+                  <div className="mt-4 flex shrink-0 justify-center">
+                    <button
+                      type="button"
+                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
+                      aria-busy={doneQuery.isFetching}
+                      aria-label={
+                        doneQuery.isError ? '목록 다시 시도' : '할 일 더보기'
+                      }
+                      disabled={doneQuery.isFetching}
+                      onClick={() => {
+                        if (
+                          doneQuery.isError &&
+                          !doneQuery.isFetchNextPageError
+                        )
+                          void doneQuery.refetch();
+                        else
+                          void doneQuery.fetchNextPage({
+                            cancelRefetch: false,
+                          });
+                      }}
+                    >
+                      {doneQuery.isFetching
+                        ? '불러오는 중…'
+                        : doneQuery.isError
+                          ? '다시 시도'
+                          : '더보기'}
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                        className="size-6 shrink-0"
+                      >
+                        <path
+                          d="M17.293 9.29289C17.6835 8.90237 18.3165 8.90237 18.707 9.29289C19.0975 9.68342 19.0975 10.3164 18.707 10.707L12.707 16.707C12.3165 17.0975 11.6835 17.0975 11.293 16.707L5.29295 10.707C4.90243 10.3164 4.90243 9.68342 5.29295 9.29289C5.68348 8.90237 6.31649 8.90237 6.70702 9.29289L12 14.5859L17.293 9.29289Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
+      <DeleteTodoModal
+        todo={deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+      />
       {/* 현재 목표를 미리 선택합니다. 생성 후 목록 재조회는 기존 모달의 mutation이 처리합니다. */}
       <TodoCreateModal
         isOpen={isTodoCreateOpen}

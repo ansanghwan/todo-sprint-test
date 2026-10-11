@@ -6,6 +6,19 @@
 @import './scrollbar.css'; /* 스크롤 커스텀 */
 
 @theme {
+  --animate-skeleton-bar: skeleton-bar 2.4s ease-in-out infinite;
+
+  /* 실제 너비는 유지하고 왼쪽을 기준으로 막대 길이만 변화시킵니다. */
+  @keyframes skeleton-bar {
+    0%,
+    100% {
+      transform: scaleX(1);
+    }
+    50% {
+      transform: scaleX(0.65);
+    }
+  }
+
   --breakpoint-md: 46.5rem; /* 744px: 태블릿 분기 수정 - 피그마 디자인 기준 적용 */
 }
 @theme inline {
