@@ -21,12 +21,26 @@ const stepCardClass =
 export default function Home() {
   return (
     <LandingSmoothScroll>
+      {/* JavaScript 비활성화 시에도 콘텐츠를 표시합니다. */}
+      <noscript>
+        <style>{`
+          [data-landing-section] [data-enter],
+          [data-landing-section] [data-enter] img,
+          [data-steps-heading] > :is(p, h2),
+          [data-landing-section="steps"] ol,
+          [data-landing-section="steps"] ol > li {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
+          }
+        `}</style>
+      </noscript>
       {/* section01 */}
       <section
         data-landing-section="hero"
         className="min-h-svh [background:radial-gradient(ellipse_at_20%_80%,#dcfaf3_0,transparent_55%),radial-gradient(ellipse_at_85%_15%,#fff0df_0,transparent_55%),#fafafb]"
       >
-        <div className="mx-auto flex h-full w-full max-w-320 flex-col items-center justify-center gap-[clamp(2rem,5svh,3.5rem)] px-5 py-[clamp(2.5rem,6svh,5rem)] text-center md:px-12">
+        <div className="mx-auto flex size-full max-w-7xl flex-col items-center justify-center gap-[clamp(2rem,5svh,3.5rem)] px-5 py-[clamp(2.5rem,6svh,5rem)] text-center md:px-12">
           <div data-enter="text">
             <p data-enter="text" className={eyebrowClass}>
               슬리드투두 하나로 정리부터 실행까지
@@ -42,7 +56,7 @@ export default function Home() {
           </LandingStartButton>
           <div
             data-enter="image"
-            className="w-full max-w-320 overflow-hidden rounded-3xl border border-white bg-white shadow-[0_1rem_3rem_#36645414] md:rounded-[2rem]"
+            className="w-full max-w-7xl overflow-hidden rounded-3xl border border-white bg-white shadow-[0_1rem_3rem_#36645414] md:rounded-4xl"
           >
             <div
               aria-hidden="true"
@@ -72,16 +86,16 @@ export default function Home() {
       >
         <div
           data-reveal-trigger
-          className="mx-auto grid w-full max-w-320 gap-[clamp(2rem,5svh,3.5rem)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-[clamp(2rem,4vw,4.5rem)] min-[80rem]:max-w-384 min-[80rem]:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]"
+          className="mx-auto grid w-full max-w-7xl gap-[clamp(2rem,5svh,3.5rem)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-[clamp(2rem,4vw,4.5rem)] xl:max-w-384 xl:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]"
         >
           <div
             data-enter="text"
             className="mx-auto w-full max-w-160 text-center lg:text-left"
           >
-            <p className="inline-block rounded-[999px] border border-[#ffffff40] bg-[#ffffff1f] px-3.5 py-1.5 text-[length:0.875rem] font-semibold">
+            <p className="inline-block rounded-[999px] border border-[#ffffff40] bg-[#ffffff1f] px-3.5 py-1.5 text-[0.875rem] font-semibold">
               더 똑똑한 할 일 관리
             </p>
-            <h2 className="mt-4 text-[length:clamp(1.5rem,5.8vw,2rem)] leading-[1.3] font-extrabold tracking-[-0.04em] text-balance break-keep md:text-[length:2.5rem] lg:text-6xl [&>span]:inline-block lg:[&>span]:block">
+            <h2 className="mt-4 text-[clamp(1.5rem,5.8vw,2rem)] leading-[1.3] font-extrabold tracking-[-0.04em] text-balance break-keep md:text-[2.5rem] lg:text-6xl [&>span]:inline-block lg:[&>span]:block">
               <span>슬리드 투두가</span> <span>특별한 이유</span>
             </h2>
             <ul className="mt-[clamp(1.75rem,4svh,2.5rem)] grid gap-3 text-left lg:mt-10 lg:gap-4">
@@ -119,7 +133,7 @@ export default function Home() {
           </div>
           <div
             data-enter="image"
-            className="mx-auto w-full max-w-160 [filter:drop-shadow(0_1rem_1.5rem_#a53c1826)] lg:max-w-none"
+            className="mx-auto w-full max-w-160 filter-[drop-shadow(0_1rem_1.5rem_#a53c1826)] lg:max-w-none"
           >
             <Image
               src="/images/landing/img_sec02.png"
@@ -136,15 +150,15 @@ export default function Home() {
       {/* section03 */}
       <section
         data-landing-section="steps"
-        className="group/steps flex min-h-svh items-center bg-[linear-gradient(140deg,#fff5ef,#fafafb_55%,#eafaf7)] px-5 py-20 max-md:data-[steps-pinned]:py-8 md:px-8"
+        className="group/steps flex min-h-svh items-center bg-[linear-gradient(140deg,#fff5ef,#fafafb_55%,#eafaf7)] px-5 py-20 max-md:data-steps-pinned:py-8 md:px-8"
       >
-        <div className="mx-auto w-full max-w-320 text-center">
+        <div className="mx-auto w-full max-w-7xl text-center">
           <div data-steps-heading>
             <p className={eyebrowClass}>목표 설정부터 기록까지</p>
             <h2 className={headingClass}>쉽고 빠르게 할 일을 시작해요</h2>
           </div>
           {/* 카드 내용은 개별 작성하고 카드 외형만 공통으로 적용합니다. */}
-          <ol className="relative mt-10 grid gap-5 max-md:group-data-[steps-pinned]/steps:mt-6 md:grid-cols-3 md:gap-6 lg:mt-26">
+          <ol className="relative mt-10 grid gap-5 max-md:group-data-steps-pinned/steps:mt-6 md:grid-cols-3 md:gap-6 lg:mt-26">
             <li className={stepCardClass}>
               <span className="flex size-9 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-md shadow-orange-500/15">
                 1
@@ -160,7 +174,7 @@ export default function Home() {
               <h3 className="mt-6 text-xl font-bold md:text-lg lg:mt-8 lg:text-2xl">
                 목표 설정하기
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
+              <p className="mt-3 text-base/relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
                 달성하고 싶은 목표를 만들고
                 <br />
                 이름을 정하세요
@@ -181,7 +195,7 @@ export default function Home() {
               <h3 className="mt-6 text-xl font-bold md:text-lg lg:mt-8 lg:text-2xl">
                 할 일 추가하기
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
+              <p className="mt-3 text-base/relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
                 목표에 맞는 할 일을 추가하고
                 <br />
                 자료를 첨부하세요
@@ -202,7 +216,7 @@ export default function Home() {
               <h3 className="mt-6 text-xl font-bold md:text-lg lg:mt-8 lg:text-2xl">
                 학습하고 기록하기
               </h3>
-              <p className="mt-3 text-base leading-relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
+              <p className="mt-3 text-base/relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
                 할 일을 완료하며 학습하고,
                 <br />
                 노트로 기록하세요
@@ -219,7 +233,7 @@ export default function Home() {
       >
         <div
           data-reveal-trigger
-          className="mx-auto grid w-full max-w-320 gap-12 md:gap-16 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-22"
+          className="mx-auto grid w-full max-w-7xl gap-12 md:gap-16 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-22"
         >
           <div
             data-enter="text"
@@ -256,7 +270,7 @@ export default function Home() {
         data-landing-section="finale"
         className="flex min-h-svh items-center bg-[#fff8e3]"
       >
-        <div className="relative isolate mx-auto flex min-h-svh w-full max-w-320 items-center justify-center overflow-hidden px-4 py-24 md:px-8 lg:px-10">
+        <div className="relative isolate mx-auto flex min-h-svh w-full max-w-7xl items-center justify-center overflow-hidden px-4 py-24 md:px-8 lg:px-10">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 -z-10"
