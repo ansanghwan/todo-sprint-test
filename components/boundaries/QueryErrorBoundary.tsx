@@ -9,7 +9,10 @@ interface QueryErrorFallbackProps {
   onReset: () => void;
 }
 
-const QueryErrorFallback = ({ message, onReset }: QueryErrorFallbackProps) => {
+export const QueryErrorFallback = ({
+  message,
+  onReset,
+}: QueryErrorFallbackProps) => {
   const { reset: resetQueryErrors } = useQueryErrorResetBoundary();
 
   // 실패한 쿼리의 에러 상태를 지워야 다시 렌더링할 때 재요청합니다.

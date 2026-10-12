@@ -25,7 +25,7 @@ describe('toast', () => {
         el.textContent === '임시 저장이 완료되었습니다ㆍ1초전',
     );
     expect(screen.getByText('check')).toBeInTheDocument();
-    expect(message.closest('div')).toHaveClass('text-[#EF6C00]');
+    expect(message.closest('div')).toHaveClass('text-orange-600');
   });
 
   it('error 토스트에 ReactNode 내용을 렌더링한다', async () => {
@@ -36,7 +36,7 @@ describe('toast', () => {
 
     const message = await screen.findByText('저장에 실패했습니다');
     expect(screen.getByText('error')).toBeInTheDocument();
-    expect(message.closest('div')).toHaveClass('text-[#FF3434]');
+    expect(message.closest('div')).toHaveClass('text-danger');
   });
 
   it('icon에 null을 넘기면 아이콘을 숨긴다', async () => {

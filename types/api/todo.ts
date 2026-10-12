@@ -24,3 +24,14 @@ export interface TodoPageDto {
   nextCursor: number | null;
   totalCount: number;
 }
+
+/** 할 일 생성(POST /{teamId}/todos) 요청 본문입니다. title 외에는 서버에서 선택값입니다. */
+export interface CreateTodoRequestDto {
+  title: string;
+  goalId?: number;
+  fileUrl?: string;
+  linkUrl?: string;
+  /** ISO 8601 */
+  dueDate?: string;
+  tags?: string[];
+}

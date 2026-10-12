@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { Meta, StoryObj } from '@storybook/nextjs';
+import { NextIntlClientProvider } from 'next-intl';
 import PostsPage from '@/app/[locale]/(routes)/(dashboard)/posts/page';
 import type { PostDto, PostPageDto } from '@/types/api/post';
 import { postKeys } from '@/queries/post';
@@ -41,17 +42,21 @@ interface PostsPagePreviewProps {
 }
 
 const PostsPagePreview = ({ postCount }: PostsPagePreviewProps) => (
-  <QueryClientProvider client={createSeededClient(createMockPosts(postCount))}>
-    <div className="min-h-dvh bg-background p-4 md:p-6">
-      <PostsPage />
-    </div>
-  </QueryClientProvider>
+  <NextIntlClientProvider locale="ko" messages={{}}>
+    <QueryClientProvider
+      client={createSeededClient(createMockPosts(postCount))}
+    >
+      <div className="min-h-dvh bg-background p-4 md:p-6">
+        <PostsPage />
+      </div>
+    </QueryClientProvider>
+  </NextIntlClientProvider>
 );
 
 const meta = {
   title: 'Posts/PostsPage',
   component: PostsPagePreview,
-  parameters: { layout: 'fullscreen' },
+  parameters: { layout: 'fullscreen', nextjs: { appDirectory: true } },
   args: { postCount: 10 },
   argTypes: { postCount: { control: { type: 'range', min: 0, max: 10 } } },
 } satisfies Meta<typeof PostsPagePreview>;

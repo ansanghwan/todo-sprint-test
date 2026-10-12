@@ -4,6 +4,7 @@ import Image from 'next/image';
 import ErrorRetry from '@/components/common/ErrorRetry';
 import usePostList from '@/hooks/post/usePostList';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
+import { Link } from '@/i18n/navigation';
 import type { PostListParams } from '@/queries/post';
 import PostListItem from './PostListItem';
 import PostListSkeleton from './PostListSkeleton';
@@ -44,7 +45,12 @@ const PostList = ({ params }: PostListProps) => {
       <ul>
         {posts.map((post) => (
           <li key={post.id}>
-            <PostListItem post={post} />
+            <Link
+              href={`/posts/${post.id}`}
+              className="block focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-orange-600"
+            >
+              <PostListItem post={post} />
+            </Link>
           </li>
         ))}
       </ul>

@@ -3,7 +3,7 @@
     "dashboard": "Dashboard",
     "goal": "Goal",
     "list": "List",
-    "addGoal": "Add Goal",
+    "createGoal": "Create Goal",
     "calendar": "Calendar",
     "community": "Community",
     "favoriteTodos": "Favorite To-dos",
@@ -92,7 +92,50 @@
     "favorite": "Favorite",
     "viewNote": "View Note",
     "copyLink": "Copy Link",
-    "moreActions": "More"
+    "moreActions": "More",
+    "toggleTodoDoneError": "Couldn't update the to-do.",
+    "toggleFavoriteError": "Couldn't update favorites.",
+    "linkCopied": "Link copied.",
+    "copyLinkError": "Couldn't copy the link.",
+    "deleteTodoConfirm": "Are you sure you want to delete {title}?",
+    "deleteTodoError": "Couldn't delete the to-do.",
+    "form": {
+      "titlePlaceholder": "Enter the title of your to-do",
+      "goalPlaceholder": "Select a goal",
+      "loadingGoals": "Loading goals…",
+      "fetchGoalsError": "Couldn't load goals.",
+      "noGoals": "There are no goals yet.",
+      "dueDatePlaceholder": "Select a date",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "tagPlaceholder": "Type and press Enter",
+      "removeTag": "Remove tag {tag}",
+      "linkPlaceholder": "Enter a link",
+      "removeLink": "Remove link",
+      "attachImage": "Attach Image",
+      "imagePreview": "Preview of the attached image",
+      "removeImage": "Remove image",
+      "closeConfirm": "Would you like to cancel writing this to-do?",
+      "closeWarning": "All the content you have written will be lost.",
+      "createError": "Couldn't create the to-do.",
+      "errors": {
+        "titleRequired": "Enter a title.",
+        "titleTooLong": "The title must be {max} characters or fewer.",
+        "goalRequired": "Select a goal.",
+        "dueDateRequired": "Select a due date.",
+        "tagRequired": "Enter a tag.",
+        "tagTooLong": "A tag must be {max} characters or fewer.",
+        "tooManyTags": "You can add up to {max} tags.",
+        "duplicateTag": "This tag has already been added.",
+        "linkInvalid": "Enter a valid link.",
+        "imageExtensionInvalid": "Only jpg, jpeg, png, gif, webp, and svg files can be attached."
+      }
+    },
+    "loadingGoals": "Loading goals…",
+    "fetchGoalsError": "Couldn't load goals.",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "dateWithTodoCount": "{date}, {count} to-dos"
   },
   "Auth": {
     "loginTitle": "Log in",
@@ -139,5 +182,12 @@
   "Landing": {
     "sessionCheckError": "Unable to check your session. Please try again shortly.",
     "checkingSession": "Checking your session"
+  },
+  "GoalCreate": {
+    "title": "Goal title",
+    "placeholder": "Enter the title of your goal",
+    "required": "Enter a goal title",
+    "tooLong": "Use no more than 100 characters",
+    "createError": "Could not create the goal. Please try again."
   }
 }

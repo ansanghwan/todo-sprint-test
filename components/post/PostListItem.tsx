@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import type { PostDto } from '@/types/api/post';
-import { formatRelativeTime } from '@/lib/formatRelativeTime';
+import { formatDateToRelativeTime } from '@/lib/formatter';
 import CommentCount from './CommentCount';
 import WriterAvatar from './WriterAvatar';
 
@@ -40,7 +40,7 @@ const PostListItem = ({ post }: PostListItemProps) => {
             <span className="truncate">{writer.name}</span>
             <span>·</span>
             <time dateTime={createdAt} className="shrink-0">
-              {formatRelativeTime(createdAt)}
+              {formatDateToRelativeTime(createdAt)}
             </time>
             <span>·</span>
             <span className="shrink-0">조회 {viewCount}</span>

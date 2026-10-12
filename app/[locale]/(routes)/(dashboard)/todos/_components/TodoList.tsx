@@ -2,21 +2,29 @@
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
 import TodoItem from '@/components/todo/TodoItem';
+import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import type { TodoNoteActions } from '@/components/todo/todoNoteActions';
+import useTodoItemActions from '@/hooks/todo/useTodoItemActions';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
 import Button from '@/components/ui/button/Button';
 import { toast } from '@/components/ui/toast/Toaster';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { todoQueries, type TodoListParams } from '@/queries/todo';
+import type { TodoDto } from '@/types/api/todo';
 import TodoListEmpty from './TodoListEmpty';
-import useTodoItemActions from './useTodoItemActions';
 
 // globals.css의 --breakpoint-md(744px)와 같은 값입니다.
 const TABLET_QUERY = '(min-width: 46.5rem)';
+
+// 할 일 상세 모달(FN-TD-13)이 생기면 연결합니다.
+const openDetailNotConnected = () => {};
+// 노트 보기·작성(FN-TD-11, 12)은 노트 담당과 연결 방식을 확정한 뒤 noteActions로 받습니다.
+const noteNotConnected = () => {};
 
 interface TodoListProps {
   params: TodoListParams;
@@ -47,9 +55,13 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
     },
   });
   const isTablet = useMediaQuery(TABLET_QUERY);
-  const actions = useTodoItemActions(noteActions);
+  const actions = useTodoItemActions();
   const labels = useTodoItemLabels();
   const t = useTranslations('Todo');
+  const [deleteTarget, setDeleteTarget] = useState<Pick<
+    TodoDto,
+    'id' | 'title'
+  > | null>(null);
 
   useEffect(() => {
     if (isError) {
@@ -83,8 +95,9 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
 
   const todos = data.pages.flatMap((page) => page.todos);
 
-  // 탭마다 조회 결과로 따로 판단합니다 (FN-TD-03).
-  if (todos.length === 0) {
+  // FN-TD-03: 조회 결과(서버 전체 개수)가 0개일 때만 빈 상태입니다. 탭마다 따로 판단합니다.
+  // 불러온 항목이 모두 빠졌어도 남은 페이지가 있으면 아래 감시 요소로 이어서 불러옵니다.
+  if (data.pages[0].totalCount === 0) {
     return <TodoListEmpty />;
   }
 
@@ -100,6 +113,16 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
             // FN-TD-01: 새 항목이 부드럽게 올라오는 애니메이션
             className="transition-[opacity,translate] duration-300 ease-out motion-reduce:transition-none starting:translate-y-2 starting:opacity-0"
             {...actions}
+            onOpenDetail={openDetailNotConnected}
+            onViewNote={noteActions?.onViewNote ?? noteNotConnected}
+            onCreateNote={noteActions?.onCreateNote ?? noteNotConnected}
+            kebabSlot={
+              <TodoItemKebab
+                onDelete={() =>
+                  setDeleteTarget({ id: todo.id, title: todo.title })
+                }
+              />
+            }
           />
         ))}
       </ul>
@@ -124,6 +147,10 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
           </Button>
         </div>
       )}
+      <DeleteTodoModal
+        todo={deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+      />
     </>
   );
 };

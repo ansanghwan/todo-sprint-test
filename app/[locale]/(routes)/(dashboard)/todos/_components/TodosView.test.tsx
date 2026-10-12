@@ -7,7 +7,12 @@ import TestProviders from '@/test/TestProviders';
 import { makeTodo } from '@/test/todoMocks';
 import TodosView from './TodosView';
 
-vi.mock('@/lib/api/todos', () => ({ getTodos: vi.fn() }));
+vi.mock('@/lib/api/todos', () => ({ getTodos: vi.fn(), createTodo: vi.fn() }));
+vi.mock('@/lib/api/goals', () => ({
+  getGoals: vi.fn(() =>
+    Promise.resolve({ goals: [], nextCursor: null, totalCount: 0 }),
+  ),
+}));
 vi.mock('@/components/ui/toast/Toaster', () => ({
   toast: { error: vi.fn() },
 }));
@@ -71,13 +76,12 @@ afterEach(() => {
   triggerIntersect = () => {};
 });
 
-const renderView = (onAddTodo = vi.fn()) => {
+const renderView = () => {
   render(
     <TestProviders>
-      <TodosView onAddTodo={onAddTodo} />
+      <TodosView />
     </TestProviders>,
   );
-  return { onAddTodo };
 };
 
 describe('TodosView', () => {
@@ -223,12 +227,27 @@ describe('TodosView', () => {
     );
   });
 
-  it('할 일 추가 버튼은 생성 모달 열기 요청만 올린다', async () => {
+  it('할 일 추가 버튼을 누르면 목표를 고르지 않은 생성 모달이 열린다', async () => {
     const user = userEvent.setup();
-    const { onAddTodo } = renderView();
+    renderView();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '할 일 추가' }));
 
-    expect(onAddTodo).toHaveBeenCalledTimes(1);
+    const modal = await screen.findByRole('dialog', { name: '할 일 생성' });
+    expect(
+      within(modal).getByRole('combobox', { name: '목표' }),
+    ).toHaveTextContent('목표를 선택해주세요');
+  });
+
+  it('작성하지 않은 생성 모달은 취소를 누르면 바로 닫힌다', async () => {
+    const user = userEvent.setup();
+    renderView();
+    await user.click(screen.getByRole('button', { name: '할 일 추가' }));
+    const modal = await screen.findByRole('dialog', { name: '할 일 생성' });
+
+    await user.click(within(modal).getByRole('button', { name: '취소' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });

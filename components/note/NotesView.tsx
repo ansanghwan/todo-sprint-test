@@ -41,7 +41,7 @@ export default function NotesView({ children }: NotesViewProps) {
   return (
     <>
       <div className="mb-10 flex flex-row justify-between">
-        <h2 className="text-2xl font-semibold">{t('notes')}</h2>
+        <h2 className="text-2xl font-semibold max-md:hidden">{t('notes')}</h2>
         <div className="flex flex-row items-center gap-2">
           <SearchInput
             aria-label="노트 검색"

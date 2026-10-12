@@ -61,6 +61,7 @@ describe('api 클라이언트: 모든 요청 실패를 ApiError로 통일한다'
       status: 403,
       code: 'FORBIDDEN',
       message: 'Not allowed',
+      httpCategory: 'forbidden',
     });
   });
 
@@ -68,7 +69,12 @@ describe('api 클라이언트: 모든 요청 실패를 ApiError로 통일한다'
     const error = await caught(
       api.get('/todos', { adapter: reply(502, '<html>Bad Gateway</html>') }),
     );
-    expect(error).toMatchObject({ kind: 'http', status: 502, code: undefined });
+    expect(error).toMatchObject({
+      kind: 'http',
+      status: 502,
+      code: undefined,
+      httpCategory: 'other',
+    });
   });
 
   it('응답이 없으면 network로 분류한다', async () => {

@@ -330,42 +330,17 @@ export function IconKebabWhite(props: IconProps) {
   return (
     <svg
       aria-hidden
-      viewBox="39 440 24 24"
+      viewBox="0 0 24 24"
+      overflow="visible"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <circle cx="51" cy="452" r="12" fill="white" />
-      <circle
-        cx="50.9417"
-        cy="452"
-        r="0.525"
-        transform="rotate(-90 50.9417 452)"
-        fill="#EF6C00"
-        stroke="#EF6C00"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <circle
-        cx="50.9417"
-        cy="455.967"
-        r="0.525"
-        transform="rotate(-90 50.9417 455.967)"
-        fill="#EF6C00"
-        stroke="#EF6C00"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <circle
-        cx="50.9417"
-        cy="448.034"
-        r="0.525"
-        transform="rotate(-90 50.9417 448.034)"
-        fill="#EF6C00"
-        stroke="#EF6C00"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
+      {/* 원이 viewBox 경계에 닿아도 소수점 배율에서 가장자리가 잘리지 않게 합니다. */}
+      <circle cx="12" cy="12" r="12" fill="white" />
+      <circle cx="12" cy="8" r="1.525" fill="#EF6C00" />
+      <circle cx="12" cy="12" r="1.525" fill="#EF6C00" />
+      <circle cx="12" cy="16" r="1.525" fill="#EF6C00" />
     </svg>
   );
 }

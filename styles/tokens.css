@@ -31,6 +31,26 @@
   --color-blue-200: #00d4be;
   --color-blue-300: #009d97;
 
+  /* Badge(태그 칩) 의미 색: 피그마 Component colors/Utility의 단계만 옮겼습니다. */
+  --color-success-50: #ecfdf3;
+  --color-success-200: #abefc6;
+  --color-success-400: #47cd89;
+  --color-success-700: #067647;
+
+  --color-warning-50: #fffaeb;
+  --color-warning-200: #fedf89;
+  --color-warning-400: #fdb022;
+  --color-warning-700: #b54708;
+
+  --color-error-50: #fef3f2;
+  --color-error-200: #fecdca;
+  --color-error-400: #f97066;
+  --color-error-700: #b42318;
+
+  /* 오류·위험을 알리는 강조색. 입력 필드 오류(테두리·안내문)와 오류 토스트 글자에 씁니다.
+     Badge의 error 단계와는 다른 색입니다. */
+  --color-danger: #ff3434;
+
   /* 공통 그림자: Tailwind 기본 shadow-md/lg를 시안 값으로 대체합니다.
      라이트·다크에서 동일하게 사용하며, 색상은 검정 약 5%입니다. */
   --shadow-md: 0 0 1.875rem 0 #0000000d; /* blur 30px */

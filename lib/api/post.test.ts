@@ -1,7 +1,7 @@
 import type { AxiosAdapter, InternalAxiosRequestConfig } from 'axios';
 import { afterEach, describe, expect, it } from 'vitest';
 import { api } from './client-fetcher';
-import { getPosts } from './post';
+import { deletePost, getPost, getPosts } from './post';
 
 const originalAdapter = api.defaults.adapter;
 afterEach(() => {
@@ -41,5 +41,27 @@ describe('getPosts', () => {
     expect(sent[0].url).toBe('/posts');
     expect(sent[0].params).toEqual({ type: 'all', limit: 10, cursor: 'xyz' });
     expect(page.nextCursor).toBe('abc');
+  });
+});
+
+describe('getPost', () => {
+  it('/posts/{postId}로 상세를 조회한다', async () => {
+    const sent = replyWith(post);
+
+    const detail = await getPost(1);
+
+    expect(sent[0].url).toBe('/posts/1');
+    expect(detail.title).toBe('제목');
+  });
+});
+
+describe('deletePost', () => {
+  it('/posts/{postId}로 DELETE를 보낸다', async () => {
+    const sent = replyWith(undefined);
+
+    await deletePost(1);
+
+    expect(sent[0].url).toBe('/posts/1');
+    expect(sent[0].method).toBe('delete');
   });
 });

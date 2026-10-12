@@ -172,6 +172,22 @@ describe('TodoList', () => {
     ).toBeInTheDocument();
   });
 
+  it('불러온 항목이 없어도 전체 개수가 남아 있으면 빈 상태 대신 다음 페이지를 불러온다', async () => {
+    mockedGetTodos
+      .mockResolvedValueOnce(page([], 41, 1))
+      .mockResolvedValueOnce(page([todo(41)], null, 1));
+    renderTodos();
+    await screen.findByRole('heading', { name: '모든 할 일 1' });
+
+    expect(
+      screen.queryByText('아직 등록한 할 일이 없어요'),
+    ).not.toBeInTheDocument();
+
+    await act(async () => triggerIntersect());
+
+    expect(await screen.findByText('할 일 41')).toBeInTheDocument();
+  });
+
   it('첫 요청이 실패하면 에러 토스트를 띄우고 다시 시도할 수 있다', async () => {
     const user = userEvent.setup();
     mockedGetTodos

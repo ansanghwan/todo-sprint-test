@@ -3,7 +3,7 @@
 import IconButton from '@/components/ui/button/IconButton';
 
 export type NotificationButtonProps = {
-  hasNotification: boolean;
+  hasNotification?: boolean;
   onOpen?: () => void;
   compact?: boolean;
 };
@@ -18,7 +18,7 @@ export type NotificationButtonProps = {
 // 읽음 처리 후 공통 데이터를 갱신하면 모든 위치의 버튼에 같은 값이 반영됩니다.
 // 클릭(onOpen)은 알림 목록을 여는 동작이며, 이곳에서 임의로 읽음 처리하거나 점을 숨기지 않습니다.
 export default function NotificationButton({
-  hasNotification,
+  hasNotification = false,
   onOpen,
   compact = false,
 }: NotificationButtonProps) {

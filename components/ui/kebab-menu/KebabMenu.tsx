@@ -34,9 +34,9 @@ const KebabMenu = ({
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         aria-label={ariaLabel}
-        className="flex rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        className="flex size-6 shrink-0 items-center justify-center rounded-sm leading-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
       >
-        <KebabIcon className="size-6" />
+        <KebabIcon className="block size-6 shrink-0" />
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
