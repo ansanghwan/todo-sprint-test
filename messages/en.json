@@ -181,7 +181,7 @@
   },
   "Landing": {
     "sessionCheckError": "Unable to check your session. Please try again shortly.",
-    "checkingSession": "Checking your session"
+    "checkingSession": "Checking login…"
   },
   "GoalCreate": {
     "title": "Goal title",

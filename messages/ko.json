@@ -181,7 +181,7 @@
   },
   "Landing": {
     "sessionCheckError": "로그인 상태를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.",
-    "checkingSession": "로그인 상태 확인 중"
+    "checkingSession": "로그인 확인 중…"
   },
   "GoalCreate": {
     "title": "목표명",

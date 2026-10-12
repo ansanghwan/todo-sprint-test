@@ -65,7 +65,7 @@
     opacity: 0;
     visibility: hidden;
   }
-  /* 3列・列間1.5remの中央に、左右のカードを1.5remずつずらして重ねます。 */
+  /* 3열·열 간격 1.5rem 배치에서 좌우 카드를 중앙 기준으로 1.5rem씩 어긋나게 겹칩니다. */
   [data-landing-section='steps'] ol > li:first-child {
     transform: translateX(100%) rotate(-6deg) scale(0.94);
   }
