@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import messages from '@/messages/ko.json';
 import { getNotes } from '@/lib/api/notes';
+import { getGoal } from '@/lib/api/goals';
 import Page from './page';
 import type { NoteList } from '@/types/api/note';
 
@@ -12,6 +13,7 @@ const replace = vi.fn();
 let currentSearch = '';
 
 vi.mock('@/lib/api/notes', () => ({ getNotes: vi.fn() }));
+vi.mock('@/lib/api/goals', () => ({ getGoal: vi.fn() }));
 
 vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(currentSearch),
@@ -60,22 +62,72 @@ describe('NotesPage', () => {
     replace.mockReset();
     vi.mocked(getNotes).mockReset();
     vi.mocked(getNotes).mockResolvedValue(firstPage);
+    vi.mocked(getGoal).mockReset();
   });
 
-  it('페이지 제목과 목표 정보를 렌더링한다', () => {
+  it('페이지 제목을 렌더링하고, goalId가 없으면 목표 배너 없이 전체 노트를 조회한다', async () => {
     renderPage();
 
     expect(
       screen.getByRole('heading', { level: 2, name: '노트 모아보기' }),
     ).toBeInTheDocument();
+    await screen.findByRole('list');
+    expect(screen.queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
+    expect(getGoal).not.toHaveBeenCalled();
+    expect(getNotes).toHaveBeenCalledWith(
+      expect.objectContaining({ goalId: undefined }),
+      expect.any(AbortSignal),
+    );
+  });
+
+  it('goalId가 있으면 목표 이름 배너를 보여주고 그 목표의 노트만 조회한다', async () => {
+    currentSearch = 'goalId=432';
+    vi.mocked(getGoal).mockResolvedValue({
+      id: 432,
+      teamId: 'team-abc',
+      userId: 1,
+      title: '자바스크립트로 웹 서비스 만들기',
+      createdAt: '2026-02-16T09:00:00.000Z',
+      updatedAt: '2026-02-16T09:00:00.000Z',
+      todos: [],
+    });
+    renderPage();
+
     expect(
-      screen.getByRole('heading', {
+      await screen.findByRole('heading', {
         level: 3,
         name: '자바스크립트로 웹 서비스 만들기',
       }),
     ).toBeInTheDocument();
+    expect(getGoal).toHaveBeenCalledWith(432, expect.any(AbortSignal));
+    expect(getNotes).toHaveBeenCalledWith(
+      expect.objectContaining({ goalId: 432 }),
+      expect.any(AbortSignal),
+    );
+  });
+
+  it('goalId가 올바르지 않으면 무시하고 전체 노트를 조회한다', async () => {
+    currentSearch = 'goalId=abc';
+    renderPage();
+
+    await screen.findByRole('list');
+    expect(getGoal).not.toHaveBeenCalled();
+    expect(getNotes).toHaveBeenCalledWith(
+      expect.objectContaining({ goalId: undefined }),
+      expect.any(AbortSignal),
+    );
+  });
+
+  it('목표를 찾을 수 없으면 배너에 안내 문구를 보여준다', async () => {
+    currentSearch = 'goalId=999';
+    vi.mocked(getGoal).mockRejectedValue(new Error('not found'));
+    renderPage();
+
     expect(
-      screen.getByRole('img', { name: '목표 아이콘' }),
+      await screen.findByRole('heading', {
+        level: 3,
+        name: '목표를 찾을 수 없어요',
+      }),
     ).toBeInTheDocument();
   });
 

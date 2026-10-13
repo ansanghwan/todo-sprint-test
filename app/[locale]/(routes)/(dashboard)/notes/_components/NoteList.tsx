@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import NoteItem from '@/components/note/NoteItem';
+import NoteItem from '@/app/[locale]/(routes)/(dashboard)/notes/_components/NoteItem';
 import { useNotesInfiniteQuery } from '@/queries/notes';
 import { useTranslations } from 'next-intl';
 import type { GetNotesParams, Note } from '@/types/api/note';
 import { useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
-import DeleteNoteModal from '@/components/note/DeleteNoteModal';
+import DeleteNoteModal from '@/app/[locale]/(routes)/(dashboard)/notes/_components/DeleteNoteModal';
 
 type NoteListProps = Omit<GetNotesParams, 'cursor'>;
 
@@ -80,7 +80,7 @@ export default function NoteList(params: NoteListProps) {
           <li key={`note-${note.id}`}>
             <NoteItem
               noteProps={note}
-              onEdit={() => router.push(`/notes/note/edit/${note.id}`)}
+              onEdit={() => router.push(`/note/edit?noteId=${note.id}`)}
               onDelete={() => setDeletingNote(note)}
             />
           </li>
