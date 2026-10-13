@@ -184,7 +184,7 @@
   },
   "Landing": {
     "sessionCheckError": "Unable to check your session. Please try again shortly.",
-    "checkingSession": "Checking your session"
+    "checkingSession": "Checking login…"
   },
   "MyInfo": {
     "title": "My account",

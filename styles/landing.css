@@ -1,0 +1,78 @@
+/* CSS는 시작 상태만 담당하며, 표시와 이동은 기존 GSAP로 제어합니다.
+모션을 줄이는 설정에서는 숨기지 않고 일반 레이아웃을 표시합니다. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-landing-section='hero'] > div > [data-enter],
+  [data-landing-section='features'] [data-enter='text'],
+  [data-landing-section='community'] [data-enter],
+  [data-landing-section='finale'] [data-enter],
+  [data-steps-heading] > :is(p, h2) {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  [data-landing-section='hero']
+    > div
+    > :is([data-enter='text'], [data-enter='button']) {
+    transform: translateY(-2.75rem);
+  }
+  [data-landing-section='hero'] > div > [data-enter='image'],
+  [data-landing-section='community'] [data-enter] {
+    transform: translateY(2rem);
+  }
+  [data-landing-section='finale']
+    :is([data-enter='text'], [data-enter='button']) {
+    transform: translateY(1rem);
+  }
+  [data-steps-heading] > :is(p, h2) {
+    transform: translateY(2.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (width < 64rem) {
+  [data-landing-section='features'] [data-enter='text'],
+  [data-landing-section='features'] [data-enter='image'] img {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(1.875rem);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (width >= 64rem) {
+  [data-landing-section='features'] [data-enter] {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(1.25rem);
+  }
+}
+
+/* 화면 높이 때문에 핀을 생략할 경우 GSAP에서 일반 카드 표시로 복원합니다. */
+@media (prefers-reduced-motion: no-preference) and (min-height: 650px) and (width < 64rem) {
+  [data-landing-section='steps'] ol > li {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(2.25rem);
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (min-height: 650px) and (width < 46.5rem) {
+  [data-landing-section='steps'] ol > li:first-child {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (min-height: 650px) and (width >= 64rem) {
+  [data-landing-section='steps'] ol {
+    opacity: 0;
+    visibility: hidden;
+  }
+  /* 3열·열 간격 1.5rem 배치에서 좌우 카드를 중앙 기준으로 1.5rem씩 어긋나게 겹칩니다. */
+  [data-landing-section='steps'] ol > li:first-child {
+    transform: translateX(100%) rotate(-6deg) scale(0.94);
+  }
+  [data-landing-section='steps'] ol > li:nth-child(2) {
+    transform: scale(0.94);
+  }
+  [data-landing-section='steps'] ol > li:nth-child(3) {
+    transform: translateX(-100%) rotate(6deg) scale(0.94);
+  }
+}

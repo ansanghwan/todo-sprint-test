@@ -52,7 +52,7 @@ export default function LandingStartButton({
       aria-busy={pending}
       aria-label={pending ? t('checkingSession') : undefined}
     >
-      {children}
+      {pending ? t('checkingSession') : children}
     </button>
   );
 }

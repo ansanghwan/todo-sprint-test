@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+// 등장 요소의 초기 투명도와 위치는 styles/landing.css에서 정의합니다.
 // 각 함수의 duration(초), start(시작 위치), 마지막 숫자(등장 시점)를 개별 수정합니다.
 // 트리거는 움직이지 않는 콘텐츠 래퍼로 지정해 등장 모션이 시작 위치에 영향을 주지 않습니다.
 
@@ -9,8 +10,6 @@ export function animateHero(section: HTMLElement) {
   const text = section.querySelector('[data-enter="text"]')!;
   const button = section.querySelector('[data-enter="button"]')!;
   const image = section.querySelector('[data-enter="image"]')!;
-  gsap.set([text, button], { autoAlpha: 0, y: -44 });
-  gsap.set(image, { autoAlpha: 0, y: 32 });
 
   return gsap
     .timeline({ defaults: { duration: 0.8, ease: 'power2.out' } })
@@ -31,7 +30,6 @@ export function animateFeatures(section: HTMLElement) {
       if (context.conditions?.stacked) {
         // 이미지 래퍼는 움직이지 않고 내부 이미지에만 모션을 적용합니다.
         const picture = image.querySelector('img')!;
-        gsap.set([text, picture], { autoAlpha: 0, y: 30 });
         let textFinished = false;
         let imageEntered = false;
         const pictureTween = gsap.to(picture, {
@@ -73,7 +71,6 @@ export function animateFeatures(section: HTMLElement) {
         return; // 모바일·태블릿에서는 아래 PC용 타임라인을 실행하지 않습니다.
       }
       // [PC] 64rem 이상: 텍스트 왼쪽 / 이미지 오른쪽의 가로 배치입니다.
-      gsap.set([text, image], { autoAlpha: 0, y: 20 });
       gsap
         .timeline({
           defaults: { duration: 0.85, ease: 'power2.out' },
@@ -94,7 +91,6 @@ export function animateFeatures(section: HTMLElement) {
 export function animateCommunity(section: HTMLElement) {
   const text = section.querySelector('[data-enter="text"]')!;
   const image = section.querySelector('[data-enter="image"]')!;
-  gsap.set([text, image], { autoAlpha: 0, y: 32 });
 
   return gsap
     .timeline({
@@ -114,8 +110,6 @@ export function animateFinale(section: HTMLElement) {
   const texts = section.querySelectorAll('[data-enter="text"]');
   const button = section.querySelector('[data-enter="button"]')!;
   const ornaments = section.querySelectorAll('[data-enter="image"]');
-  gsap.set([...texts, button], { autoAlpha: 0, y: 16 });
-  gsap.set(ornaments, { autoAlpha: 0 });
 
   return gsap
     .timeline({
@@ -135,7 +129,6 @@ export function animateFinale(section: HTMLElement) {
 export function animateSteps(section: HTMLElement) {
   const heading = section.querySelector('[data-steps-heading]')!;
   const headingTexts = heading.querySelectorAll('p, h2');
-  gsap.set(headingTexts, { autoAlpha: 0, y: 40 });
   gsap.to(headingTexts, {
     autoAlpha: 1,
     y: 0,
@@ -159,19 +152,32 @@ export function animateSteps(section: HTMLElement) {
       tallEnough: '(min-height: 650px)',
     },
     (context) => {
-      if (!context.conditions?.tallEnough) return;
+      const deck = section.querySelector('ol')!;
+      const showStaticCards = () =>
+        gsap.set([deck, ...cards], {
+          autoAlpha: 1,
+          x: 0,
+          xPercent: 0,
+          y: 0,
+          rotation: 0,
+          scale: 1,
+        });
+      if (!context.conditions?.tallEnough) {
+        showStaticCards();
+        return;
+      }
       const mobile = context.conditions.mobile;
       section.setAttribute('data-steps-pinned', '');
       // 글자 확대 등으로 콘텐츠가 화면보다 커지면 자연 스크롤을 유지합니다.
       if (section.scrollHeight > window.innerHeight + 1) {
         section.removeAttribute('data-steps-pinned');
+        // 핀을 생략할 때는 CSS의 초기 숨김/겹침도 해제합니다.
+        showStaticCards();
         return;
       }
       if (context.conditions?.desktop) {
-        const deck = section.querySelector('ol')!;
         // PC에서만 목록 전체를 미리 표시하고, 카드의 위치는 스크롤로 제어합니다.
         // 서로 다른 요소/속성을 사용해 등장 모션과 펼침 모션이 충돌하지 않습니다.
-        gsap.set(deck, { autoAlpha: 0 });
         gsap.set(cards, { zIndex: (index) => cards.length - index });
         gsap.to(deck, {
           autoAlpha: 1,
@@ -190,21 +196,17 @@ export function animateSteps(section: HTMLElement) {
             invalidateOnRefresh: true,
           },
         });
-        unfold.fromTo(
+        // 초기 카드 겹침 위치는 landing.css에서 정의합니다.
+        unfold.to(
           cards,
           {
-            // 원래 그리드 자리를 유지하고 중앙으로 이동하므로 섹션 높이는 같습니다.
-            // 리사이즈 시 원래 배치를 기준으로 다시 계산합니다.
-            x: (index) =>
-              deck.clientWidth / 2 -
-              cards[index].offsetLeft -
-              cards[index].offsetWidth / 2 +
-              (index - 1) * 24,
-            rotation: (index) => (index - 1) * 6,
-            scale: 0.94,
-            y: 0,
+            x: 0,
+            xPercent: 0,
+            rotation: 0,
+            scale: 1,
+            duration: 1.6,
+            ease: 'power2.inOut',
           },
-          { x: 0, rotation: 0, scale: 1, duration: 1.6, ease: 'power2.inOut' },
           0.2,
         );
         // 다 펼쳐진 뒤 읽을 수 있는 구간을 남깁니다.
@@ -212,7 +214,6 @@ export function animateSteps(section: HTMLElement) {
         return () => section.removeAttribute('data-steps-pinned');
       }
 
-      gsap.set(cards, { autoAlpha: 0, y: 36 });
       if (mobile) {
         gsap.set(cards[0], { autoAlpha: 1, y: 0 });
       } else {
