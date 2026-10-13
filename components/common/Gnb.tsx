@@ -197,9 +197,9 @@ export default function Gnb({
           {pageTitle}
         </span>
         {/* 모바일: 메뉴를 닫았을 때 상단 헤더에서만 표시합니다. */}
-        <div className="shrink-0 md:hidden">
+        {/* 개발 미완료로 잠쉬 숨김 처리 <div className="shrink-0 md:hidden">
           <NotificationButton {...notificationProps} compact />
-        </div>
+        </div> */}
         {/* 태블릿은 open=false, PC는 open=true일 때 접힌 상태입니다.
             펼친 상태의 알림은 아래 내 정보 링크 옆에서 표시합니다. */}
         <div className="hidden justify-center md:max-lg:group-data-[open=false]/gnb:flex lg:group-data-[open=true]/gnb:flex">
@@ -443,9 +443,9 @@ export default function Gnb({
                   </Link>
                 </li>
                 {/* 모바일에서는 숨깁니다. md 이상은 펼친 메뉴에서만 접근 가능합니다. */}
-                <li className="hidden shrink-0 md:block">
+                {/*  개발 미완료로 잠쉬 숨김 처리 <li className="hidden shrink-0 md:block">
                   <NotificationButton {...notificationProps} />
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
