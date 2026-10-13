@@ -71,6 +71,8 @@
     "goalProgress": "Goal Progress",
     "createTodo": "Create To-do",
     "editTodo": "Edit To-do",
+    "attachments": "Attachments",
+    "attachedImage": "Attached image",
     "title": "Title",
     "dueDate": "Due Date",
     "link": "Link",

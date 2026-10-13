@@ -71,6 +71,8 @@
     "goalProgress": "목표 진행도",
     "createTodo": "할 일 생성",
     "editTodo": "할 일 수정",
+    "attachments": "첨부자료",
+    "attachedImage": "첨부 이미지",
     "title": "제목",
     "dueDate": "마감기한",
     "link": "링크",

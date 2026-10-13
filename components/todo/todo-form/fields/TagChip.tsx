@@ -1,10 +1,15 @@
 import { cva } from 'class-variance-authority';
 
+import { cn } from '@/lib/utils';
+
 import type { TagColor } from '../tagColors';
 
-/** Figma Badge (4:8985): 높이 24, 패딩 좌 8·상하 4·우 3, 글자 12/16 medium, 테두리 1px */
+/**
+ * Figma Badge (4:8985): 높이 24, 패딩 좌 8·상하 4·우 3, 글자 12/16 medium, 테두리 1px
+ * 삭제 버튼이 없는 읽기 전용(할 일 상세 4:9975)은 좌우 8입니다.
+ */
 const chipVariants = cva(
-  'flex shrink-0 items-center gap-0.5 rounded-full border py-0.75 pr-0.75 pl-2 text-xs/4 font-medium',
+  'flex shrink-0 items-center gap-0.5 rounded-full border py-0.75 pl-2 text-xs/4 font-medium',
   {
     variants: {
       color: {
@@ -29,24 +34,30 @@ const removeIconVariants = cva('material-symbols-outlined text-[1rem]', {
 interface TagChipProps {
   label: string;
   color: TagColor;
-  /** 삭제 버튼의 접근성 이름 (예: "공부 태그 삭제") */
-  removeLabel: string;
-  onRemove: () => void;
+  /** 삭제 버튼의 접근성 이름 (예: "공부 태그 삭제"). onRemove와 함께 넘깁니다. */
+  removeLabel?: string;
+  /** 없으면 삭제 버튼 없이 읽기 전용으로 그립니다. */
+  onRemove?: () => void;
 }
 
 const TagChip = ({ label, color, removeLabel, onRemove }: TagChipProps) => (
-  <li data-color={color} className={chipVariants({ color })}>
+  <li
+    data-color={color}
+    className={cn(chipVariants({ color }), onRemove ? 'pr-0.75' : 'pr-2')}
+  >
     <span className="max-w-40 truncate">{label}</span>
-    <button
-      type="button"
-      aria-label={removeLabel}
-      onClick={onRemove}
-      className="flex rounded-full focus-visible:outline-2 focus-visible:outline-orange-600"
-    >
-      <span aria-hidden="true" className={removeIconVariants({ color })}>
-        close
-      </span>
-    </button>
+    {onRemove && (
+      <button
+        type="button"
+        aria-label={removeLabel}
+        onClick={onRemove}
+        className="flex rounded-full focus-visible:outline-2 focus-visible:outline-orange-600"
+      >
+        <span aria-hidden="true" className={removeIconVariants({ color })}>
+          close
+        </span>
+      </button>
+    )}
   </li>
 );
 
