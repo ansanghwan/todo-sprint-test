@@ -164,9 +164,8 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
       <ConfirmModal
         isOpen={isDeleteOpen}
         onOpenChange={setIsDeleteOpen}
-        title="목표를 삭제하시겠어요?"
-        description="연결된 할 일은 삭제되지 않습니다."
-        confirmLabel="삭제하기"
+        title="정말 삭제하시겠어요?"
+        description="삭제된 목표는 복구할 수 없습니다."
         isPending={isPending}
         onConfirm={() => void remove()}
       />

@@ -106,8 +106,8 @@ it('삭제 확인 후에만 삭제하고 대시보드로 이동한다', async ()
   const { user } = setup();
   await select(user, '삭제하기');
   expect(deleteGoal).not.toHaveBeenCalled();
-  const dialog = screen.getByRole('dialog', { name: '목표를 삭제하시겠어요?' });
-  await user.click(within(dialog).getByRole('button', { name: '삭제하기' }));
+  const dialog = screen.getByRole('dialog', { name: '정말 삭제하시겠어요?' });
+  await user.click(within(dialog).getByRole('button', { name: '확인' }));
   await waitFor(() => expect(replace).toHaveBeenCalledWith('/dashboard'));
   expect(deleteGoal).toHaveBeenCalledWith(683);
 });
@@ -117,7 +117,7 @@ it('삭제 실패하면 확인창을 유지하고 이동하지 않는다', async
   await select(user, '삭제하기');
   await user.click(
     within(screen.getByRole('dialog')).getByRole('button', {
-      name: '삭제하기',
+      name: '확인',
     }),
   );
   await waitFor(() => expect(error).toHaveBeenCalled());
