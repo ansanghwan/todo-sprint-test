@@ -17,6 +17,9 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother);
 
 // false로 바꾸면 섹션이 서로 덮이는 효과만 끕니다.
 const ENABLE_SECTION_OVERLAP = true;
+// 섹션을 모두 읽을 수 있도록 다음 섹션의 진입을 늦출 스크롤 거리입니다.
+// 0.3 = 화면 높이의 30%. 시간(초)이 아니라 스크롤 거리 기준입니다.
+const SECTION_READ_RATIO = 0.3;
 
 export default function LandingSmoothScroll({
   children,
@@ -56,6 +59,9 @@ export default function LandingSmoothScroll({
             gsap.set(section, { position: 'relative', zIndex: index + 1 });
             if (index === sections.length - 1) return;
 
+            // 고정 공간 중 한 화면만 겹쳐 다음 섹션이 덮어 올라오도록 합니다.
+            // 나머지 SECTION_READ_RATIO만큼은 현재 섹션을 가리지 않습니다.
+            gsap.set(sections[index + 1], { marginTop: '-100vh' });
             ScrollTrigger.create({
               trigger: section,
               // 긴 모바일 섹션은 끝까지 읽은 뒤 고정합니다.
@@ -63,10 +69,9 @@ export default function LandingSmoothScroll({
                 section.offsetHeight > window.innerHeight
                   ? 'bottom bottom'
                   : 'top top',
-              end: () =>
-                `+=${Math.min(section.offsetHeight, window.innerHeight)}`,
+              end: () => `+=${window.innerHeight * (1 + SECTION_READ_RATIO)}`,
               pin: true,
-              pinSpacing: false,
+              pinSpacing: true,
               invalidateOnRefresh: true,
             });
           }
