@@ -16,6 +16,7 @@ import { GoalTodoSkeletonRows } from '@/components/goal/GoalDetailSkeleton';
 import TodoItem from '@/components/todo/TodoItem';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
+import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import useTodoItemActions from '@/hooks/todo/useTodoItemActions';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
@@ -36,6 +37,7 @@ export default function GoalDetailPage() {
   const labels = useTodoItemLabels();
   const isTablet = useMediaQuery('(min-width: 46.5rem)');
   const router = useRouter();
+  const [editTodoId, setEditTodoId] = useState<number | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Pick<
     TodoDto,
     'id' | 'title'
@@ -250,6 +252,7 @@ export default function GoalDetailPage() {
                           kebabSlot={
                             <span className={goalTodoKebabClass}>
                               <TodoItemKebab
+                                onEdit={() => setEditTodoId(todo.id)}
                                 isWhite
                                 onDelete={() => setDeleteTarget(todo)}
                               />
@@ -357,6 +360,7 @@ export default function GoalDetailPage() {
                           kebabSlot={
                             <span className={goalTodoKebabClass}>
                               <TodoItemKebab
+                                onEdit={() => setEditTodoId(todo.id)}
                                 isWhite
                                 onDelete={() => setDeleteTarget(todo)}
                               />
@@ -420,6 +424,7 @@ export default function GoalDetailPage() {
           </div>
         </div>
       </div>
+      <TodoEditModal todoId={editTodoId} onClose={() => setEditTodoId(null)} />
       <DeleteTodoModal
         todo={deleteTarget}
         onClose={() => setDeleteTarget(null)}

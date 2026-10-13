@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
+import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import { toast } from '@/components/ui/toast/Toaster';
 import {
@@ -60,6 +61,7 @@ export default function Dashboard() {
     Goal,
     'id' | 'title'
   > | null>(null);
+  const [editTodoId, setEditTodoId] = useState<number | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<TodoItemData | null>(null);
   const [refreshVersion, setRefreshVersion] = useState(0);
   const loadedGoalCount = useRef(2);
@@ -691,6 +693,9 @@ export default function Dashboard() {
                                         kebabSlot={
                                           <span className={goalTodoKebabClass}>
                                             <TodoItemKebab
+                                              onEdit={() =>
+                                                setEditTodoId(todo.id)
+                                              }
                                               isWhite
                                               onDelete={() =>
                                                 setDeleteTarget(todo)
@@ -785,6 +790,9 @@ export default function Dashboard() {
                                         kebabSlot={
                                           <span className={goalTodoKebabClass}>
                                             <TodoItemKebab
+                                              onEdit={() =>
+                                                setEditTodoId(todo.id)
+                                              }
                                               isWhite
                                               onDelete={() =>
                                                 setDeleteTarget(todo)
@@ -897,6 +905,11 @@ export default function Dashboard() {
           if (!open) setCreateGoal(null);
         }}
         onCreated={refreshDashboard}
+      />
+      <TodoEditModal
+        todoId={editTodoId}
+        onClose={() => setEditTodoId(null)}
+        onUpdated={refreshDashboard}
       />
       <DeleteTodoModal
         todo={deleteTarget}
