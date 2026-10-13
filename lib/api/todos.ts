@@ -1,5 +1,6 @@
 import type {
   CreateTodoRequestDto,
+  FavoriteTodoPageDto,
   TodoDto,
   TodoPageDto,
 } from '@/types/api/todo';
@@ -100,6 +101,17 @@ export const deleteTodo = (todoId: number) =>
 
 export const addTodoFavorite = (todoId: number) =>
   requestVoid({ method: 'POST', url: `/todos/${todoId}/favorites` });
+
+export type GetFavoriteTodosParams = {
+  cursor?: number;
+  /** 최대 100, 기본 10 */
+  limit?: number;
+};
+
+export const getFavoriteTodos = (
+  params: GetFavoriteTodosParams,
+  signal?: AbortSignal,
+) => request<FavoriteTodoPageDto>({ url: '/todos/favorites', params, signal });
 
 export const removeTodoFavorite = (todoId: number) =>
   requestVoid({ method: 'DELETE', url: `/todos/${todoId}/favorites` });

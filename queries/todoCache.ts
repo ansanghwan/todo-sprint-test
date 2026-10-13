@@ -5,16 +5,25 @@ import type {
 } from '@tanstack/react-query';
 
 import type { TodoDto, TodoPageDto } from '@/types/api/todo';
-import { todoKeys } from './todo';
+import { todoKeys, type FavoriteTodosData } from './todo';
 
 type TodoListData = InfiniteData<TodoPageDto, number | undefined>;
 
-/** 되돌릴 때 쓰는 목록 캐시 사본 */
-export type TodoListSnapshot = [QueryKey, TodoListData | undefined][];
+/** 되돌릴 때 쓰는 목록 캐시 사본 (일반 목록과 찜 목록) */
+export type TodoListSnapshot = [
+  QueryKey,
+  TodoListData | FavoriteTodosData | undefined,
+][];
 
-/** 캐시된 모든 할 일 목록(탭별 포함)의 현재 상태를 저장합니다. */
-export const snapshotTodoLists = (queryClient: QueryClient): TodoListSnapshot =>
-  queryClient.getQueriesData<TodoListData>({ queryKey: todoKeys.lists() });
+/** 캐시된 모든 할 일 목록(탭별 포함)과 찜 목록의 현재 상태를 저장합니다. */
+export const snapshotTodoLists = (
+  queryClient: QueryClient,
+): TodoListSnapshot => [
+  ...queryClient.getQueriesData<TodoListData>({ queryKey: todoKeys.lists() }),
+  ...queryClient.getQueriesData<FavoriteTodosData>({
+    queryKey: todoKeys.favorites(),
+  }),
+];
 
 export const restoreTodoLists = (
   queryClient: QueryClient,
@@ -25,7 +34,7 @@ export const restoreTodoLists = (
   });
 };
 
-/** 캐시된 모든 할 일 목록에서 해당 할 일의 필드를 바꿉니다. */
+/** 캐시된 모든 할 일 목록과 찜 목록에서 해당 할 일의 필드를 바꿉니다. */
 export const updateTodoInLists = (
   queryClient: QueryClient,
   todoId: number,
@@ -42,6 +51,16 @@ export const updateTodoInLists = (
             todo.id === todoId ? { ...todo, ...patch } : todo,
           ),
         })),
+      },
+  );
+  queryClient.setQueryData<FavoriteTodosData>(
+    todoKeys.favorites(),
+    (data) =>
+      data && {
+        ...data,
+        todos: data.todos.map((todo) =>
+          todo.id === todoId ? { ...todo, ...patch } : todo,
+        ),
       },
   );
 };
@@ -70,4 +89,20 @@ export const removeTodoFromLists = (
       };
     },
   );
+};
+
+/** 찜 목록에서 할 일을 빼고 전체 개수를 1 줄입니다. 찜 해제·삭제에 씁니다. */
+export const removeTodoFromFavorites = (
+  queryClient: QueryClient,
+  todoId: number,
+) => {
+  queryClient.setQueryData<FavoriteTodosData>(todoKeys.favorites(), (data) => {
+    if (!data || !data.todos.some((todo) => todo.id === todoId)) {
+      return data;
+    }
+    return {
+      todos: data.todos.filter((todo) => todo.id !== todoId),
+      totalCount: Math.max(data.totalCount - 1, 0),
+    };
+  });
 };

@@ -3,8 +3,9 @@ import { describe, expect, it } from 'vitest';
 
 import type { TodoPageDto } from '@/types/api/todo';
 import { makeTodo } from '@/test/todoMocks';
-import { todoKeys } from './todo';
+import { todoKeys, type FavoriteTodosData } from './todo';
 import {
+  removeTodoFromFavorites,
   removeTodoFromLists,
   restoreTodoLists,
   snapshotTodoLists,
@@ -34,9 +35,18 @@ const setup = () => {
     TODO_KEY,
     infinite([{ todos: [makeTodo(1)], nextCursor: null, totalCount: 1 }]),
   );
+  queryClient.setQueryData<FavoriteTodosData>(todoKeys.favorites(), {
+    todos: [
+      makeTodo(1, { isFavorite: true }),
+      makeTodo(3, { isFavorite: true }),
+    ],
+    totalCount: 2,
+  });
   const read = (key: readonly unknown[]) =>
     queryClient.getQueryData<InfiniteData<TodoPageDto>>(key)!;
-  return { queryClient, read };
+  const readFavorites = () =>
+    queryClient.getQueryData<FavoriteTodosData>(todoKeys.favorites())!;
+  return { queryClient, read, readFavorites };
 };
 
 describe('todoCache', () => {
@@ -70,5 +80,40 @@ describe('todoCache', () => {
     expect(read(ALL_KEY).pages[0].todos[0].isFavorite).toBe(
       makeTodo(1).isFavorite,
     );
+  });
+
+  describe('찜 목록', () => {
+    it('updateTodoInLists는 찜 목록의 같은 할 일도 바꾼다', () => {
+      const { queryClient, readFavorites } = setup();
+
+      updateTodoInLists(queryClient, 1, { done: true });
+
+      expect(readFavorites().todos[0].done).toBe(true);
+      expect(readFavorites().todos[1]).toEqual(
+        makeTodo(3, { isFavorite: true }),
+      );
+    });
+
+    it('removeTodoFromFavorites는 찜 목록에서 빼고 개수를 1 줄이며, 없는 할 일이면 그대로 둔다', () => {
+      const { queryClient, readFavorites } = setup();
+
+      removeTodoFromFavorites(queryClient, 2);
+      expect(readFavorites().totalCount).toBe(2);
+
+      removeTodoFromFavorites(queryClient, 1);
+      expect(readFavorites().todos.map((todo) => todo.id)).toEqual([3]);
+      expect(readFavorites().totalCount).toBe(1);
+    });
+
+    it('snapshot은 찜 목록도 함께 되돌린다', () => {
+      const { queryClient, readFavorites } = setup();
+      const snapshot = snapshotTodoLists(queryClient);
+
+      removeTodoFromFavorites(queryClient, 1);
+      restoreTodoLists(queryClient, snapshot);
+
+      expect(readFavorites().todos.map((todo) => todo.id)).toEqual([1, 3]);
+      expect(readFavorites().totalCount).toBe(2);
+    });
   });
 });
