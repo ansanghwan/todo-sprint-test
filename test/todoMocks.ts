@@ -7,6 +7,7 @@ import { api } from '@/lib/api/client-fetcher';
 import type { GoalDto, GoalPageDto } from '@/types/api/goal';
 import type {
   CreateTodoRequestDto,
+  FavoriteTodoPageDto,
   TodoDto,
   TodoPageDto,
 } from '@/types/api/todo';
@@ -90,6 +91,10 @@ interface MockTodosApiOptions {
   failDetail?: boolean;
   /** GET /todos/{id}에 응답하지 않고 로딩 상태로 둡니다. */
   isDetailPending?: boolean;
+  /** true면 할 일마다 앞의 목표 3개 중 하나를 차례로 붙입니다. */
+  withGoals?: boolean;
+  /** 몇 번째 GET /todos/favorites 요청(0부터)을 실패시킬지 */
+  failFavoritesAt?: number;
 }
 
 /** 배열을 cursor(다음에 줄 항목의 1부터 센 위치)로 잘라 줍니다. */
@@ -112,6 +117,7 @@ const wait = (delay: number) =>
 /**
  * axios adapter를 바꿔 할 일 화면이 쓰는 API를 흉내 냅니다.
  * - GET /todos: done으로 거르고 최신순(만든 순서의 반대)으로 돌려줍니다.
+ * - GET /todos/favorites: 찜한 할 일만 favorites[].todo로 감싸 돌려줍니다.
  * - GET /goals: 10개씩 돌려줍니다.
  * - POST /images, 업로드 PUT, POST /todos: 생성한 할 일을 목록 맨 앞에 넣습니다.
  * - PATCH·DELETE /todos/{id}, POST·DELETE /todos/{id}/favorites: 메모리의 할 일을 바꿉니다.
@@ -132,18 +138,29 @@ export const mockTodosApi = ({
   todoOverrides = {},
   failDetail = false,
   isDetailPending = false,
+  withGoals = false,
+  failFavoritesAt,
 }: MockTodosApiOptions) => {
   const originalAdapter = api.defaults.adapter;
   const originalUploadAdapter = axios.defaults.adapter;
   let todoRequestCount = 0;
+  let favoritesRequestCount = 0;
   let nextTodoId = totalCount + 1;
+  const goals = Array.from({ length: goalCount }, (_, i) => makeGoal(i + 1));
+  const goalOf = (id: number) => {
+    const goal = goals[(id - 1) % Math.min(3, goals.length)];
+    return goal
+      ? { goalId: goal.id, goal: { id: goal.id, title: goal.title } }
+      : {};
+  };
   const todos = Array.from({ length: totalCount }, (_, i) =>
     makeTodo(i + 1, {
       ...(hasDone ? {} : { done: false }),
+      ...(withGoals ? goalOf(i + 1) : {}),
+      // id별 덮어쓰기가 목표 자동 배정보다 우선합니다.
       ...todoOverrides[i + 1],
     }),
   );
-  const goals = Array.from({ length: goalCount }, (_, i) => makeGoal(i + 1));
 
   // GET /todos/{id}
   const getTodoResponse = async (config: InternalAxiosRequestConfig) => {
@@ -206,6 +223,44 @@ export const mockTodosApi = ({
       todos: page,
       nextCursor,
       totalCount: filtered.length,
+    };
+    console.info(`${label} → ${page.length}개, nextCursor=${nextCursor}`);
+    return ok(data, config);
+  };
+
+  // 찜한 할 일만 최신순으로 돌려줍니다. 찜 해제·삭제가 바로 반영됩니다.
+  const getFavoritesResponse = async (config: InternalAxiosRequestConfig) => {
+    const requestIndex = favoritesRequestCount;
+    favoritesRequestCount += 1;
+    const label = `[mock GET /todos/favorites] 요청 #${requestIndex + 1} cursor=${config.params?.cursor ?? '없음'}`;
+
+    if (isPending) {
+      console.info(`${label} → 응답 없음(로딩 유지)`);
+      return new Promise<never>(() => {});
+    }
+    await wait(delay);
+    if (requestIndex === failFavoritesAt) {
+      console.info(`${label} → 실패`);
+      throw new Error('mock network error');
+    }
+
+    const favorites = todos.filter((todo) => todo.isFavorite);
+    const { page, nextCursor } = paginate(
+      favorites,
+      config.params?.cursor,
+      config.params?.limit ?? 10,
+    );
+    const data: FavoriteTodoPageDto = {
+      favorites: page.map((todo) => ({
+        id: todo.id,
+        teamId: todo.teamId,
+        userId: todo.userId,
+        todoId: todo.id,
+        createdAt: todo.createdAt,
+        todo: { ...todo },
+      })),
+      nextCursor,
+      totalCount: favorites.length,
     };
     console.info(`${label} → ${page.length}개, nextCursor=${nextCursor}`);
     return ok(data, config);
@@ -305,6 +360,9 @@ export const mockTodosApi = ({
     }
     if (config.url === '/todos' && method === 'POST') {
       return createTodoResponse(config);
+    }
+    if (config.url === '/todos/favorites' && method === 'GET') {
+      return getFavoritesResponse(config);
     }
     if (config.url === '/goals' && method === 'GET') {
       return getGoalsResponse(config);

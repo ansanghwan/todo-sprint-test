@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
+import TodoDetailModal from '@/components/todo/todo-detail/TodoDetailModal';
 import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
 import TodoItem from '@/components/todo/TodoItem';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
@@ -22,8 +23,6 @@ import TodoListEmpty from './TodoListEmpty';
 // globals.css의 --breakpoint-md(744px)와 같은 값입니다.
 const TABLET_QUERY = '(min-width: 46.5rem)';
 
-// 할 일 상세 모달(FN-TD-13)이 생기면 연결합니다.
-const openDetailNotConnected = () => {};
 // 노트 보기·작성(FN-TD-11, 12)은 노트 담당과 연결 방식을 확정한 뒤 noteActions로 받습니다.
 const noteNotConnected = () => {};
 
@@ -64,6 +63,7 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
     'id' | 'title'
   > | null>(null);
   const [editTodoId, setEditTodoId] = useState<number | null>(null);
+  const [detailTodoId, setDetailTodoId] = useState<number | null>(null);
 
   useEffect(() => {
     if (isError) {
@@ -115,7 +115,7 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
             // FN-TD-01: 새 항목이 부드럽게 올라오는 애니메이션
             className="transition-[opacity,translate] duration-300 ease-out motion-reduce:transition-none starting:translate-y-2 starting:opacity-0"
             {...actions}
-            onOpenDetail={openDetailNotConnected}
+            onOpenDetail={setDetailTodoId}
             onViewNote={noteActions?.onViewNote ?? noteNotConnected}
             onCreateNote={noteActions?.onCreateNote ?? noteNotConnected}
             kebabSlot={
@@ -155,6 +155,19 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
         onClose={() => setDeleteTarget(null)}
       />
       <TodoEditModal todoId={editTodoId} onClose={() => setEditTodoId(null)} />
+      {/* 상세의 케밥은 상세를 닫고 같은 수정·삭제 모달로 넘깁니다. 모달을 겹쳐 띄우지 않습니다. */}
+      <TodoDetailModal
+        todoId={detailTodoId}
+        onClose={() => setDetailTodoId(null)}
+        onEdit={(todoId) => {
+          setDetailTodoId(null);
+          setEditTodoId(todoId);
+        }}
+        onDelete={(todo) => {
+          setDetailTodoId(null);
+          setDeleteTarget(todo);
+        }}
+      />
     </>
   );
 };
