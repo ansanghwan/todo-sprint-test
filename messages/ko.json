@@ -186,6 +186,38 @@
     "sessionCheckError": "로그인 상태를 확인하지 못했어요. 잠시 후 다시 시도해 주세요.",
     "checkingSession": "로그인 상태 확인 중"
   },
+  "MyInfo": {
+    "title": "내 정보 관리",
+    "loadError": "내 정보를 불러오지 못했어요.",
+    "profileImage": "프로필 이미지",
+    "profileImagePreview": "변경할 프로필 이미지 미리보기",
+    "changeProfileImage": "프로필 이미지 변경",
+    "emailLabel": "이메일",
+    "nameLabel": "이름",
+    "namePlaceholder": "이름을 입력해주세요",
+    "checkName": "중복 검사",
+    "nameAvailable": "사용 가능한 이름입니다.",
+    "nameCheckFailed": "이름을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    "save": "저장하기",
+    "saved": "저장되었습니다.",
+    "saveFailed": "저장하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    "passwordTitle": "비밀번호 변경",
+    "currentPassword": "현재 비밀번호",
+    "newPassword": "새 비밀번호",
+    "newPasswordConfirm": "새 비밀번호 확인",
+    "changePassword": "비밀번호 변경",
+    "passwordChangeFailed": "비밀번호를 변경하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    "imageExtensionInvalid": "jpg, jpeg, png, gif, webp, svg 이미지만 올릴 수 있습니다.",
+    "errors": {
+      "nameRequired": "이름을 입력해 주세요.",
+      "nameTaken": "이미 사용 중인 이름입니다.",
+      "currentPasswordRequired": "현재 비밀번호를 입력해 주세요.",
+      "currentPasswordWrong": "현재 비밀번호가 올바르지 않습니다.",
+      "passwordTooShort": "비밀번호가 8자 이상이 되도록 해 주세요.",
+      "passwordTooLong": "비밀번호는 72자 이하로 입력해 주세요.",
+      "passwordMismatch": "비밀번호가 일치하지 않습니다."
+    }
+  },
   "GoalCreate": {
     "title": "목표명",
     "placeholder": "목표의 제목을 적어주세요",

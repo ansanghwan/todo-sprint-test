@@ -166,3 +166,15 @@ it.each([false, true])(
     }
   },
 );
+
+it('프로필 링크에 사용자 이미지를 보여주고, 없으면 기본 이미지를 보여준다', () => {
+  const avatar = () =>
+    screen.getByRole('link', { name: '내 정보 관리' }).querySelector('img');
+  const { rerender } = render(<Gnb userImage="https://example.com/me.png" />, {
+    wrapper,
+  });
+  expect(avatar()).toHaveAttribute('src', 'https://example.com/me.png');
+
+  rerender(<Gnb userImage={null} />);
+  expect(avatar()?.getAttribute('src')).toContain('img_profile.jpg');
+});

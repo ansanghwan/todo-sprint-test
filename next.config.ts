@@ -1,13 +1,17 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
+import {
+  UPLOADED_IMAGE_HOSTNAME,
+  UPLOADED_IMAGE_PATH,
+} from './lib/uploadedImageLocation';
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'sprint-fe-project.s3.ap-northeast-2.amazonaws.com',
-        pathname: '/slid-todo/**',
+        hostname: UPLOADED_IMAGE_HOSTNAME,
+        pathname: `${UPLOADED_IMAGE_PATH}**`,
       },
     ],
   },
