@@ -1,22 +1,22 @@
 import { useFormatter, useTranslations } from 'next-intl';
 
 import { getFirstDay, type MonthKey } from '../_lib/calendarDates';
-import CalendarGoalFilter, { type CalendarGoal } from './CalendarGoalFilter';
+import CalendarGoalFilter from './CalendarGoalFilter';
 
 const MONTH_BUTTON_CLASS_NAME =
   'flex rounded-sm text-subtle hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600';
 
 interface CalendarHeaderProps {
   month: MonthKey;
-  selectedGoal: CalendarGoal | null;
-  onSelectGoal: (goal: CalendarGoal | null) => void;
+  selectedGoalId: number | null;
+  onSelectGoal: (goalId: number | null) => void;
   onPreviousMonth: () => void;
   onNextMonth: () => void;
 }
 
 const CalendarHeader = ({
   month,
-  selectedGoal,
+  selectedGoalId,
   onSelectGoal,
   onPreviousMonth,
   onNextMonth,
@@ -62,7 +62,7 @@ const CalendarHeader = ({
         </button>
       </div>
       <CalendarGoalFilter
-        selectedGoal={selectedGoal}
+        selectedGoalId={selectedGoalId}
         onSelectGoal={onSelectGoal}
       />
     </header>

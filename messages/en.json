@@ -186,6 +186,38 @@
     "sessionCheckError": "Unable to check your session. Please try again shortly.",
     "checkingSession": "Checking your session"
   },
+  "MyInfo": {
+    "title": "My account",
+    "loadError": "Could not load your account.",
+    "profileImage": "Profile image",
+    "profileImagePreview": "Preview of the new profile image",
+    "changeProfileImage": "Change profile image",
+    "emailLabel": "Email",
+    "nameLabel": "Name",
+    "namePlaceholder": "Enter your name",
+    "checkName": "Check",
+    "nameAvailable": "This name is available.",
+    "nameCheckFailed": "Could not check the name. Please try again later.",
+    "save": "Save",
+    "saved": "Saved.",
+    "saveFailed": "Could not save. Please try again later.",
+    "passwordTitle": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "newPasswordConfirm": "Confirm new password",
+    "changePassword": "Change password",
+    "passwordChangeFailed": "Could not change your password. Please try again later.",
+    "imageExtensionInvalid": "Only jpg, jpeg, png, gif, webp, or svg images can be uploaded.",
+    "errors": {
+      "nameRequired": "Enter your name.",
+      "nameTaken": "This name is already in use.",
+      "currentPasswordRequired": "Enter your current password.",
+      "currentPasswordWrong": "The current password is incorrect.",
+      "passwordTooShort": "Use at least 8 characters for your password.",
+      "passwordTooLong": "Use 72 characters or fewer for your password.",
+      "passwordMismatch": "The passwords do not match."
+    }
+  },
   "GoalCreate": {
     "title": "Goal title",
     "placeholder": "Enter the title of your goal",

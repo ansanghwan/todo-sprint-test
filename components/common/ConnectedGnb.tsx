@@ -64,7 +64,7 @@ export default function ConnectedGnb() {
       setIsLoggingOut(false);
     }
   };
-  const { userName, userEmail } = useCurrentUser();
+  const { userName, userEmail, userImage } = useCurrentUser();
   const page = pathname.split('/')[1];
   // 클릭 여부가 아닌 실제 경로로 선택하므로 직접 접속·새로고침·뒤로 가기에도 유지됩니다.
   const menus: Record<string, MenuId> = {
@@ -84,6 +84,7 @@ export default function ConnectedGnb() {
     posts: '소통 게시판',
     notes: '노트 모아보기',
     favorites: '찜한 할 일',
+    mypage: '내 정보 관리',
   };
   const retryGoals = () => {
     if (goalMenuQuery.isFetchNextPageError) {
@@ -120,6 +121,7 @@ export default function ConnectedGnb() {
         pageTitle={titles[page] ?? '슬리드 투두'}
         userName={userName || '사용자'}
         userEmail={userEmail}
+        userImage={userImage}
         hasNotification={false}
       />
       <GoalCreateModal

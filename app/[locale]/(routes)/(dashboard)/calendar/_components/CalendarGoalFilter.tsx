@@ -5,9 +5,6 @@ import Image from 'next/image';
 import { DropdownMenu } from 'radix-ui';
 
 import useAllGoals from '@/hooks/goal/useAllGoals';
-import type { GoalDto } from '@/types/api/goal';
-
-export type CalendarGoal = Pick<GoalDto, 'id' | 'title'>;
 
 const ALL_GOALS_VALUE = 'all';
 const ITEM_CLASS_NAME = 'group cursor-pointer p-1.25 outline-none md:p-1.5';
@@ -17,16 +14,17 @@ const STATUS_ROW_CLASS_NAME = 'px-3 py-2 text-sm/5 text-muted';
 
 interface CalendarGoalFilterProps {
   /** null이면 전체 목표 */
-  selectedGoal: CalendarGoal | null;
-  onSelectGoal: (goal: CalendarGoal | null) => void;
+  selectedGoalId: number | null;
+  onSelectGoal: (goalId: number | null) => void;
 }
 
 const CalendarGoalFilter = ({
-  selectedGoal,
+  selectedGoalId,
   onSelectGoal,
 }: CalendarGoalFilterProps) => {
   const t = useTranslations('Todo');
   const { goals, isLoading, isError, retry } = useAllGoals();
+  const selectedGoal = goals?.find(({ id }) => id === selectedGoalId);
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen && isError) {
@@ -65,7 +63,9 @@ const CalendarGoalFilter = ({
           className="z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) overflow-y-auto rounded-xl bg-white-section shadow-[0_0.25rem_0.5rem_rgba(0,0,0,0.1)] md:rounded-2xl"
         >
           <DropdownMenu.RadioGroup
-            value={selectedGoal ? String(selectedGoal.id) : ALL_GOALS_VALUE}
+            value={
+              selectedGoalId === null ? ALL_GOALS_VALUE : String(selectedGoalId)
+            }
           >
             <DropdownMenu.RadioItem
               value={ALL_GOALS_VALUE}
@@ -78,7 +78,7 @@ const CalendarGoalFilter = ({
               <DropdownMenu.RadioItem
                 key={id}
                 value={String(id)}
-                onSelect={() => onSelectGoal({ id, title })}
+                onSelect={() => onSelectGoal(id)}
                 className={ITEM_CLASS_NAME}
               >
                 <span className={ITEM_LABEL_CLASS_NAME}>{title}</span>

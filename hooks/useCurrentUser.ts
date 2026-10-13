@@ -17,6 +17,7 @@ export default function useCurrentUser() {
   return {
     userName: !isError ? data?.name.trim() : undefined,
     userEmail: !isError ? data?.email : undefined,
+    userImage: !isError ? data?.image : undefined,
     isPending,
     isError,
   };

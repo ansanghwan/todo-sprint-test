@@ -13,19 +13,23 @@ import {
   groupTodosByDueDate,
   type DateKey,
 } from '../_lib/calendarDates';
-import type { CalendarGoal } from './CalendarGoalFilter';
 import CalendarGrid from './CalendarGrid';
 import CalendarHeader from './CalendarHeader';
 import DayTodosModal from './DayTodosModal';
 
 interface MonthCalendarProps {
   today: DateKey;
+  /** null이면 전체 목표 */
+  selectedGoalId: number | null;
+  onSelectGoal: (goalId: number | null) => void;
   onAddTodo: () => void;
   onOpenTodo: (todoId: number) => void;
 }
 
 const MonthCalendar = ({
   today,
+  selectedGoalId,
+  onSelectGoal,
   onAddTodo,
   onOpenTodo,
 }: MonthCalendarProps) => {
@@ -33,13 +37,12 @@ const MonthCalendar = ({
   const [month, setMonth] = useState(() => getMonthKey(today));
   const [selectedDate, setSelectedDate] = useState(today);
   const [openedDate, setOpenedDate] = useState<DateKey | null>(null);
-  const [selectedGoal, setSelectedGoal] = useState<CalendarGoal | null>(null);
 
   const days = getCalendarDays(month);
   const { todos, isLoading, isError, retry } = useCalendarTodos({
     from: days[0],
     to: days[days.length - 1],
-    goalId: selectedGoal?.id,
+    goalId: selectedGoalId ?? undefined,
   });
   const todosByDate = groupTodosByDueDate(todos ?? []);
 
@@ -58,8 +61,8 @@ const MonthCalendar = ({
       <section className="-mx-4 overflow-hidden bg-white-section shadow-lg md:mx-0 md:rounded-3xl lg:rounded-4xl">
         <CalendarHeader
           month={month}
-          selectedGoal={selectedGoal}
-          onSelectGoal={setSelectedGoal}
+          selectedGoalId={selectedGoalId}
+          onSelectGoal={onSelectGoal}
           onPreviousMonth={handlePreviousMonth}
           onNextMonth={handleNextMonth}
         />

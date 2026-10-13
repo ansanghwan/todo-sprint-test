@@ -28,7 +28,8 @@ const useAllPages = <TPage, TQueryKey extends QueryKey, TPageParam>(
   // 실패하면 retry 전까지 멈춥니다.
   useEffect(() => {
     if (hasNextPage && !isFetching && !isError) {
-      void fetchNextPage();
+      // 같은 목록을 여러 컴포넌트가 쓰면 이 effect가 함께 실행되므로, 먼저 보낸 요청을 취소하지 않고 같이 기다립니다.
+      void fetchNextPage({ cancelRefetch: false });
     }
   }, [hasNextPage, isFetching, isError, fetchNextPage]);
 

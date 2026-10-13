@@ -1,8 +1,8 @@
 import z from 'zod';
 
 export const NAME_MAX_LENGTH = 20;
-const PASSWORD_MIN_LENGTH = 8;
-const PASSWORD_MAX_LENGTH = 72;
+export const PASSWORD_MIN_LENGTH = 8;
+export const PASSWORD_MAX_LENGTH = 72;
 
 /** 검증 실패 메시지는 번역 key입니다. 문구는 화면에서 번역(Auth.errors)합니다. */
 const email = z.email({
