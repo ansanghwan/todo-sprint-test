@@ -6,10 +6,43 @@ import { getGoals, type GetGoalsParams } from '@/lib/api/goals';
 import { getTodos, type GetTodosParams } from '@/lib/api/todos';
 import TestProviders from '@/test/TestProviders';
 import { makeTodo } from '@/test/todoMocks';
-import CalendarView from './CalendarView';
+import CalendarContainer from './CalendarContainer';
 
 vi.mock('@/lib/api/todos', () => ({ getTodos: vi.fn() }));
 vi.mock('@/lib/api/goals', () => ({ getGoals: vi.fn() }));
+
+// router.replace가 바꾼 쿼리를 useSearchParams가 다시 읽도록 URL을 흉내 냅니다.
+const url = vi.hoisted(() => {
+  let search = '';
+  const listeners = new Set<() => void>();
+  return {
+    getSearch: () => search,
+    setSearch: (nextSearch: string) => {
+      search = nextSearch;
+      listeners.forEach((listener) => listener());
+    },
+    subscribe: (listener: () => void) => {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+  };
+});
+
+vi.mock('next/navigation', async () => {
+  const { useSyncExternalStore } = await import('react');
+  return {
+    useSearchParams: () =>
+      new URLSearchParams(useSyncExternalStore(url.subscribe, url.getSearch)),
+  };
+});
+vi.mock('@/i18n/navigation', () => ({
+  useRouter: () => ({
+    replace: (href: string) => url.setSearch(href.split('?')[1] ?? ''),
+  }),
+  usePathname: () => '/calendar',
+}));
 
 const mockedGetTodos = vi.mocked(getTodos);
 const mockedGetGoals = vi.mocked(getGoals);
@@ -53,7 +86,7 @@ const respondGoals = ({ cursor }: GetGoalsParams) =>
 const renderCalendar = () =>
   render(
     <TestProviders>
-      <CalendarView />
+      <CalendarContainer />
     </TestProviders>,
   );
 
@@ -61,6 +94,7 @@ beforeEach(() => {
   // KST로는 2025-01-10 00:30
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date('2025-01-09T15:30:00.000Z'));
+  url.setSearch('');
   mockedGetTodos.mockImplementation(respond);
   mockedGetGoals.mockImplementation(respondGoals);
 });
@@ -70,7 +104,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('CalendarView', () => {
+describe('CalendarContainer', () => {
   it('오늘(KST)이 포함된 달의 보이는 범위를 nextCursor가 null이 될 때까지 요청한다', async () => {
     renderCalendar();
 
@@ -148,7 +182,7 @@ describe('CalendarView', () => {
     const onOpenTodo = vi.fn();
     render(
       <TestProviders>
-        <CalendarView onOpenTodo={onOpenTodo} />
+        <CalendarContainer onOpenTodo={onOpenTodo} />
       </TestProviders>,
     );
 
@@ -209,6 +243,38 @@ describe('CalendarView', () => {
     await screen.findAllByText('할 일 1');
     expect(mockedGetTodos.mock.lastCall?.[0].goalId).toBeUndefined();
   });
+
+  it('URL의 goalId와 같은 목표를 선택한 채로 시작하고, 목표를 바꾸면 URL에 반영한다', async () => {
+    const user = userEvent.setup();
+    url.setSearch('goalId=2');
+    renderCalendar();
+
+    const filterButton = await screen.findByRole('button', { name: '목표 2' });
+    expect(mockedGetTodos.mock.lastCall?.[0]).toMatchObject({ goalId: 2 });
+
+    await user.click(filterButton);
+    await user.click(screen.getByRole('menuitemradio', { name: '목표 1' }));
+    expect(url.getSearch()).toBe('goalId=1');
+
+    await user.click(screen.getByRole('button', { name: '목표 1' }));
+    await user.click(screen.getByRole('menuitemradio', { name: '전체 목표' }));
+    expect(url.getSearch()).toBe('');
+  });
+
+  it.each(['abc', '-1', '1.5', '', '999'])(
+    'goalId가 올바르지 않거나 없는 목표면(%s) 전체 목표로 본다',
+    async (goalId) => {
+      url.setSearch(`goalId=${goalId}`);
+      renderCalendar();
+
+      await screen.findAllByText('할 일 1');
+      expect(mockedGetGoals).toHaveBeenCalledTimes(2);
+      expect(
+        screen.getByRole('button', { name: '전체 목표' }),
+      ).toBeInTheDocument();
+      expect(mockedGetTodos.mock.lastCall?.[0].goalId).toBeUndefined();
+    },
+  );
 
   it('목표를 불러오지 못하면 에러를 표시하고 다시 열면 재요청한다', async () => {
     const user = userEvent.setup();

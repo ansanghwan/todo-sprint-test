@@ -1,5 +1,6 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/nextjs';
 import type { AxiosAdapter } from 'axios';
+import { useState } from 'react';
 import { fn } from 'storybook/test';
 
 import { api } from '@/lib/api/client-fetcher';
@@ -149,7 +150,28 @@ const meta = {
   component: MonthCalendar,
   parameters: { layout: 'fullscreen' },
   decorators: [withCalendarPage],
-  args: { today: '2025-01-10', onAddTodo: fn(), onOpenTodo: fn() },
+  args: {
+    today: '2025-01-10',
+    selectedGoalId: null,
+    onSelectGoal: fn(),
+    onAddTodo: fn(),
+    onOpenTodo: fn(),
+  },
+  // 목표 필터를 고르면 반영되도록 선택한 목표를 스토리에서 들고 있습니다.
+  render: function Render(args) {
+    const [selectedGoalId, setSelectedGoalId] = useState(args.selectedGoalId);
+    const handleSelectGoal = (goalId: number | null) => {
+      args.onSelectGoal(goalId);
+      setSelectedGoalId(goalId);
+    };
+    return (
+      <MonthCalendar
+        {...args}
+        selectedGoalId={selectedGoalId}
+        onSelectGoal={handleSelectGoal}
+      />
+    );
+  },
   // beforeEach가 돌려준 함수로 스토리를 떠날 때 mock API를 되돌립니다.
   beforeEach: () => mockCalendarTodosApi({ todos: FIGMA_TODOS }),
 } satisfies Meta<typeof MonthCalendar>;
