@@ -2,6 +2,15 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import type { Note } from '@/types/api/note';
 import NoteItem from './NoteItem';
+import IntlTestProvider from '@/test/IntlTestProvider';
+
+function renderNoteItem(note: Note) {
+  return render(
+    <IntlTestProvider>
+      <NoteItem noteProps={note} onEdit={vi.fn()} onDelete={vi.fn()} />
+    </IntlTestProvider>,
+  );
+}
 
 const note: Note = {
   id: 7,
@@ -35,7 +44,7 @@ const note: Note = {
 
 describe('NoteItem', () => {
   it('노트 제목, 연결된 할 일, 수정일을 렌더링한다', () => {
-    render(<NoteItem noteProps={note} />);
+    renderNoteItem(note);
 
     expect(screen.getByText('API 설계 메모')).toBeInTheDocument();
     expect(screen.getByText('API 문서 작성')).toBeInTheDocument();
@@ -46,20 +55,13 @@ describe('NoteItem', () => {
   });
 
   it('미완료 할 일은 TO DO 상태를 표시한다', () => {
-    render(<NoteItem noteProps={note} />);
+    renderNoteItem(note);
 
     expect(screen.getByText('TO DO')).toBeInTheDocument();
   });
 
   it('완료된 할 일은 DONE 상태를 표시한다', () => {
-    render(
-      <NoteItem
-        noteProps={{
-          ...note,
-          todo: { ...note.todo, done: true },
-        }}
-      />,
-    );
+    renderNoteItem({ ...note, todo: { ...note.todo, done: true } });
 
     expect(screen.getByText('DONE')).toBeInTheDocument();
   });

@@ -1,4 +1,5 @@
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
+
 import { getGoal, getGoals, type GetGoalsParams } from '@/lib/api/goals';
 
 export type GoalListParams = Omit<GetGoalsParams, 'cursor'>;
@@ -7,7 +8,8 @@ export const goalKeys = {
   all: ['goals'] as const,
   lists: () => [...goalKeys.all, 'list'] as const,
   list: (params: GoalListParams) => [...goalKeys.lists(), params] as const,
-  detail: (goalId: number) => [...goalKeys.all, 'detail', goalId] as const,
+  details: () => [...goalKeys.all, 'detail'] as const,
+  detail: (goalId: number) => [...goalKeys.details(), goalId] as const,
 };
 
 export const goalQueries = {

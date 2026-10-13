@@ -5,7 +5,13 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { createNote, getNote, getNotes, updateNote } from '@/lib/api/notes';
+import {
+  createNote,
+  deleteNote,
+  getNote,
+  getNotes,
+  updateNote,
+} from '@/lib/api/notes';
 import type { GetNotesParams, UpdateNoteBody } from '@/types/api/note';
 
 // 캐시 키를 한곳에서 관리합니다. 노트 생성·수정·삭제 후
@@ -62,6 +68,22 @@ export function useUpdateNoteMutation(noteId: number) {
       queryClient.setQueryData(noteKeys.detail(noteId), updatedNote);
       // 목록은 제목 등이 바뀌었으니 다시 불러오도록 표시
       return queryClient.invalidateQueries({ queryKey: noteKeys.lists() });
+    },
+  });
+}
+
+export function useDeleteNoteMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (noteId: number) => deleteNote(noteId),
+    onSuccess: (_data, noteId) => {
+      // 지워진 노트의 상세 캐시는 더 이상 필요 없으니 제거
+      queryClient.removeQueries({ queryKey: noteKeys.detail(noteId) });
+    },
+    // 재조회를 기다리지 않아야 mutate에 넘긴 onSuccess·onError가 바로 실행됩니다.
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: noteKeys.lists() });
     },
   });
 }

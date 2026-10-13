@@ -80,12 +80,16 @@ export const todoFormSchema = z.object({
     return parsed.url;
   }),
   // FN-TD-26: 선택, 1개. 허용 확장자가 아니면 에러
+  // 새로 고른 파일(File), 수정할 때 그대로 둔 기존 이미지 URL(string), 없음(null) 중 하나입니다.
   image: z
-    .instanceof(File)
+    .union([z.instanceof(File), z.string()])
     .nullable()
-    .refine((file) => !file || hasImageExtension(file.name), {
-      error: TODO_FORM_ERRORS.imageExtensionInvalid,
-    }),
+    .refine(
+      (image) => !(image instanceof File) || hasImageExtension(image.name),
+      { error: TODO_FORM_ERRORS.imageExtensionInvalid },
+    ),
+  // FN-TD-30: 수정 모달의 상태 필드. 생성할 때는 false로 두고 전송하지 않습니다.
+  done: z.boolean(),
 });
 
 const requiredFieldsSchema = todoFormSchema.pick({
@@ -114,4 +118,5 @@ export const EMPTY_TODO_FORM: TodoFormInput = {
   tags: [],
   linkUrl: '',
   image: null,
+  done: false,
 };

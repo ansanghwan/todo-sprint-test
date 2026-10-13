@@ -6,6 +6,7 @@ import DueDateField from './fields/DueDateField';
 import GoalSelectField, { type GoalOption } from './fields/GoalSelectField';
 import ImageField from './fields/ImageField';
 import LinkField from './fields/LinkField';
+import StatusField from './fields/StatusField';
 import TagInputField from './fields/TagInputField';
 import TitleField from './fields/TitleField';
 import {
@@ -33,18 +34,30 @@ interface TodoFormFieldsProps {
   initialGoal?: GoalOption;
   /** 태그 입력란에 적고 아직 추가하지 않은 글자가 바뀔 때 알립니다. */
   onTagDraftChange?: (draft: string) => void;
+  /** 맨 위에 상태(TO DO / DONE) 필드를 보여 줍니다. 수정 모달에서만 씁니다 (FN-TD-29). */
+  showStatus?: boolean;
 }
 
 /**
  * 할 일 폼의 입력 필드 묶음. RHF 값·에러를 각 필드에 연결합니다.
- * 모바일 12px, PC 16px 간격 (Figma TaskForm). 상태 필드는 수정 모달에서만 추가합니다 (FN-TD-29).
+ * 모바일 12px, PC 16px 간격 (Figma TaskForm).
  */
 const TodoFormFields = ({
   control,
   initialGoal,
   onTagDraftChange,
+  showStatus = false,
 }: TodoFormFieldsProps) => (
   <div className="flex flex-col gap-3 md:gap-4">
+    {showStatus && (
+      <Controller
+        control={control}
+        name="done"
+        render={({ field }) => (
+          <StatusField value={field.value} onChange={field.onChange} />
+        )}
+      />
+    )}
     <Controller
       control={control}
       name="title"

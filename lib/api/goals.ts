@@ -2,9 +2,9 @@ import type {
   CreateGoalRequest,
   CreatedGoalDto,
   GoalPageDto,
+  GoalDetailDto,
 } from '@/types/api/goal';
 import { request, requestVoid } from './client-fetcher';
-import type { GoalDetailDto } from '../../types/api/goal';
 
 export type GetGoalsParams = {
   cursor?: number;

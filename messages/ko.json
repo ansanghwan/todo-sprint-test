@@ -23,6 +23,7 @@
     "todo": "할 일",
     "tag": "태그",
     "noNotes": "아직 등록된 노트가 없어요",
+    "deleteNoteError": "노트를 삭제하지 못했어요",
     "writeNote": "노트 작성하기",
     "register": "등록하기",
     "noteTitlePlaceholder": "노트의 제목을 입력해주세요",
@@ -69,6 +70,7 @@
     "myGoals": "{name}님의 목표",
     "goalProgress": "목표 진행도",
     "createTodo": "할 일 생성",
+    "editTodo": "할 일 수정",
     "title": "제목",
     "dueDate": "마감기한",
     "link": "링크",
@@ -118,6 +120,7 @@
       "closeConfirm": "할 일 작성을 취소하시겠어요?",
       "closeWarning": "작성하신 모든 내용이 사라집니다",
       "createError": "할 일을 생성하지 못했어요",
+      "updateError": "할 일을 수정하지 못했어요",
       "errors": {
         "titleRequired": "제목을 입력해주세요",
         "titleTooLong": "제목은 {max}자 이내로 입력해주세요",

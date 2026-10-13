@@ -8,6 +8,7 @@ const normalize = (values: TodoFormInput) => ({
   tags: values.tags.map((tag) => tag.trim()),
   linkUrl: values.linkUrl.trim(),
   image: values.image,
+  done: values.done,
 });
 
 /**
@@ -31,6 +32,7 @@ export const isTodoFormChanged = (
     a.dueDate !== b.dueDate ||
     a.linkUrl !== b.linkUrl ||
     a.image !== b.image ||
+    a.done !== b.done ||
     a.tags.length !== b.tags.length ||
     a.tags.some((tag, index) => tag !== b.tags[index])
   );
