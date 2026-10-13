@@ -2,11 +2,13 @@
 
 import useCurrentUser from '@/hooks/useCurrentUser';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
+import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
+import TodoDetailModal from '@/components/todo/todo-detail/TodoDetailModal';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import { toast } from '@/components/ui/toast/Toaster';
 import {
@@ -60,7 +62,12 @@ export default function Dashboard() {
     Goal,
     'id' | 'title'
   > | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<TodoItemData | null>(null);
+  const [detailTodoId, setDetailTodoId] = useState<number | null>(null);
+  const [editTodoId, setEditTodoId] = useState<number | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Pick<
+    TodoItemData,
+    'id' | 'title'
+  > | null>(null);
   const [refreshVersion, setRefreshVersion] = useState(0);
   const loadedGoalCount = useRef(2);
   const pendingTodoIds = useRef(new Set<number>());
@@ -503,6 +510,7 @@ export default function Dashboard() {
       <div className="md:flex md:flex-wrap md:gap-3 lg:gap-6">
         {/* 최근 등록한일 */}
         <RecentTodosCard
+          onOpenDetail={setDetailTodoId}
           labels={todoLabels}
           todos={recentTodos}
           isLoading={isLoadingRecentTodos}
@@ -575,9 +583,8 @@ export default function Dashboard() {
                         <div className="relative flex flex-wrap items-center gap-3 md:flex-nowrap lg:grid lg:grid-cols-2 lg:gap-8">
                           <div className="w-[calc(100%-3.25rem)] min-w-0 md:w-auto md:flex-1 lg:flex lg:items-center lg:gap-4">
                             <h3 className="text-base font-semibold text-foreground lg:min-w-0 lg:basis-2/5">
-                              {/* TODO: 담당자에게 목표 상세 경로를 확인한 뒤 goal.id로 연결합니다. */}
                               <Link
-                                href="/"
+                                href={`/goals/${goal.id}`}
                                 className="rounded-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                               >
                                 {goal.title}
@@ -692,6 +699,9 @@ export default function Dashboard() {
                                         kebabSlot={
                                           <span className={goalTodoKebabClass}>
                                             <TodoItemKebab
+                                              onEdit={() =>
+                                                setEditTodoId(todo.id)
+                                              }
                                               isWhite
                                               onDelete={() =>
                                                 setDeleteTarget(todo)
@@ -700,10 +710,10 @@ export default function Dashboard() {
                                           </span>
                                         }
                                         showCreateNote={false}
-                                        // 상세·노트 화면은 해당 기능 구현 후 연결합니다.
+                                        // 노트 보기는 별도 연결 단계에서 처리합니다.
                                         onToggleDone={onToggleDone}
                                         onToggleFavorite={onToggleFavorite}
-                                        onOpenDetail={() => undefined}
+                                        onOpenDetail={setDetailTodoId}
                                         onCopyLink={onCopyLink}
                                         onViewNote={() => undefined}
                                         onCreateNote={() => undefined}
@@ -786,6 +796,9 @@ export default function Dashboard() {
                                         kebabSlot={
                                           <span className={goalTodoKebabClass}>
                                             <TodoItemKebab
+                                              onEdit={() =>
+                                                setEditTodoId(todo.id)
+                                              }
                                               isWhite
                                               onDelete={() =>
                                                 setDeleteTarget(todo)
@@ -794,10 +807,10 @@ export default function Dashboard() {
                                           </span>
                                         }
                                         showCreateNote={false}
-                                        // 상세·노트 화면은 해당 기능 구현 후 연결합니다.
+                                        // 노트 보기는 별도 연결 단계에서 처리합니다.
                                         onToggleDone={onToggleDone}
                                         onToggleFavorite={onToggleFavorite}
-                                        onOpenDetail={() => undefined}
+                                        onOpenDetail={setDetailTodoId}
                                         onCopyLink={onCopyLink}
                                         onViewNote={() => undefined}
                                         onCreateNote={() => undefined}
@@ -898,6 +911,23 @@ export default function Dashboard() {
           if (!open) setCreateGoal(null);
         }}
         onCreated={refreshDashboard}
+      />
+      <TodoDetailModal
+        todoId={detailTodoId}
+        onClose={() => setDetailTodoId(null)}
+        onEdit={(todoId) => {
+          setDetailTodoId(null);
+          setEditTodoId(todoId);
+        }}
+        onDelete={(todo) => {
+          setDetailTodoId(null);
+          setDeleteTarget(todo);
+        }}
+      />
+      <TodoEditModal
+        todoId={editTodoId}
+        onClose={() => setEditTodoId(null)}
+        onUpdated={refreshDashboard}
       />
       <DeleteTodoModal
         todo={deleteTarget}

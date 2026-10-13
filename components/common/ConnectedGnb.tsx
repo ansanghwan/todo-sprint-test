@@ -3,12 +3,13 @@
 import GoalCreateModal from '@/components/goal/goal-create/GoalCreateModal';
 import useCreateGoal from '@/hooks/goal/useCreateGoal';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
-import Gnb, { type MenuId } from '@/components/common/Gnb';
+import Gnb, { type GoalMenuState, type MenuId } from '@/components/common/Gnb';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useRef, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { logout } from '@/lib/api/auth';
 import { toast } from '@/components/ui/toast/Toaster';
+import { goalQueries } from '@/queries/goal';
 import useCurrentUser from '@/hooks/useCurrentUser';
 
 /**
@@ -19,7 +20,7 @@ import useCurrentUser from '@/hooks/useCurrentUser';
  * props로 전달합니다. Gnb는 전달받은 내용을 표시하고 메뉴 열기·닫기 등 UI 동작을 담당합니다.
  * 데이터 조회와 화면 동작을 분리해 Gnb 안에 API 연결 코드가 늘어나지 않도록 합니다.
  *
- * 향후 목표 목록·알림 API도 이곳에서 연결해 Gnb에 전달할 수 있습니다(현재는 미연동).
+ * 목표 목록은 아코디언을 펼칠 때 20개씩 조회합니다. 알림 API는 아직 미연동입니다.
  * 페이지 본문의 사용자 정보는 이 컴포넌트에서 전달하지 않으며,
  * 필요한 화면에서 useCurrentUser를 사용해 동일한 React Query 캐시를 공유합니다.
  */
@@ -29,6 +30,20 @@ export default function ConnectedGnb() {
   const createGoal = useCreateGoal();
   const pathname = usePathname();
   const router = useRouter();
+  const [isGoalMenuExpanded, setIsGoalMenuExpanded] = useState(false);
+  const goalMenuQuery = useInfiniteQuery({
+    ...goalQueries.list({ limit: 20 }),
+    enabled: isGoalMenuExpanded,
+  });
+  const loadMoreGoals = () => {
+    if (
+      goalMenuQuery.hasNextPage &&
+      !goalMenuQuery.isFetching &&
+      !goalMenuQuery.isError
+    ) {
+      void goalMenuQuery.fetchNextPage({ cancelRefetch: false });
+    }
+  };
   const queryClient = useQueryClient();
   const loggingOut = useRef(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -71,9 +86,33 @@ export default function ConnectedGnb() {
     favorites: '찜한 할 일',
     mypage: '내 정보 관리',
   };
+  const retryGoals = () => {
+    if (goalMenuQuery.isFetchNextPageError) {
+      void goalMenuQuery.fetchNextPage({ cancelRefetch: false });
+    } else {
+      void goalMenuQuery.refetch();
+    }
+  };
+
+  // 목표 조회 결과와 동작을 한곳에서 정리해, Gnb에는 화면에 필요한 값만 전달합니다.
+  const goalMenu: GoalMenuState = {
+    goals: goalMenuQuery.data?.pages.flatMap((page) => page.goals) ?? [],
+    selectedGoalId: pathname.startsWith('/goals/')
+      ? Number(pathname.split('/')[2])
+      : undefined,
+    isPending: goalMenuQuery.isPending,
+    isFetching: goalMenuQuery.isFetching,
+    isError: goalMenuQuery.isError,
+    hasNextPage: !!goalMenuQuery.hasNextPage,
+    onExpand: setIsGoalMenuExpanded,
+    onLoadMore: loadMoreGoals,
+    onRetry: retryGoals,
+  };
+
   return (
     <>
       <Gnb
+        goalMenu={goalMenu}
         onCreateTodo={() => setIsCreateOpen(true)}
         onCreateGoal={() => setIsGoalCreateOpen(true)}
         onLogout={() => void handleLogout()}

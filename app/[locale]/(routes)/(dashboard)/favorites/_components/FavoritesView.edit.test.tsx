@@ -16,6 +16,11 @@ import FavoritesView from './FavoritesView';
  * 통합 검증: mock 서버(mockTodosApi)에 모든 할 일·찜한 할 일 화면을 차례로 붙여
  * 찜 목록 캐시가 있는 상태에서 수정 저장이 찜 화면에도 반영되는지 확인합니다.
  */
+const { push } = vi.hoisted(() => ({ push: vi.fn() }));
+vi.mock('@/i18n/navigation', () => ({
+  useRouter: () => ({ push }),
+}));
+
 vi.mock('@/components/ui/toast/Toaster', () => ({
   toast: { error: vi.fn(), success: vi.fn() },
 }));

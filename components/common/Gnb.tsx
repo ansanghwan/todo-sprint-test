@@ -10,7 +10,20 @@ import { getProfileImageProps } from '@/lib/user/profileImage';
 export type MenuId =
   'dashboard' | 'goal' | 'calendar' | 'board' | 'favorites' | 'notes';
 
+export type GoalMenuState = {
+  goals: { id: number; title: string }[];
+  selectedGoalId?: number;
+  isPending: boolean;
+  isFetching: boolean;
+  isError: boolean;
+  hasNextPage: boolean;
+  onExpand: (open: boolean) => void;
+  onLoadMore: () => void;
+  onRetry: () => void;
+};
+
 type GnbProps = {
+  goalMenu?: GoalMenuState;
   activeMenu?: MenuId | null;
   onCreateTodo?: () => void;
   onCreateGoal?: () => void;
@@ -25,6 +38,7 @@ type GnbProps = {
 };
 
 export default function Gnb({
+  goalMenu,
   activeMenu = null,
   onCreateTodo,
   onCreateGoal,
@@ -183,9 +197,9 @@ export default function Gnb({
           {pageTitle}
         </span>
         {/* 모바일: 메뉴를 닫았을 때 상단 헤더에서만 표시합니다. */}
-        <div className="shrink-0 md:hidden">
+        {/* 개발 미완료로 잠쉬 숨김 처리 <div className="shrink-0 md:hidden">
           <NotificationButton {...notificationProps} compact />
-        </div>
+        </div> */}
         {/* 태블릿은 open=false, PC는 open=true일 때 접힌 상태입니다.
             펼친 상태의 알림은 아래 내 정보 링크 옆에서 표시합니다. */}
         <div className="hidden justify-center md:max-lg:group-data-[open=false]/gnb:flex lg:group-data-[open=true]/gnb:flex">
@@ -245,10 +259,9 @@ export default function Gnb({
                   />
                 </li>
                 {/* 시연에서는 목표 메뉴를 숨깁니다. 목표 목록 연동 후 복구합니다. */}
-                <li hidden>
+                <li>
                   <SideMenuAccordion
                     title="목표"
-                    href="/"
                     icon={
                       <SideMenuIcon
                         name="flag"
@@ -256,34 +269,55 @@ export default function Gnb({
                       />
                     }
                     active={activeMenu === 'goal'}
+                    onExpand={goalMenu?.onExpand}
+                    onLoadMore={goalMenu?.onLoadMore}
+                    canLoadMore={
+                      !!goalMenu?.hasNextPage &&
+                      !goalMenu.isFetching &&
+                      !goalMenu.isError
+                    }
                   >
-                    {/* 임시 목표 목록입니다. 실제 목표 데이터와 주소로 교체합니다.
-                        개발 연동: 아래 Link의 data-active를 선택한 목표 여부에 연결해주세요.
-                        예: data-active={selectedGoalId === goal.id}
-                        true이면 글자색만 orange-700(#DC5203)으로 표시합니다.
-                        false이면 기본 스타일을 표시합니다.
-                        data-active는 li가 아닌 Link에 지정하며, 선택한 항목만 true로 유지해주세요.
-                        현재 임시 항목은 활성화하지 않습니다.
-                    */}
-                    <li>
-                      <Link
-                        href="#"
-                        data-active="false"
-                        className="block truncate px-6 py-2 focus-visible:outline-2 focus-visible:outline-orange-500 data-[active=false]:hover:text-orange-700 data-[active=true]:text-orange-700"
-                      >
-                        자바스크립트로 웹 서비스 만들기
-                      </Link>
-                    </li>
-
-                    <li>
-                      <Link
-                        href="#"
-                        data-active="false"
-                        className="block truncate px-6 py-2 focus-visible:outline-2 focus-visible:outline-orange-500 data-[active=false]:hover:text-orange-700 data-[active=true]:text-orange-700"
-                      >
-                        자바스크립트로 웹 서비스 만들기
-                      </Link>
-                    </li>
+                    {goalMenu?.goals.map((goal) => (
+                      <li key={goal.id}>
+                        <Link
+                          href={`/goals/${goal.id}`}
+                          onClick={closeMenu}
+                          data-active={goalMenu.selectedGoalId === goal.id}
+                          aria-current={
+                            goalMenu.selectedGoalId === goal.id
+                              ? 'page'
+                              : undefined
+                          }
+                          className="block truncate px-6 py-2 focus-visible:outline-2 focus-visible:outline-orange-500 data-[active=false]:hover:text-orange-700 data-[active=true]:text-orange-700"
+                        >
+                          {goal.title}
+                        </Link>
+                      </li>
+                    ))}
+                    {goalMenu?.isFetching && (
+                      <li role="status" className="px-6 py-2 text-muted">
+                        목표를 불러오는 중입니다.
+                      </li>
+                    )}
+                    {goalMenu?.isError && (
+                      <li className="px-6 py-2">
+                        <button
+                          type="button"
+                          onClick={goalMenu.onRetry}
+                          className="text-orange-600 hover:underline"
+                        >
+                          다시 시도
+                        </button>
+                      </li>
+                    )}
+                    {goalMenu &&
+                      !goalMenu.isPending &&
+                      !goalMenu.isError &&
+                      goalMenu.goals.length === 0 && (
+                        <li className="px-6 py-2 text-muted">
+                          등록된 목표가 없어요
+                        </li>
+                      )}
                   </SideMenuAccordion>
                 </li>
                 <li>
@@ -308,6 +342,14 @@ export default function Gnb({
                     title="노트 모아보기"
                     icon="note"
                     active={activeMenu === 'notes'}
+                  />
+                </li>
+                <li>
+                  <SideMenuLink
+                    href="/favorites"
+                    title="찜한 할 일"
+                    icon="star"
+                    active={activeMenu === 'favorites'}
                   />
                 </li>
               </ul>
@@ -401,9 +443,9 @@ export default function Gnb({
                   </Link>
                 </li>
                 {/* 모바일에서는 숨깁니다. md 이상은 펼친 메뉴에서만 접근 가능합니다. */}
-                <li className="hidden shrink-0 md:block">
+                {/*  개발 미완료로 잠쉬 숨김 처리 <li className="hidden shrink-0 md:block">
                   <NotificationButton {...notificationProps} />
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>
@@ -475,7 +517,9 @@ function SideMenuIcon({
 // 각 사용 위치마다 상태와 ID가 독립적입니다. 추후 타입과 함수를 별도 파일로 옮길 수 있습니다.
 type SideMenuAccordionProps = {
   title: string;
-  href: string;
+  onExpand?: (open: boolean) => void;
+  onLoadMore?: () => void;
+  canLoadMore?: boolean;
   icon?: ReactNode;
   defaultOpen?: boolean;
   active?: boolean;
@@ -484,7 +528,9 @@ type SideMenuAccordionProps = {
 
 function SideMenuAccordion({
   title,
-  href,
+  onExpand,
+  onLoadMore,
+  canLoadMore = false,
   icon,
   defaultOpen = false,
   active = false,
@@ -492,48 +538,56 @@ function SideMenuAccordion({
 }: SideMenuAccordionProps) {
   const [isExpanded, setIsExpanded] = useState(defaultOpen);
   const panelId = useId();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    if (!isExpanded || !canLoadMore || !onLoadMore || !sentinelRef.current)
+      return;
+    // 페이지 전체가 아닌 목표 목록 내부의 끝을 감시해 미리 추가 조회합니다.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) onLoadMore();
+      },
+      { root: scrollRef.current, rootMargin: '0px 0px 64px 0px' },
+    );
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [isExpanded, canLoadMore, onLoadMore]);
 
   return (
     <div className="group/side-menu-accordion" data-open={isExpanded}>
-      {/* 제목 링크는 페이지 선택, 화살표 버튼은 펼침만 담당합니다. 서로 중첩하지 않습니다. */}
-      <div
+      <button
+        type="button"
         data-active={active}
-        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-orange-menu-active data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg"
+        aria-label={`${title} 목록 ${isExpanded ? '접기' : '펼치기'}`}
+        aria-expanded={isExpanded}
+        aria-controls={panelId}
+        onClick={() => {
+          const next = !isExpanded;
+          setIsExpanded(next);
+          onExpand?.(next);
+        }}
+        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg"
       >
-        <Link
-          href={href}
+        {icon && (
+          <span className="flex shrink-0 items-center" aria-hidden="true">
+            {icon}
+          </span>
+        )}
+        <span className="min-w-0 flex-1 truncate">{title}</span>
+        <span
+          aria-hidden="true"
           data-active={active}
-          aria-current={active ? 'page' : undefined}
-          className="flex min-w-0 flex-1 items-center gap-2 self-stretch focus-visible:outline-2 focus-visible:outline-grayscale-500"
-        >
-          {icon && (
-            <span className="flex shrink-0 items-center" aria-hidden="true">
-              {icon}
-            </span>
-          )}
-          <span className="min-w-0 flex-1 truncate">{title}</span>
-        </Link>
-        <button
-          type="button"
-          aria-label={`${title} 목록 ${isExpanded ? '접기' : '펼치기'}`}
-          aria-expanded={isExpanded}
-          aria-controls={panelId}
-          onClick={() => setIsExpanded((previous) => !previous)}
-          className="flex w-6 shrink-0 items-center justify-center self-stretch focus-visible:outline-2 focus-visible:outline-grayscale-500"
-        >
-          <span
-            aria-hidden="true"
-            data-active={active}
-            className="size-6 shrink-0 rotate-180 bg-grayscale-400 transition-transform duration-300 group-data-[open=true]/side-menu-accordion:rotate-0 data-[active=true]:bg-orange-700 motion-reduce:transition-none"
-            style={{
-              maskImage: 'url(/icons/gnb/icon_arrow_up.svg)',
-              maskSize: 'contain',
-              maskPosition: 'center',
-              maskRepeat: 'no-repeat',
-            }}
-          />
-        </button>
-      </div>
+          className="size-6 shrink-0 rotate-180 bg-grayscale-400 transition-transform duration-300 group-data-[open=true]/side-menu-accordion:rotate-0 data-[active=true]:bg-orange-700 motion-reduce:transition-none"
+          style={{
+            maskImage: 'url(/icons/gnb/icon_arrow_up.svg)',
+            maskSize: 'contain',
+            maskPosition: 'center',
+            maskRepeat: 'no-repeat',
+          }}
+        />
+      </button>
 
       {/* 높이 애니메이션 영역. 닫는 즉시 내부 키보드·스크린리더 접근도 차단합니다. */}
       <div
@@ -543,9 +597,15 @@ function SideMenuAccordion({
         className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out group-data-[open=true]/side-menu-accordion:grid-rows-[1fr] motion-reduce:transition-none"
       >
         <div className="min-h-0 overflow-hidden">
-          {/* 모바일은 높이 제한 없이, md 이상은 최대 6.5rem(104px)까지 표시 후 내부 스크롤합니다. */}
-          <div className="scrollbar-thin md:max-h-26 md:overflow-y-auto md:overscroll-contain">
-            <ul className="pt-2 text-sm font-semibold">{children}</ul>
+          {/* 기존 최대 높이 104px을 유지하고 모바일도 같은 내부 스크롤을 사용합니다. */}
+          <div
+            ref={scrollRef}
+            className="max-h-26 scrollbar-thin overflow-y-auto overscroll-contain"
+          >
+            <ul className="pt-2 text-sm font-semibold">
+              {children}
+              <li ref={sentinelRef} aria-hidden="true" className="h-px" />
+            </ul>
           </div>
         </div>
       </div>

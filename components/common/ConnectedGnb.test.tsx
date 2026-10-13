@@ -1,4 +1,5 @@
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -6,12 +7,12 @@ import {
   within,
 } from '@testing-library/react';
 import { useQuery } from '@tanstack/react-query';
-import { beforeEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import type { AnchorHTMLAttributes } from 'react';
 import TestProviders from '@/test/TestProviders';
 import { getMe } from '@/lib/api/user';
 import { userQueries } from '@/queries/user';
-import { createGoal } from '@/lib/api/goals';
+import { createGoal, getGoals } from '@/lib/api/goals';
 import { logout } from '@/lib/api/auth';
 import ConnectedGnb from './ConnectedGnb';
 import type { TodoCreateModalProps } from '@/components/todo/todo-create/TodoCreateModal';
@@ -51,7 +52,7 @@ vi.mock('@/components/todo/todo-create/TodoCreateModal', () => ({
       </div>
     ) : null,
 }));
-vi.mock('@/lib/api/goals', () => ({ createGoal: vi.fn() }));
+vi.mock('@/lib/api/goals', () => ({ createGoal: vi.fn(), getGoals: vi.fn() }));
 vi.mock('@/lib/api/auth', () => ({ logout: vi.fn() }));
 vi.mock('@/components/ui/toast/Toaster', () => ({
   toast: { error: toastError },
@@ -171,14 +172,12 @@ it('시연 메뉴를 숨기고 실제 경로를 연결한다', async () => {
   const nav = within(screen.getByRole('navigation'));
   expect(nav.queryByRole('link', { name: '목표' })).not.toBeInTheDocument();
   expect(screen.queryByRole('link', { name: '설정' })).not.toBeInTheDocument();
-  expect(
-    nav.queryByRole('link', { name: '찜한 할 일' }),
-  ).not.toBeInTheDocument();
   for (const [name, href] of [
     ['대시보드', '/dashboard'],
     ['캘린더', '/calendar'],
     ['소통 게시판', '/posts'],
     ['노트 모아보기', '/notes'],
+    ['찜한 할 일', '/favorites'],
   ]) {
     expect(nav.getByRole('link', { name })).toHaveAttribute('href', href);
   }
@@ -309,4 +308,83 @@ it('목표 생성 실패 시 팝업과 입력값을 유지하고 재시도할 �
   await waitFor(() => expect(toastError).toHaveBeenCalled());
   expect(input).toHaveValue('프로젝트 완성');
   expect(screen.getByRole('button', { name: '등록하기' })).toBeEnabled();
+});
+
+afterEach(() => vi.unstubAllGlobals());
+
+it('목표를 펼칠 때 20개를 조회하고 내부 끝에서 추가 조회하며 실패 후 재시도한다', async () => {
+  let notify: IntersectionObserverCallback;
+  let observerOptions: IntersectionObserverInit | undefined;
+  vi.stubGlobal(
+    'IntersectionObserver',
+    class {
+      constructor(
+        callback: IntersectionObserverCallback,
+        options: IntersectionObserverInit,
+      ) {
+        notify = callback;
+        observerOptions = options;
+      }
+      observe() {}
+      disconnect() {}
+    },
+  );
+  const goal = (id: number) => ({
+    id,
+    title: `목표 ${id}`,
+    teamId: 'test',
+    userId: 1,
+    todoCount: 0,
+    completedCount: 0,
+    createdAt: '',
+    updatedAt: '',
+  });
+  vi.mocked(getGoals)
+    .mockResolvedValueOnce({
+      goals: Array.from({ length: 20 }, (_, i) => goal(i + 1)),
+      totalCount: 21,
+      nextCursor: 20,
+    })
+    .mockRejectedValueOnce(new Error('Offline'))
+    .mockResolvedValueOnce({
+      goals: [goal(21)],
+      totalCount: 21,
+      nextCursor: null,
+    });
+  render(
+    <TestProviders>
+      <ConnectedGnb />
+    </TestProviders>,
+  );
+  expect(getGoals).not.toHaveBeenCalled();
+  fireEvent.click(
+    screen.getByRole('button', { name: '목표 목록 펼치기', hidden: true }),
+  );
+  expect(
+    await screen.findByRole('link', { name: '목표 20', hidden: true }),
+  ).toHaveAttribute('href', '/goals/20');
+  expect(getGoals).toHaveBeenCalledWith(
+    expect.objectContaining({ limit: 20 }),
+    expect.anything(),
+  );
+  expect(observerOptions?.root).toHaveClass('max-h-26', 'overflow-y-auto');
+  act(() =>
+    notify(
+      [{ isIntersecting: true } as IntersectionObserverEntry],
+      {} as IntersectionObserver,
+    ),
+  );
+  await screen.findByRole('button', { name: '다시 시도', hidden: true });
+  expect(
+    screen.getByRole('link', { name: '목표 1', hidden: true }),
+  ).toBeInTheDocument();
+  fireEvent.click(
+    screen.getByRole('button', { name: '다시 시도', hidden: true }),
+  );
+  await screen.findByRole('link', { name: '목표 21', hidden: true });
+  expect(getGoals).toHaveBeenLastCalledWith(
+    expect.objectContaining({ limit: 20, cursor: 20 }),
+    expect.anything(),
+  );
+  expect(getGoals).toHaveBeenCalledTimes(3);
 });

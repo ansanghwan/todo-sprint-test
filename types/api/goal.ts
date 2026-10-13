@@ -1,4 +1,3 @@
-import type { TodoDto } from '@/types/api/todo';
 /** 목표 API(GET /{teamId}/goals) 응답 DTO입니다. 서버 스펙을 그대로 따릅니다. */
 export interface GoalDto {
   id: number;
@@ -24,7 +23,20 @@ export interface CreateGoalRequest {
 
 export type CreatedGoalDto = Omit<GoalDto, 'todoCount' | 'completedCount'>;
 
-/** GET /goals/{goalId} 응답. 목표에 속한 할 일 목록이 함께 옵니다. */
-export type GoalDetailDto = CreatedGoalDto & {
-  todos: TodoDto[];
-};
+export interface GoalTodoDto {
+  id: number;
+  title: string;
+  done: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GoalDetailDto {
+  id: number;
+  teamId: string;
+  userId: number;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  todos: GoalTodoDto[];
+}

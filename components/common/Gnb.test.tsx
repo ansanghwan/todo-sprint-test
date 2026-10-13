@@ -57,7 +57,6 @@ describe('주 메뉴 활성 상태', () => {
       '캘린더',
       '소통 게시판',
       '노트 모아보기',
-      '목표',
     ]) {
       const link = menu().getByRole('link', { name: title, hidden: true });
       const event = new MouseEvent('click', {
@@ -80,7 +79,7 @@ describe('주 메뉴 활성 상태', () => {
       'page',
     );
     expect(
-      menu().getByRole('link', { name: '목표', hidden: true }),
+      menu().getByRole('button', { name: '목표 목록 펼치기', hidden: true }),
     ).not.toHaveAttribute('aria-current');
   });
 
