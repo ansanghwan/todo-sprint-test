@@ -24,6 +24,9 @@ export type GetTodosParams = {
 export const getTodos = (params: GetTodosParams, signal?: AbortSignal) =>
   request<TodoPageDto>({ url: '/todos', params, signal });
 
+export const getTodo = (todoId: number, signal?: AbortSignal) =>
+  request<TodoDto>({ url: `/todos/${todoId}`, signal });
+
 /** 최근 등록한 할 일을 서버에서 최신순으로 최대 4개 조회합니다. */
 export async function getRecentTodos(signal?: AbortSignal): Promise<TodoDto[]> {
   const data = await getTodos({ sort: 'latest', limit: 4 }, signal);

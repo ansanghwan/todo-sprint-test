@@ -17,9 +17,11 @@ const useCreateTodo = () => {
 
   return useMutation({
     mutationFn: async (values: TodoFormOutput) => {
-      const fileUrl = values.image
-        ? await uploadImage(values.image)
-        : undefined;
+      // 생성 폼의 이미지는 새로 고른 파일뿐이라 File일 때만 올립니다.
+      const fileUrl =
+        values.image instanceof File
+          ? await uploadImage(values.image)
+          : undefined;
 
       return createTodo(toCreateTodoRequest(values, fileUrl));
     },

@@ -1,6 +1,6 @@
-import { infiniteQueryOptions } from '@tanstack/react-query';
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 
-import { getTodos, type GetTodosParams } from '@/lib/api/todos';
+import { getTodo, getTodos, type GetTodosParams } from '@/lib/api/todos';
 
 export type TodoListParams = Omit<GetTodosParams, 'cursor'>;
 
@@ -8,6 +8,8 @@ export const todoKeys = {
   all: ['todos'] as const,
   lists: () => [...todoKeys.all, 'list'] as const,
   list: (params: TodoListParams) => [...todoKeys.lists(), params] as const,
+  details: () => [...todoKeys.all, 'detail'] as const,
+  detail: (todoId: number) => [...todoKeys.details(), todoId] as const,
 };
 
 export const todoQueries = {
@@ -18,5 +20,10 @@ export const todoQueries = {
         getTodos({ ...params, cursor: pageParam }, signal),
       initialPageParam: undefined as number | undefined,
       getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    }),
+  detail: (todoId: number) =>
+    queryOptions({
+      queryKey: todoKeys.detail(todoId),
+      queryFn: ({ signal }) => getTodo(todoId, signal),
     }),
 };

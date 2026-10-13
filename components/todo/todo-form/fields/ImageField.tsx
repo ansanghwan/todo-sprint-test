@@ -11,14 +11,16 @@ import type { TodoFormErrorKey } from '../todoFormSchema';
 import FieldLayout from './FieldLayout';
 
 interface ImageFieldProps {
-  value: File | null;
-  onChange: (file: File | null) => void;
+  /** 새로 고른 파일(File), 이미 올라가 있는 이미지 URL(string), 없음(null) */
+  value: File | string | null;
+  onChange: (image: File | null) => void;
   error?: TodoFormErrorKey;
 }
 
 /**
  * 이미지 1개 첨부 (FN-TD-26). 선택하면 미리보기만 보여 주고, 실제 업로드는 제출할 때 합니다.
  * 허용하지 않는 확장자는 첨부하지 않고 에러만 보여 줍니다.
+ * 수정 모달에서는 기존 이미지 URL을 보여 주고, 삭제하면 null, 새 파일로 바꾸면 File이 됩니다.
  */
 const ImageField = ({ value, onChange, error }: ImageFieldProps) => {
   const t = useTranslations('Todo');
@@ -28,7 +30,8 @@ const ImageField = ({ value, onChange, error }: ImageFieldProps) => {
   const errorId = `${id}-error`;
   const helpId = `${id}-help`;
   const inputRef = useRef<HTMLInputElement>(null);
-  const previewRef = useImagePreview(value);
+  const newFile = value instanceof File ? value : null;
+  const previewRef = useImagePreview(newFile);
   // 고른 파일을 첨부하지 못한 이유. 폼 검증 에러(error)보다 먼저 보여 줍니다.
   const [selectError, setSelectError] = useState<TodoFormErrorKey>();
   const shownError = selectError ?? error;
@@ -78,13 +81,22 @@ const ImageField = ({ value, onChange, error }: ImageFieldProps) => {
 
         {value ? (
           <div className="relative h-25.25 w-40 overflow-hidden rounded-2xl border border-grayscale-300 bg-grayscale-50">
-            {/* 브라우저가 만든 임시 blob URL이라 next/image 최적화 대상이 아닙니다. src는 useImagePreview가 넣습니다. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              ref={previewRef}
-              alt={t('form.imagePreview')}
-              className="size-full object-cover"
-            />
+            {/* 새 파일은 브라우저 임시 blob URL(useImagePreview가 src를 넣음), 기존 이미지는 업로드 서버 URL이라 next/image 최적화 대상이 아닙니다. */}
+            {newFile ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                ref={previewRef}
+                alt={t('form.imagePreview')}
+                className="size-full object-cover"
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={value}
+                alt={t('form.imagePreview')}
+                className="size-full object-cover"
+              />
+            )}
             <button
               type="button"
               aria-label={t('form.removeImage')}

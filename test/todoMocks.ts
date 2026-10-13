@@ -84,6 +84,12 @@ interface MockTodosApiOptions {
   failUpload?: boolean;
   /** 수정·삭제·찜 요청을 모두 실패시킵니다. */
   failMutations?: boolean;
+  /** id별로 할 일 값을 덮어씁니다 (기존 이미지, 규격 밖 데이터 등). */
+  todoOverrides?: Record<number, Partial<TodoDto>>;
+  /** GET /todos/{id}를 실패시킵니다. */
+  failDetail?: boolean;
+  /** GET /todos/{id}에 응답하지 않고 로딩 상태로 둡니다. */
+  isDetailPending?: boolean;
 }
 
 /** 배열을 cursor(다음에 줄 항목의 1부터 센 위치)로 잘라 줍니다. */
@@ -123,15 +129,54 @@ export const mockTodosApi = ({
   failCreate = false,
   failUpload = false,
   failMutations = false,
+  todoOverrides = {},
+  failDetail = false,
+  isDetailPending = false,
 }: MockTodosApiOptions) => {
   const originalAdapter = api.defaults.adapter;
   const originalUploadAdapter = axios.defaults.adapter;
   let todoRequestCount = 0;
   let nextTodoId = totalCount + 1;
   const todos = Array.from({ length: totalCount }, (_, i) =>
-    makeTodo(i + 1, hasDone ? {} : { done: false }),
+    makeTodo(i + 1, {
+      ...(hasDone ? {} : { done: false }),
+      ...todoOverrides[i + 1],
+    }),
   );
   const goals = Array.from({ length: goalCount }, (_, i) => makeGoal(i + 1));
+
+  // GET /todos/{id}
+  const getTodoResponse = async (config: InternalAxiosRequestConfig) => {
+    const label = `[mock GET ${config.url}]`;
+    if (isDetailPending) {
+      console.info(`${label} → 응답 없음(로딩 유지)`);
+      return new Promise<never>(() => {});
+    }
+    await wait(delay);
+    const todo = todos.find(
+      ({ id }) => id === Number(config.url?.split('/')[2]),
+    );
+    if (failDetail || !todo) {
+      console.info(`${label} → 실패`);
+      throw new Error('mock network error');
+    }
+    console.info(`${label} → 성공`);
+    return ok(structuredClone(todo), config);
+  };
+
+  // PATCH 본문(태그 이름 배열, goalId)을 서버 응답 형태(태그 객체, goal)로 바꿔 저장합니다.
+  const applyTodoPatch = (todo: TodoDto, patch: Record<string, unknown>) => {
+    const { tags, goalId, ...rest } = patch;
+    Object.assign(todo, rest);
+    if (Array.isArray(tags)) {
+      todo.tags = tags.map((name, index) => ({ id: index + 1, name }));
+    }
+    if (goalId !== undefined) {
+      const goal = goals.find(({ id }) => id === goalId);
+      todo.goalId = goal?.id ?? null;
+      todo.goal = goal ? { id: goal.id, title: goal.title } : null;
+    }
+  };
 
   const getTodosResponse = async (config: InternalAxiosRequestConfig) => {
     const requestIndex = todoRequestCount;
@@ -244,7 +289,7 @@ export const mockTodosApi = ({
     if (sub === 'favorites') {
       todos[index].isFavorite = method === 'POST';
     } else if (method === 'PATCH') {
-      Object.assign(todos[index], JSON.parse(config.data ?? '{}'));
+      applyTodoPatch(todos[index], JSON.parse(config.data ?? '{}'));
     } else if (method === 'DELETE') {
       todos.splice(index, 1);
     }
@@ -266,6 +311,9 @@ export const mockTodosApi = ({
     }
     if (config.url === '/images' && method === 'POST') {
       return createImageUrlResponse(config);
+    }
+    if (/^\/todos\/\d+$/.test(config.url ?? '') && method === 'GET') {
+      return getTodoResponse(config);
     }
     if (config.url?.startsWith('/todos/')) {
       return mutateTodoResponse(config, method);

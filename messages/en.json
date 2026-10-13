@@ -70,6 +70,7 @@
     "myGoals": "{name}'s Goals",
     "goalProgress": "Goal Progress",
     "createTodo": "Create To-do",
+    "editTodo": "Edit To-do",
     "title": "Title",
     "dueDate": "Due Date",
     "link": "Link",
@@ -119,6 +120,7 @@
       "closeConfirm": "Would you like to cancel writing this to-do?",
       "closeWarning": "All the content you have written will be lost.",
       "createError": "Couldn't create the to-do.",
+      "updateError": "Couldn't update the to-do.",
       "errors": {
         "titleRequired": "Enter a title.",
         "titleTooLong": "The title must be {max} characters or fewer.",

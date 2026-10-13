@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
+import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
 import TodoItem from '@/components/todo/TodoItem';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import type { TodoNoteActions } from '@/components/todo/todoNoteActions';
@@ -62,6 +63,7 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
     TodoDto,
     'id' | 'title'
   > | null>(null);
+  const [editTodoId, setEditTodoId] = useState<number | null>(null);
 
   useEffect(() => {
     if (isError) {
@@ -118,6 +120,7 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
             onCreateNote={noteActions?.onCreateNote ?? noteNotConnected}
             kebabSlot={
               <TodoItemKebab
+                onEdit={() => setEditTodoId(todo.id)}
                 onDelete={() =>
                   setDeleteTarget({ id: todo.id, title: todo.title })
                 }
@@ -151,6 +154,7 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
         todo={deleteTarget}
         onClose={() => setDeleteTarget(null)}
       />
+      <TodoEditModal todoId={editTodoId} onClose={() => setEditTodoId(null)} />
     </>
   );
 };
