@@ -172,14 +172,12 @@ it('시연 메뉴를 숨기고 실제 경로를 연결한다', async () => {
   const nav = within(screen.getByRole('navigation'));
   expect(nav.queryByRole('link', { name: '목표' })).not.toBeInTheDocument();
   expect(screen.queryByRole('link', { name: '설정' })).not.toBeInTheDocument();
-  expect(
-    nav.queryByRole('link', { name: '찜한 할 일' }),
-  ).not.toBeInTheDocument();
   for (const [name, href] of [
     ['대시보드', '/dashboard'],
     ['캘린더', '/calendar'],
     ['소통 게시판', '/posts'],
     ['노트 모아보기', '/notes'],
+    ['찜한 할 일', '/favorites'],
   ]) {
     expect(nav.getByRole('link', { name })).toHaveAttribute('href', href);
   }

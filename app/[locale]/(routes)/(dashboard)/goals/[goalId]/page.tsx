@@ -17,6 +17,7 @@ import TodoItem from '@/components/todo/TodoItem';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
 import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
+import TodoDetailModal from '@/components/todo/todo-detail/TodoDetailModal';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import useTodoItemActions from '@/hooks/todo/useTodoItemActions';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
@@ -37,6 +38,7 @@ export default function GoalDetailPage() {
   const labels = useTodoItemLabels();
   const isTablet = useMediaQuery('(min-width: 46.5rem)');
   const router = useRouter();
+  const [detailTodoId, setDetailTodoId] = useState<number | null>(null);
   const [editTodoId, setEditTodoId] = useState<number | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Pick<
     TodoDto,
@@ -243,10 +245,9 @@ export default function GoalDetailPage() {
                           size={isTablet ? 'large' : 'small'}
                           className={goalTodoItemClass}
                           {...actions}
-                          // 할 일 상세 열기는 기존 다른 목록과 같이 별도 연동 단계에서 연결합니다.
-                          onOpenDetail={() => {}}
+                          onOpenDetail={setDetailTodoId}
                           onCreateNote={(todoId) =>
-                            router.push(`/notes/note/write?todoId=${todoId}`)
+                            router.push(`/note/write?todoId=${todoId}`)
                           }
                           onViewNote={() => router.push(`/notes?goalId=${id}`)}
                           kebabSlot={
@@ -351,10 +352,9 @@ export default function GoalDetailPage() {
                           size={isTablet ? 'large' : 'small'}
                           className={goalTodoItemClass}
                           {...actions}
-                          // 할 일 상세 열기는 기존 다른 목록과 같이 별도 연동 단계에서 연결합니다.
-                          onOpenDetail={() => {}}
+                          onOpenDetail={setDetailTodoId}
                           onCreateNote={(todoId) =>
-                            router.push(`/notes/note/write?todoId=${todoId}`)
+                            router.push(`/note/write?todoId=${todoId}`)
                           }
                           onViewNote={() => router.push(`/notes?goalId=${id}`)}
                           kebabSlot={
@@ -424,6 +424,18 @@ export default function GoalDetailPage() {
           </div>
         </div>
       </div>
+      <TodoDetailModal
+        todoId={detailTodoId}
+        onClose={() => setDetailTodoId(null)}
+        onEdit={(todoId) => {
+          setDetailTodoId(null);
+          setEditTodoId(todoId);
+        }}
+        onDelete={(todo) => {
+          setDetailTodoId(null);
+          setDeleteTarget(todo);
+        }}
+      />
       <TodoEditModal todoId={editTodoId} onClose={() => setEditTodoId(null)} />
       <DeleteTodoModal
         todo={deleteTarget}

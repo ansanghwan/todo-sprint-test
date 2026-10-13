@@ -12,6 +12,7 @@ import { toast } from '@/components/ui/toast/Toaster';
 import useTodoItemActions from '@/hooks/todo/useTodoItemActions';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
 import useMediaQuery from '@/hooks/useMediaQuery';
+import { useRouter } from '@/i18n/navigation';
 import { todoQueries } from '@/queries/todo';
 import type { TodoDto } from '@/types/api/todo';
 import TodoListEmpty from '../../todos/_components/TodoListEmpty';
@@ -24,7 +25,7 @@ import {
 // globals.css의 --breakpoint-md(744px)와 같은 값입니다.
 const TABLET_QUERY = '(min-width: 46.5rem)';
 
-// 상세(FN-TD-13)·노트(FN-TD-11, 12) 연결은 보류 중입니다.
+// 상세(FN-TD-13)·노트 보기(FN-TD-11) 연결은 보류 중입니다.
 const notConnected = () => {};
 
 interface FavoriteTodoListProps {
@@ -40,6 +41,7 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
   const { data, isPending, isError, errorUpdatedAt, refetch } = useQuery(
     todoQueries.favorites(),
   );
+  const router = useRouter();
   const isTablet = useMediaQuery(TABLET_QUERY);
   const actions = useTodoItemActions();
   const labels = useTodoItemLabels();
@@ -99,7 +101,9 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
             {...actions}
             onOpenDetail={notConnected}
             onViewNote={notConnected}
-            onCreateNote={notConnected}
+            onCreateNote={(todoId) =>
+              router.push(`/note/write?todoId=${todoId}`)
+            }
             kebabSlot={
               <TodoItemKebab
                 onDelete={() =>

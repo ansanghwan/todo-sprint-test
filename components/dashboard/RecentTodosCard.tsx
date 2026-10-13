@@ -16,6 +16,7 @@ type RecentTodosCardProps = {
   onToggleFavorite: TodoItemProps['onToggleFavorite'];
   onCopyLink: TodoItemProps['onCopyLink'];
   onDelete: (todo: TodoItemData) => void;
+  onOpenDetail: TodoItemProps['onOpenDetail'];
 };
 
 /** 최근 할 일의 표시만 담당합니다. 조회와 상태 변경은 페이지에서 전달합니다. */
@@ -28,6 +29,7 @@ export default function RecentTodosCard({
   onToggleFavorite,
   onCopyLink,
   onDelete,
+  onOpenDetail,
 }: RecentTodosCardProps) {
   return (
     <div className="min-w-0 md:flex-1 lg:flex-[1_1_28rem]">
@@ -88,8 +90,8 @@ export default function RecentTodosCard({
                   showCreateNote={false}
                   onToggleDone={onToggleDone}
                   onToggleFavorite={onToggleFavorite}
-                  // 상세·노트 화면은 해당 기능 구현 후 연결합니다.
-                  onOpenDetail={() => undefined}
+                  // 노트 보기는 별도 연결 단계에서 처리합니다.
+                  onOpenDetail={onOpenDetail}
                   onCopyLink={onCopyLink}
                   onViewNote={() => undefined}
                   onCreateNote={() => undefined}

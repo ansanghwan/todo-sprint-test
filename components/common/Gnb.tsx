@@ -344,6 +344,14 @@ export default function Gnb({
                     active={activeMenu === 'notes'}
                   />
                 </li>
+                <li>
+                  <SideMenuLink
+                    href="/favorites"
+                    title="찜한 할 일"
+                    icon="star"
+                    active={activeMenu === 'favorites'}
+                  />
+                </li>
               </ul>
             </nav>
             <div className="mt-3 md:mt-6">

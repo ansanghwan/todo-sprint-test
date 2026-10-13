@@ -21,6 +21,11 @@ import type { TodoDto } from '@/types/api/todo';
 import TodosView from '../../todos/_components/TodosView';
 import FavoritesView from './FavoritesView';
 
+const { push } = vi.hoisted(() => ({ push: vi.fn() }));
+vi.mock('@/i18n/navigation', () => ({
+  useRouter: () => ({ push }),
+}));
+
 vi.mock('@/lib/api/todos', () => ({
   getFavoriteTodos: vi.fn(),
   getTodos: vi.fn(),
@@ -148,6 +153,15 @@ const chooseGoal = async (user: UserEvent, title: string) => {
 };
 
 describe('찜한 할 일 화면', () => {
+  it('연필 버튼은 해당 할 일 ID로 노트 작성 화면을 연다', async () => {
+    const user = renderFavorites();
+    await screen.findByText('찜 1');
+    await user.click(
+      within(itemOf('찜 1')).getByRole('button', { name: '노트 작성하기' }),
+    );
+    expect(push).toHaveBeenCalledWith('/note/write?todoId=1');
+  });
+
   describe('조회 (FN-FV-01, 02)', () => {
     it('limit 100으로 모든 페이지를 차례로 받아 보여 주고, 개수는 서버 totalCount다', async () => {
       serverFavorites = Array.from({ length: 150 }, (_, i) =>

@@ -14,8 +14,9 @@ vi.mock('@/lib/api/todos', () => ({
   addTodoFavorite: vi.fn(),
   removeTodoFavorite: vi.fn(),
 }));
+const { push } = vi.hoisted(() => ({ push: vi.fn() }));
 vi.mock('@/i18n/navigation', () => ({
-  useRouter: () => ({ push: vi.fn() }),
+  useRouter: () => ({ push }),
   Link: ({ children, href, ...props }: React.ComponentProps<'a'>) => (
     <a href={href} {...props}>
       {children}
@@ -30,6 +31,20 @@ vi.mock('@/lib/api/goals', () => ({ getGoal: vi.fn() }));
 vi.mock('@/components/goal/GoalTitleCard', () => ({ default: () => null }));
 vi.mock('@/components/todo/todo-create/TodoCreateModal', () => ({
   default: () => null,
+}));
+vi.mock('@/components/todo/todo-detail/TodoDetailModal', () => ({
+  default: ({
+    todoId,
+    onClose,
+  }: {
+    todoId: number | null;
+    onClose: () => void;
+  }) =>
+    todoId === null ? null : (
+      <div role="dialog" aria-label={`할 일 상세 ${todoId}`}>
+        <button onClick={onClose}>상세 닫기</button>
+      </div>
+    ),
 }));
 beforeEach(() => {
   vi.clearAllMocks();
@@ -119,4 +134,23 @@ it('추가 조회 실패 시 기존 목록을 유지하며 재시도할 수 있�
   expect(screen.getAllByRole('listitem')).toHaveLength(1);
   await user.click(screen.getByRole('button', { name: '목록 다시 시도' }));
   await waitFor(() => expect(screen.getAllByRole('listitem')).toHaveLength(2));
+});
+
+it('할 일 제목은 해당 ID의 상세를 열고 연필은 새 노트 작성 경로로 이동한다', async () => {
+  vi.mocked(getTodos).mockImplementation(async (params) => ({
+    todos:
+      params.done === 'true'
+        ? []
+        : [makeTodo(7, { title: '연결 확인', noteIds: [] })],
+    totalCount: params.done === 'true' ? 0 : 1,
+    nextCursor: null,
+  }));
+  const user = setup();
+  await user.click(await screen.findByRole('button', { name: '연결 확인' }));
+  expect(
+    screen.getByRole('dialog', { name: '할 일 상세 7' }),
+  ).toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: '상세 닫기' }));
+  await user.click(screen.getByRole('button', { name: '노트 작성하기' }));
+  expect(push).toHaveBeenCalledWith('/note/write?todoId=7');
 });
