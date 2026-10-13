@@ -4,12 +4,17 @@ import Image from 'next/image';
 import NoteItem from '@/components/note/NoteItem';
 import { useNotesInfiniteQuery } from '@/queries/notes';
 import { useTranslations } from 'next-intl';
-import type { GetNotesParams } from '@/types/api/note';
+import type { GetNotesParams, Note } from '@/types/api/note';
+import { useRouter } from '@/i18n/navigation';
+import { useState } from 'react';
+import DeleteNoteModal from '@/components/note/DeleteNoteModal';
 
 type NoteListProps = Omit<GetNotesParams, 'cursor'>;
 
 export default function NoteList(params: NoteListProps) {
   const t = useTranslations('Todo');
+  const router = useRouter();
+  const [deletingNote, setDeletingNote] = useState<Note | null>(null);
   const {
     data,
     isPending,
@@ -73,7 +78,11 @@ export default function NoteList(params: NoteListProps) {
       >
         {notes.map((note) => (
           <li key={`note-${note.id}`}>
-            <NoteItem noteProps={note} />
+            <NoteItem
+              noteProps={note}
+              onEdit={() => router.push(`/notes/note/edit/${note.id}`)}
+              onDelete={() => setDeletingNote(note)}
+            />
           </li>
         ))}
       </ul>
@@ -89,6 +98,10 @@ export default function NoteList(params: NoteListProps) {
           </button>
         </div>
       )}
+      <DeleteNoteModal
+        note={deletingNote}
+        onClose={() => setDeletingNote(null)}
+      />
     </>
   );
 }

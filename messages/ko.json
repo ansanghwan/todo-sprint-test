@@ -23,6 +23,7 @@
     "todo": "할 일",
     "tag": "태그",
     "noNotes": "아직 등록된 노트가 없어요",
+    "deleteNoteError": "노트를 삭제하지 못했어요",
     "writeNote": "노트 작성하기",
     "register": "등록하기",
     "noteTitlePlaceholder": "노트의 제목을 입력해주세요",

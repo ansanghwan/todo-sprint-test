@@ -1,16 +1,22 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import messages from '@/messages/ko.json';
-import { getNotes } from '@/lib/api/notes';
+import { deleteNote, getNotes } from '@/lib/api/notes';
+import { toast } from '@/components/ui/toast/Toaster';
 import type { Note, NoteList as NoteListResponse } from '@/types/api/note';
 import NoteList from '@/components/note/NoteList';
 
-vi.mock('@/lib/api/notes', () => ({ getNotes: vi.fn() }));
+vi.mock('@/lib/api/notes', () => ({ getNotes: vi.fn(), deleteNote: vi.fn() }));
+vi.mock('@/components/ui/toast/Toaster', () => ({ toast: { error: vi.fn() } }));
+
+const push = vi.fn();
+vi.mock('@/i18n/navigation', () => ({ useRouter: () => ({ push }) }));
 
 const mockedGetNotes = vi.mocked(getNotes);
+const mockedDeleteNote = vi.mocked(deleteNote);
 
 function makeNote(id: number, title: string): Note {
   return {
@@ -50,6 +56,7 @@ function renderNoteList(props: Parameters<typeof NoteList>[0] = {}) {
 
 describe('NoteList', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     mockedGetNotes.mockReset();
   });
 
@@ -147,5 +154,63 @@ describe('NoteList', () => {
     expect(
       await screen.findByRole('button', { name: '불러오는 중…' }),
     ).toBeDisabled();
+  });
+
+  describe('케밥 메뉴', () => {
+    // 메뉴·모달이 열려 있는 동안 Radix가 body에 pointer-events: none을 겁니다.
+    const setup = async () => {
+      const user = userEvent.setup({ pointerEventsCheck: 0 });
+      mockedGetNotes.mockResolvedValue(
+        page([makeNote(7, 'API 설계 메모')], null),
+      );
+      renderNoteList();
+      await user.click(await screen.findByRole('button', { name: '더보기' }));
+      return user;
+    };
+
+    it('수정하기를 누르면 수정 페이지로 이동한다', async () => {
+      const user = await setup();
+
+      await user.click(screen.getByRole('menuitem', { name: '수정하기' }));
+
+      expect(push).toHaveBeenCalledWith('/notes/note/edit/7');
+    });
+
+    it('삭제하기를 누르면 확인 모달을 연다', async () => {
+      const user = await setup();
+
+      await user.click(screen.getByRole('menuitem', { name: '삭제하기' }));
+
+      expect(
+        screen.getByRole('dialog', { name: '노트를 삭제하시겠어요?' }),
+      ).toBeInTheDocument();
+      expect(mockedDeleteNote).not.toHaveBeenCalled();
+    });
+
+    it('확인을 누르면 노트를 삭제하고 모달을 닫는다', async () => {
+      mockedDeleteNote.mockResolvedValue();
+      const user = await setup();
+
+      await user.click(screen.getByRole('menuitem', { name: '삭제하기' }));
+      await user.click(screen.getByRole('button', { name: '확인' }));
+
+      expect(mockedDeleteNote).toHaveBeenCalledWith(7);
+      await waitFor(() =>
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+      );
+    });
+
+    it('삭제에 실패하면 에러 토스트를 띄우고 모달은 열어 둔다', async () => {
+      mockedDeleteNote.mockRejectedValue(new Error('boom'));
+      const user = await setup();
+
+      await user.click(screen.getByRole('menuitem', { name: '삭제하기' }));
+      await user.click(screen.getByRole('button', { name: '확인' }));
+
+      await waitFor(() =>
+        expect(toast.error).toHaveBeenCalledWith('노트를 삭제하지 못했어요'),
+      );
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
   });
 });

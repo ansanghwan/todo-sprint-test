@@ -2,12 +2,21 @@ import type { Note } from '@/types/api/note';
 import Image from 'next/image';
 import TodoStatusChip from '@/components/todo/TodoStatusChip';
 import { formatUtcDateToYmd } from '@/lib/formatter';
+import KebabMenu from '@/components/ui/kebab-menu/KebabMenu';
+import { useTranslations } from 'next-intl';
 
 interface NoteItemProps {
   noteProps: Note;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-export default function NoteItem({ noteProps }: NoteItemProps) {
+export default function NoteItem({
+  noteProps,
+  onEdit,
+  onDelete,
+}: NoteItemProps) {
+  const t = useTranslations('Todo');
   const { title, updatedAt: date, todo } = noteProps;
   const isTodo = todo?.done;
   const todoTitle = todo?.title;
@@ -29,9 +38,13 @@ export default function NoteItem({ noteProps }: NoteItemProps) {
           <p className={'truncate text-xl font-semibold'}>{title}</p>
         </div>
 
-        <span className="material-symbols-outlined cursor-pointer text-2xl text-grayscale-400">
-          more_vert
-        </span>
+        <KebabMenu
+          ariaLabel={t('moreActions')}
+          items={[
+            { label: t('edit'), onSelect: onEdit },
+            { label: t('delete'), onSelect: onDelete },
+          ]}
+        />
       </div>
 
       <div className={'flex flex-row flex-nowrap items-center justify-between'}>

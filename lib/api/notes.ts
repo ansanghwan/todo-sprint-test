@@ -1,4 +1,4 @@
-import { request } from './client-fetcher';
+import { request, requestVoid } from './client-fetcher';
 import type {
   CreateNoteBody,
   GetNotesParams,
@@ -29,4 +29,8 @@ export function updateNote(noteId: number, body: UpdateNoteBody) {
     url: `/notes/${noteId}`,
     data: body,
   });
+}
+
+export function deleteNote(noteId: number) {
+  return requestVoid({ method: 'DELETE', url: `/notes/${noteId}` });
 }

@@ -23,6 +23,7 @@
     "todo": "To-do",
     "tag": "Tag",
     "noNotes": "There are no notes yet.",
+    "deleteNoteError": "Failed to delete the note",
     "writeNote": "Write a Note",
     "register": "Register",
     "noteTitlePlaceholder": "Enter the title of your note",
