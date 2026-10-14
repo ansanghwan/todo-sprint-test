@@ -227,5 +227,19 @@
     "required": "Enter a goal title",
     "tooLong": "Use no more than 100 characters",
     "createError": "Could not create the goal. Please try again."
+  },
+  "Gnb": {
+    "appName": "Slid to-do",
+    "userFallback": "User",
+    "toggleMenu": "Toggle menu",
+    "closeMenu": "Close menu",
+    "mainNavigation": "Main navigation",
+    "dashboardLink": "Slid to-do Dashboard",
+    "expandList": "Expand {title} list",
+    "collapseList": "Collapse {title} list",
+    "loggingOut": "Logging out…",
+    "logoutError": "Couldn't log out. Please try again.",
+    "openNotifications": "Open notifications",
+    "withUnreadNotifications": "{label} (unread notifications)"
   }
 }

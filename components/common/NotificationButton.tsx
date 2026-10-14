@@ -1,6 +1,7 @@
 'use client';
 
 import IconButton from '@/components/ui/button/IconButton';
+import { useTranslations } from 'next-intl';
 
 export type NotificationButtonProps = {
   hasNotification?: boolean;
@@ -22,10 +23,16 @@ export default function NotificationButton({
   onOpen,
   compact = false,
 }: NotificationButtonProps) {
+  // 기존 '알림' 문구는 Todo.notifications에 있습니다. 버튼 동작을 설명하는
+  // '알림 열기'와 새 알림 접근성 안내는 GNB 전용 문구이므로 Gnb 묶음에 추가했습니다.
+  // 메뉴명은 기존 Todo 번역을 재사용하며, 전체 번역 키 재분류는 이번 작업에 포함하지 않습니다.
+  const nextIntlGnb = useTranslations('Gnb');
+  const label = nextIntlGnb('openNotifications');
   return (
     <IconButton
       icon="bell"
-      aria-label="알림 열기"
+      aria-label={label}
+      notificationLabel={nextIntlGnb('withUnreadNotifications', { label })}
       hasNotification={hasNotification}
       onClick={onOpen}
       className={

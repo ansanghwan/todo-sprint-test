@@ -227,5 +227,19 @@
     "required": "목표명을 입력해주세요",
     "tooLong": "목표명은 100자 이내로 입력해주세요",
     "createError": "목표를 등록하지 못했어요. 다시 시도해주세요."
+  },
+  "Gnb": {
+    "appName": "슬리드 투두",
+    "userFallback": "사용자",
+    "toggleMenu": "메뉴 열기·닫기",
+    "closeMenu": "메뉴 닫기",
+    "mainNavigation": "주 메뉴",
+    "dashboardLink": "Slid to-do 대시보드",
+    "expandList": "{title} 목록 펼치기",
+    "collapseList": "{title} 목록 접기",
+    "loggingOut": "로그아웃 중…",
+    "logoutError": "로그아웃하지 못했어요. 다시 시도해주세요.",
+    "openNotifications": "알림 열기",
+    "withUnreadNotifications": "{label} (새 알림 있음)"
   }
 }

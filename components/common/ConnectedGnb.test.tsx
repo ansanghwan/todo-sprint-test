@@ -388,3 +388,13 @@ it('목표를 펼칠 때 20개를 조회하고 내부 끝에서 추가 조회하
   );
   expect(getGoals).toHaveBeenCalledTimes(3);
 });
+
+it('영문 모바일 헤더는 사용자 이름을 유지하고 목표 제목을 번역한다', async () => {
+  pathname = '/goals/683';
+  render(
+    <TestProviders locale="en">
+      <ConnectedGnb />
+    </TestProviders>,
+  );
+  expect(await screen.findByText("상환's Goals")).toBeInTheDocument();
+});

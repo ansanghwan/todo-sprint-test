@@ -19,6 +19,8 @@ const styles = cva(
 
 type IconButtonProps = Omit<ComponentPropsWithRef<'button'>, 'children'> & {
   'aria-label': string;
+  /** 알림이 있을 때 사용할 접근성 문구. 생략하면 기존 기본 문구를 사용합니다. */
+  notificationLabel?: string;
 } & (
     | { icon: 'bell'; hasNotification?: boolean; size?: never }
     | { icon: 'close'; size?: 'sm' | 'md'; hasNotification?: never }
@@ -36,12 +38,17 @@ export default function IconButton({
   type = 'button',
   className,
   'aria-label': label,
+  notificationLabel,
   ...props
 }: IconButtonProps) {
   return (
     <button
       type={type}
-      aria-label={hasNotification ? `${label} (새 알림 있음)` : label}
+      aria-label={
+        hasNotification
+          ? (notificationLabel ?? `${label} (새 알림 있음)`)
+          : label
+      }
       className={cn(
         styles({ icon }),
         icon === 'close' && size === 'sm' && 'size-3.25',
