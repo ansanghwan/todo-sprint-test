@@ -1,4 +1,9 @@
-import type { PostDto, PostPageDto } from '@/types/api/post';
+import type {
+  CreatePostRequest,
+  PostDto,
+  PostPageDto,
+  UpdatePostRequest,
+} from '@/types/api/post';
 import { request, requestVoid } from './client-fetcher';
 
 export type PostSortType = 'all' | 'best';
@@ -18,3 +23,9 @@ export const getPost = (postId: number, signal?: AbortSignal) =>
 
 export const deletePost = (postId: number) =>
   requestVoid({ url: `/posts/${postId}`, method: 'DELETE' });
+
+export const createPost = (data: CreatePostRequest) =>
+  request<PostDto>({ url: '/posts', method: 'POST', data });
+
+export const updatePost = (postId: number, data: UpdatePostRequest) =>
+  request<PostDto>({ url: `/posts/${postId}`, method: 'PATCH', data });

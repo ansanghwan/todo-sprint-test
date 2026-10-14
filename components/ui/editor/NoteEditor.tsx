@@ -9,16 +9,22 @@ import {
 import StarterKit from '@tiptap/starter-kit';
 import TextAlign from '@tiptap/extension-text-align';
 import { Placeholder } from '@tiptap/extensions';
-import Toolbar from '@/components/ui/editor/Toolbar';
 import { useTranslations } from 'next-intl';
+import NoteToolbar from '@/components/ui/editor/NoteToolbar';
 
 type Props = {
   value?: JSONContent; // Tiptap 문서 JSON
+  placeholder: string;
   onChange: (json: JSONContent | undefined) => void;
   children: React.ReactNode; // 제목, 목표, 할일, 작성일, 태그 등 추가 데이터 컴포넌트
 };
 
-export default function NoteEditor({ value, onChange, children }: Props) {
+export default function NoteEditor({
+  value,
+  placeholder,
+  onChange,
+  children,
+}: Props) {
   const t = useTranslations('Todo');
 
   const editor = useEditor({
@@ -26,7 +32,7 @@ export default function NoteEditor({ value, onChange, children }: Props) {
       StarterKit.configure({ link: { openOnClick: false } }),
       TextAlign.configure({ types: ['paragraph', 'heading'] }),
       Placeholder.configure({
-        placeholder: `${t('noteContentPlaceholder')}`,
+        placeholder: `${placeholder}`,
       }),
     ],
     content: value,
@@ -54,7 +60,7 @@ export default function NoteEditor({ value, onChange, children }: Props) {
 
   return (
     <div>
-      <Toolbar editor={editor} />
+      <NoteToolbar editor={editor} />
       {children}
       <EditorContent
         editor={editor}

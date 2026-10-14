@@ -1,7 +1,16 @@
 import type { Editor } from '@tiptap/react';
 import { useEditorState } from '@tiptap/react';
 
-export default function Toolbar({ editor }: { editor: Editor }) {
+interface PostToolbarProps {
+  editor: Editor;
+  /** 이미지 첨부 버튼을 눌렀을 때 (파일 선택 창 열기) */
+  onImageClick: () => void;
+}
+
+export default function PostToolbar({
+  editor,
+  onImageClick,
+}: PostToolbarProps) {
   const s = useEditorState({
     editor,
     selector: ({ editor }) => ({
@@ -12,17 +21,9 @@ export default function Toolbar({ editor }: { editor: Editor }) {
       center: editor.isActive({ textAlign: 'center' }),
       right: editor.isActive({ textAlign: 'right' }),
       list: editor.isActive('bulletList'),
-      link: editor.isActive('link'),
       image: editor.isActive('image'),
     }),
   });
-
-  const setLink = () => {
-    const url = window.prompt('링크 주소');
-    if (url === null) return;
-    if (url === '') return editor.chain().focus().unsetLink().run();
-    editor.chain().focus().setLink({ href: url }).run();
-  };
 
   return (
     <div className="flex items-center gap-3 rounded-full bg-gray-50 px-4 py-2 align-middle">
@@ -104,21 +105,12 @@ export default function Toolbar({ editor }: { editor: Editor }) {
 
       <button
         type="button"
-        data-active={s.link}
-        onClick={setLink}
+        aria-label="이미지 첨부"
+        onClick={onImageClick}
         className={'flex items-center align-middle text-grayscale-500'}
       >
-        <span className="material-symbols-outlined font-light!">link_2</span>
+        <span className="material-symbols-outlined font-light!">image</span>
       </button>
-
-      {/*<button*/}
-      {/*  type="button"*/}
-      {/*  data-active={s.image}*/}
-      {/*  onClick={setLink}*/}
-      {/*  className={'flex align-middle items-center text-grayscale-500'}*/}
-      {/*>*/}
-      {/*  <span className="material-symbols-outlined font-light!">image</span>*/}
-      {/*</button>*/}
     </div>
   );
 }

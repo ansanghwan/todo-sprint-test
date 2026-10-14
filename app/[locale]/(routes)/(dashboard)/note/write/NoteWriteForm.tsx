@@ -8,6 +8,9 @@ import { useCreateNoteMutation } from '@/queries/notes';
 import { toast } from '@/components/ui/toast/Toaster';
 import { ApiError } from '@/lib/api/errors';
 import MetaRow from '@/components/note/MetaRow';
+import { formatUtcDateToYmd } from '@/lib/formatter';
+import { todoQueries } from '@/queries/todo';
+import { useQuery } from '@tanstack/react-query';
 
 interface NoteWriteFormProps {
   /** 노트를 연결할 할 일 ID (page.tsx에서 검사를 마친 값) */
@@ -18,7 +21,7 @@ export default function NoteWriteForm({ todoId }: NoteWriteFormProps) {
   const t = useTranslations('Todo');
   const router = useRouter();
   const { mutate: createNote, isPending } = useCreateNoteMutation();
-
+  const { data: todo } = useQuery(todoQueries.detail(todoId));
   const handleSubmit = (values: NoteFormValues) => {
     createNote(
       { todoId, ...values },
@@ -42,14 +45,14 @@ export default function NoteWriteForm({ todoId }: NoteWriteFormProps) {
         // 할 일 단건 조회 API가 생기면 실제 값으로 교체
         <>
           <MetaRow icon="flag_2" label={t('goal')}>
-            <span className="truncate">목표</span>
+            <span className="truncate">{todo?.goal?.title}</span>
           </MetaRow>
           <MetaRow icon="calendar_today" label={t('createdAt')}>
-            날짜
+            {formatUtcDateToYmd(todo?.createdAt || '')}
           </MetaRow>
           <MetaRow icon="check_box" label={t('todo')}>
-            <span className="truncate">할일</span>
-            <TodoStatusChip isTodo={false} className="ml-1 shrink-0" />
+            <span className="truncate">{todo?.title}</span>
+            <TodoStatusChip isTodo={todo?.done} className="ml-1 shrink-0" />
           </MetaRow>
           <MetaRow icon="tag" label={t('tag')}>
             태그들

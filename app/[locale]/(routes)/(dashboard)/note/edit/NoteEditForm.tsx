@@ -36,7 +36,7 @@ export default function NoteEditForm({ noteId }: NoteEditFormProps) {
 
   return (
     <NoteForm
-      heading="노트 수정하기"
+      heading={t('editNote')}
       submitLabel={t('edit')}
       defaultValues={{
         title: note.title,

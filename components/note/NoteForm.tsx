@@ -7,8 +7,8 @@ import { z } from 'zod';
 import { useTranslations } from 'next-intl';
 import type { JSONContent } from '@tiptap/react';
 import Button from '@/components/ui/button/Button';
-import NoteEditor from '@/components/ui/editor/Editor';
 import Image from 'next/image';
+import NoteEditor from '@/components/ui/editor/NoteEditor';
 
 const schema = z.object({
   title: z.string().trim().min(1).max(30),
@@ -72,7 +72,11 @@ export default function NoteForm({
             control={control}
             name="content"
             render={({ field }) => (
-              <NoteEditor value={field.value} onChange={field.onChange}>
+              <NoteEditor
+                value={field.value}
+                placeholder={t('noteContentPlaceholder')}
+                onChange={field.onChange}
+              >
                 <div
                   className={
                     'mt-[1.4rem] flex flex-row flex-nowrap items-center'

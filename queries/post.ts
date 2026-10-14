@@ -4,12 +4,16 @@ import {
   queryOptions,
 } from '@tanstack/react-query';
 import {
+  createPost,
   deletePost,
   getPost,
   getPosts,
   type GetPostsParams,
+  updatePost,
 } from '@/lib/api/post';
 import { retryUnlessNotFound } from './retry';
+import { CreatePostRequest, UpdatePostRequest } from '@/types/api/post';
+import { uploadImage } from '@/lib/api/images';
 
 const BEST_POSTS_PARAMS = { type: 'best', limit: 3 } as const;
 
@@ -58,6 +62,31 @@ export const postMutations = {
       onSuccess: (_data, postId, _onMutateResult, context) => {
         context.client.removeQueries({ queryKey: postKeys.detail(postId) });
         return context.client.invalidateQueries({ queryKey: postKeys.all });
+      },
+    }),
+  create: () =>
+    mutationOptions({
+      mutationFn: async ({
+        image,
+        ...rest
+      }: Omit<CreatePostRequest, 'image'> & { image: File | null }) => {
+        const imageUrl = image ? await uploadImage(image) : undefined;
+        return createPost({ ...rest, image: imageUrl });
+      },
+      onSuccess: (_data, _variables, _onMutateResult, context) =>
+        context.client.invalidateQueries({ queryKey: postKeys.lists() }),
+    }),
+  update: (postId: number) =>
+    mutationOptions({
+      mutationFn: async ({
+        image,
+        ...rest
+      }: Omit<UpdatePostRequest, 'image'> & {
+        image: File | string | null;
+      }) => {
+        const imageUrl =
+          image instanceof File ? await uploadImage(image) : image;
+        return updatePost(postId, { ...rest, image: imageUrl });
       },
     }),
 };
