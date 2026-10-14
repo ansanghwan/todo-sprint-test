@@ -188,7 +188,7 @@ export default function Gnb({
             alt=""
             width={18}
             height={15}
-            className="hidden h-3.75 w-4.5 md:block"
+            className="hidden h-3.75 w-4.5 transition-transform duration-400 ease-out motion-reduce:transition-none max-lg:group-data-[open=true]/gnb:rotate-180 md:block lg:group-data-[open=false]/gnb:rotate-180"
           />
         </button>
         {/* 개발 연동: pageTitle에 현재 페이지 제목을 전달해주세요.
@@ -336,14 +336,14 @@ export default function Gnb({
                     active={activeMenu === 'board'}
                   />
                 </li>
-                <li>
+                {/* <li>
                   <SideMenuLink
                     href="/notes"
                     title="노트 모아보기"
                     icon="note"
                     active={activeMenu === 'notes'}
                   />
-                </li>
+                </li> */}
                 <li>
                   <SideMenuLink
                     href="/favorites"
