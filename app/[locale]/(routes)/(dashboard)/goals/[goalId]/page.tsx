@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { cn } from '@/lib/utils';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
 import useCurrentUser from '@/hooks/useCurrentUser';
 import { useParams } from 'next/navigation';
@@ -34,6 +36,10 @@ const goalTodoKebabClass =
   'flex shrink-0 rounded-full transition-colors group-hover/goal-todo:bg-white group-focus-within/goal-todo:bg-white [&>button]:size-6 [&>button]:rounded-full [&>button[data-state=open]]:bg-white [&_svg>circle:first-child]:fill-transparent';
 
 export default function GoalDetailPage() {
+  const isKorean = useLocale() === 'ko';
+  const nextIntlTodo = useTranslations('Todo');
+  const nextIntlGoalDetail = useTranslations('GoalDetail');
+  const nextIntlDashboard = useTranslations('Dashboard');
   const actions = useTodoItemActions();
   const labels = useTodoItemLabels();
   const isTablet = useMediaQuery('(min-width: 46.5rem)');
@@ -97,7 +103,7 @@ export default function GoalDetailPage() {
       : undefined;
 
   if (!Number.isInteger(id) || id <= 0) {
-    return <p role="alert">올바르지 않은 목표 주소입니다.</p>;
+    return <p role="alert">{nextIntlGoalDetail('invalidAddress')}</p>;
   }
 
   // 최초 조회에만 표시하고, 갱신 중에는 기존 콘텐츠를 유지합니다.
@@ -106,7 +112,7 @@ export default function GoalDetailPage() {
   }
 
   if (isError || !goal) {
-    return <DashboardEmptyState message="목표를 불러오지 못했습니다." />;
+    return <DashboardEmptyState message={nextIntlTodo('fetchGoalsError')} />;
   }
 
   return (
@@ -115,7 +121,9 @@ export default function GoalDetailPage() {
       {/* 컨텐츠 마크업은 여기서 부터 */}
       <div>
         <h1 className="mb-7.5 text-xl font-semibold text-heading max-md:hidden lg:mb-8.5 lg:text-2xl">
-          {userName ? `${userName}님의 목표` : '목표'}
+          {userName
+            ? nextIntlTodo('myGoals', { name: userName })
+            : nextIntlTodo('goal')}
         </h1>
       </div>
       {/* 사이드바가 펼쳐진 중간 PC 폭에서는 제목과 카드 묶음을 각각 한 줄로 배치합니다. */}
@@ -130,11 +138,11 @@ export default function GoalDetailPage() {
                   role="alert"
                   className="absolute inset-0 flex items-center justify-center p-6 text-center text-white"
                 >
-                  진행률을 불러오지 못했습니다.
+                  {nextIntlDashboard('fetchProgressError')}
                 </p>
               ) : progress === undefined ? (
                 <DashboardLoading
-                  message="진행률을 불러오는 중입니다."
+                  message={nextIntlDashboard('loadingProgress')}
                   className="absolute inset-0"
                 />
               ) : (
@@ -146,7 +154,9 @@ export default function GoalDetailPage() {
                     className="aspect-square w-[calc((100%+2.5rem)*0.268222)] shrink-0 md:size-23"
                   />
                   <div className="min-w-0 text-white">
-                    <p className="text-lg font-bold">목표진행도</p>
+                    <p className="text-lg font-bold">
+                      {nextIntlTodo('goalProgress')}
+                    </p>
                     <p className="flex items-baseline">
                       <span className="text-display-lg leading-none font-bold">
                         {progress}
@@ -165,7 +175,7 @@ export default function GoalDetailPage() {
               className="relative isolate flex aspect-[343/160] min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-blue-200 pb-8 pl-10 text-white shadow-[0_0.625rem_2.5rem_0_#00D4BE3D] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-[2rem] md:pb-[2.1875rem] md:before:size-[6.0625rem]"
             >
               <span className="relative z-10 inline-flex items-center gap-1.5 text-2xl font-bold">
-                노트 모아보기
+                {nextIntlTodo('notes')}
                 <Image
                   src="/icons/icon_arrow_right.svg"
                   width={8}
@@ -188,7 +198,10 @@ export default function GoalDetailPage() {
             <div className="ml-auto">
               <Link
                 href={`/calendar?goalId=${id}`}
-                className="inline-flex h-10 w-30 shrink-0 items-center justify-center gap-1 rounded-full border border-[#ccc] px-4 text-sm leading-none font-semibold tracking-[-0.03em] text-grayscale-500 transition-colors hover:border-[#bbb] hover:text-grayscale-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+                className={cn(
+                  'inline-flex h-10 shrink-0 items-center justify-center gap-1 rounded-full border border-[#ccc] px-4 text-sm leading-none font-semibold tracking-[-0.03em] whitespace-nowrap text-grayscale-500 transition-colors hover:border-[#bbb] hover:text-grayscale-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600',
+                  isKorean ? 'w-30' : 'w-auto',
+                )}
               >
                 <Image
                   src="/icons/icon_calendar.svg"
@@ -196,11 +209,14 @@ export default function GoalDetailPage() {
                   height={20}
                   alt=""
                 />
-                캘린더 보기
+                {nextIntlTodo('calendarView')}
               </Link>
               <Button
                 size="sm"
-                className="ml-2 w-30 gap-1 tracking-[-0.03em]"
+                className={cn(
+                  'ml-2 gap-1 tracking-[-0.03em] whitespace-nowrap',
+                  isKorean ? 'w-30' : 'w-auto px-4',
+                )}
                 onClick={() => setIsTodoCreateOpen(true)}
               >
                 <Image
@@ -209,7 +225,7 @@ export default function GoalDetailPage() {
                   height={20}
                   alt=""
                 />
-                할일 추가
+                {nextIntlTodo('addTodo')}
               </Button>
             </div>
           </div>
@@ -217,12 +233,12 @@ export default function GoalDetailPage() {
           <div className="relative min-h-34 rounded-2xl bg-[#fff6df] p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6">
             {todoQuery.isPending ? (
               <div role="status" aria-busy="true">
-                <span className="sr-only">할 일을 불러오는 중입니다.</span>
+                <span className="sr-only">{nextIntlTodo('loadingTodos')}</span>
                 <GoalTodoSkeletonRows />
               </div>
             ) : !todoQuery.data ? (
               <div className="flex items-center justify-center py-6 md:flex-1">
-                <p role="alert">할 일을 불러오지 못했습니다.</p>
+                <p role="alert">{nextIntlTodo('fetchTodosError')}</p>
               </div>
             ) : (
               <div className="md:flex md:max-h-[calc(36rem-2rem)] md:min-h-0 md:flex-1 md:flex-col lg:max-h-[calc(36rem-3rem)]">
@@ -231,7 +247,7 @@ export default function GoalDetailPage() {
                   {todoQuery.data.pages[0]?.totalCount === 0 ? (
                     <div className="py-6">
                       <DashboardEmptyState
-                        message="해야할 일이 아직 없어요"
+                        message={nextIntlTodo('noTodos')}
                         imageSrc="/images/dashboard/img_result_none02.svg"
                       />
                     </div>
@@ -266,8 +282,8 @@ export default function GoalDetailPage() {
                   {todoQuery.isError && (
                     <p role="alert" className="mt-3 text-sm text-danger">
                       {todoQuery.isFetchNextPageError
-                        ? '추가 목록을 불러오지 못했습니다. 다시 시도해주세요.'
-                        : '목록 갱신에 실패했습니다.'}
+                        ? nextIntlGoalDetail('loadMoreError')
+                        : nextIntlGoalDetail('refreshError')}
                     </p>
                   )}
                 </div>
@@ -278,7 +294,9 @@ export default function GoalDetailPage() {
                       className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
                       aria-busy={todoQuery.isFetching}
                       aria-label={
-                        todoQuery.isError ? '목록 다시 시도' : '할 일 더보기'
+                        todoQuery.isError
+                          ? nextIntlGoalDetail('retryList')
+                          : nextIntlGoalDetail('loadMoreTodos')
                       }
                       disabled={todoQuery.isFetching}
                       onClick={() => {
@@ -294,10 +312,10 @@ export default function GoalDetailPage() {
                       }}
                     >
                       {todoQuery.isFetching
-                        ? '불러오는 중…'
+                        ? nextIntlDashboard('loading')
                         : todoQuery.isError
-                          ? '다시 시도'
-                          : '더보기'}
+                          ? nextIntlTodo('retry')
+                          : nextIntlDashboard('more')}
                       <svg
                         viewBox="0 0 24 24"
                         fill="none"
@@ -324,12 +342,12 @@ export default function GoalDetailPage() {
           <div className="relative min-h-34 rounded-2xl bg-white-section p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6">
             {doneQuery.isPending ? (
               <div role="status" aria-busy="true">
-                <span className="sr-only">할 일을 불러오는 중입니다.</span>
+                <span className="sr-only">{nextIntlTodo('loadingTodos')}</span>
                 <GoalTodoSkeletonRows />
               </div>
             ) : !doneQuery.data ? (
               <div className="flex items-center justify-center py-6 md:flex-1">
-                <p role="alert">할 일을 불러오지 못했습니다.</p>
+                <p role="alert">{nextIntlTodo('fetchTodosError')}</p>
               </div>
             ) : (
               <div className="md:flex md:max-h-[calc(36rem-2rem)] md:min-h-0 md:flex-1 md:flex-col lg:max-h-[calc(36rem-3rem)]">
@@ -338,7 +356,7 @@ export default function GoalDetailPage() {
                   {doneQuery.data.pages[0]?.totalCount === 0 ? (
                     <div className="py-6">
                       <DashboardEmptyState
-                        message="완료한 일이 아직 없어요"
+                        message={nextIntlTodo('noCompletedTodos')}
                         imageSrc="/images/dashboard/img_result_none.svg"
                       />
                     </div>
@@ -373,8 +391,8 @@ export default function GoalDetailPage() {
                   {doneQuery.isError && (
                     <p role="alert" className="mt-3 text-sm text-danger">
                       {doneQuery.isFetchNextPageError
-                        ? '추가 목록을 불러오지 못했습니다. 다시 시도해주세요.'
-                        : '목록 갱신에 실패했습니다.'}
+                        ? nextIntlGoalDetail('loadMoreError')
+                        : nextIntlGoalDetail('refreshError')}
                     </p>
                   )}
                 </div>
@@ -385,7 +403,9 @@ export default function GoalDetailPage() {
                       className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
                       aria-busy={doneQuery.isFetching}
                       aria-label={
-                        doneQuery.isError ? '목록 다시 시도' : '할 일 더보기'
+                        doneQuery.isError
+                          ? nextIntlGoalDetail('retryList')
+                          : nextIntlGoalDetail('loadMoreTodos')
                       }
                       disabled={doneQuery.isFetching}
                       onClick={() => {
@@ -401,10 +421,10 @@ export default function GoalDetailPage() {
                       }}
                     >
                       {doneQuery.isFetching
-                        ? '불러오는 중…'
+                        ? nextIntlDashboard('loading')
                         : doneQuery.isError
-                          ? '다시 시도'
-                          : '더보기'}
+                          ? nextIntlTodo('retry')
+                          : nextIntlDashboard('more')}
                       <svg
                         viewBox="0 0 24 24"
                         fill="none"

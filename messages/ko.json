@@ -256,5 +256,19 @@
     "loadingMoreGoals": "목표를 더 불러오는 중입니다.",
     "loadMoreGoalsError": "목표를 더 불러오지 못했어요.",
     "goalProgressLabel": "목표 진행률 {percentage}%"
+  },
+  "GoalDetail": {
+    "invalidAddress": "올바르지 않은 목표 주소입니다.",
+    "loadingDetail": "목표 상세를 불러오는 중입니다.",
+    "loadMoreError": "추가 목록을 불러오지 못했습니다. 다시 시도해주세요.",
+    "refreshError": "목록 갱신에 실패했습니다.",
+    "retryList": "목록 다시 시도",
+    "loadMoreTodos": "할 일 더보기",
+    "moreActions": "목표 더보기",
+    "save": "저장",
+    "updateError": "목표를 수정하지 못했어요. 다시 시도해주세요.",
+    "deleteError": "목표를 삭제하지 못했어요. 다시 시도해주세요.",
+    "deleteConfirm": "정말 삭제하시겠어요?",
+    "deleteWarning": "삭제된 목표는 복구할 수 없습니다."
   }
 }

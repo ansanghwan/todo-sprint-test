@@ -2,6 +2,7 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useId, useRef, useState } from 'react';
 
 import Button from '@/components/ui/button/Button';
@@ -16,6 +17,9 @@ import { todoKeys } from '@/queries/todo';
 import type { GoalDetailDto } from '@/types/api/goal';
 
 export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
+  const nextIntlTodo = useTranslations('Todo');
+  const nextIntlGoalDetail = useTranslations('GoalDetail');
+  const nextIntlGoalCreate = useTranslations('GoalCreate');
   const queryClient = useQueryClient();
   const router = useRouter();
   const inputId = useId();
@@ -27,9 +31,9 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const trimmedTitle = title.trim();
   const error = !trimmedTitle
-    ? '목표명을 입력해주세요.'
+    ? nextIntlGoalCreate('required')
     : title.length > 100
-      ? '목표명은 100자 이내로 입력해주세요.'
+      ? nextIntlGoalCreate('tooLong')
       : undefined;
 
   const cancelEdit = () => {
@@ -56,7 +60,7 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
       void queryClient.invalidateQueries({ queryKey: todoKeys.all });
       setIsEditing(false);
     } catch {
-      toast.error('목표를 수정하지 못했어요. 다시 시도해주세요.');
+      toast.error(nextIntlGoalDetail('updateError'));
     } finally {
       busy.current = false;
       setIsPending(false);
@@ -73,7 +77,7 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
       setIsDeleteOpen(false);
       router.replace('/dashboard');
     } catch {
-      toast.error('목표를 삭제하지 못했어요. 다시 시도해주세요.');
+      toast.error(nextIntlGoalDetail('deleteError'));
     } finally {
       busy.current = false;
       setIsPending(false);
@@ -108,7 +112,7 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
               <TextField
                 ref={inputRef}
                 id={inputId}
-                label="목표명"
+                label={nextIntlGoalCreate('title')}
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 disabled={isPending}
@@ -123,7 +127,7 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
                 className="w-auto"
                 disabled={Boolean(error) || isPending}
               >
-                저장
+                {nextIntlGoalDetail('save')}
               </Button>
               <Button
                 size="md"
@@ -132,7 +136,7 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
                 disabled={isPending}
                 onClick={cancelEdit}
               >
-                취소
+                {nextIntlTodo('cancel')}
               </Button>
             </div>
           </form>
@@ -142,10 +146,10 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
               {goal.title}
             </h2>
             <KebabMenu
-              ariaLabel="목표 더보기"
+              ariaLabel={nextIntlGoalDetail('moreActions')}
               items={[
                 {
-                  label: '수정하기',
+                  label: nextIntlTodo('edit'),
                   onSelect: () => {
                     setTitle(goal.title);
                     setIsEditing(true);
@@ -155,7 +159,10 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
                     });
                   },
                 },
-                { label: '삭제하기', onSelect: () => setIsDeleteOpen(true) },
+                {
+                  label: nextIntlTodo('delete'),
+                  onSelect: () => setIsDeleteOpen(true),
+                },
               ]}
             />
           </>
@@ -164,8 +171,10 @@ export default function GoalTitleCard({ goal }: { goal: GoalDetailDto }) {
       <ConfirmModal
         isOpen={isDeleteOpen}
         onOpenChange={setIsDeleteOpen}
-        title="정말 삭제하시겠어요?"
-        description="삭제된 목표는 복구할 수 없습니다."
+        title={nextIntlGoalDetail('deleteConfirm')}
+        description={nextIntlGoalDetail('deleteWarning')}
+        cancelLabel={nextIntlTodo('cancel')}
+        confirmLabel={nextIntlTodo('confirm')}
         isPending={isPending}
         onConfirm={() => void remove()}
       />

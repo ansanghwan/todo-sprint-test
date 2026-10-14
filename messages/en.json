@@ -256,5 +256,19 @@
     "loadingMoreGoals": "Loading more goals…",
     "loadMoreGoalsError": "Couldn’t load more goals.",
     "goalProgressLabel": "Goal progress {percentage}%"
+  },
+  "GoalDetail": {
+    "invalidAddress": "This goal URL is invalid.",
+    "loadingDetail": "Loading goal details…",
+    "loadMoreError": "Couldn’t load more items. Please try again.",
+    "refreshError": "Couldn’t refresh the list.",
+    "retryList": "Retry list",
+    "loadMoreTodos": "Load more to-dos",
+    "moreActions": "More goal actions",
+    "save": "Save",
+    "updateError": "Couldn’t update the goal. Please try again.",
+    "deleteError": "Couldn’t delete the goal. Please try again.",
+    "deleteConfirm": "Are you sure you want to delete this goal?",
+    "deleteWarning": "Deleted goals cannot be recovered."
   }
 }

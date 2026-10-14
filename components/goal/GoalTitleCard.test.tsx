@@ -14,6 +14,7 @@ import { goalKeys } from '@/queries/goal';
 import { installRadixDomMocks } from '@/test/domMocks';
 import type { GoalDetailDto } from '@/types/api/goal';
 import GoalTitleCard from './GoalTitleCard';
+import IntlTestProvider from '@/test/IntlTestProvider';
 
 const { replace, error } = vi.hoisted(() => ({
   replace: vi.fn(),
@@ -38,7 +39,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   installRadixDomMocks();
 });
-function setup() {
+function setup(locale: 'ko' | 'en' = 'ko') {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -52,9 +53,11 @@ function setup() {
     return <GoalTitleCard goal={data!} />;
   }
   render(
-    <QueryClientProvider client={client}>
-      <View />
-    </QueryClientProvider>,
+    <IntlTestProvider locale={locale}>
+      <QueryClientProvider client={client}>
+        <View />
+      </QueryClientProvider>
+    </IntlTestProvider>,
   );
   return { client, user: userEvent.setup() };
 }
@@ -123,4 +126,28 @@ it('삭제 실패하면 확인창을 유지하고 이동하지 않는다', async
   await waitFor(() => expect(error).toHaveBeenCalled());
   expect(screen.getByRole('dialog')).toBeInTheDocument();
   expect(replace).not.toHaveBeenCalled();
+});
+
+it('영문에서 수정·삭제 문구를 번역하고 사용자가 작성한 목표명은 유지한다', async () => {
+  const { user } = setup('en');
+  expect(
+    screen.getByRole('heading', { name: '기존 목표' }),
+  ).toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: 'More goal actions' }));
+  await user.click(await screen.findByRole('menuitem', { name: 'Edit' }));
+  expect(screen.getByRole('textbox', { name: 'Goal title' })).toHaveValue(
+    '기존 목표',
+  );
+  await user.click(screen.getByRole('button', { name: 'Cancel' }));
+  await user.click(screen.getByRole('button', { name: 'More goal actions' }));
+  await user.click(await screen.findByRole('menuitem', { name: 'Delete' }));
+  const dialog = screen.getByRole('dialog', {
+    name: 'Are you sure you want to delete this goal?',
+  });
+  expect(
+    within(dialog).getByText('Deleted goals cannot be recovered.'),
+  ).toBeInTheDocument();
+  expect(
+    within(dialog).getByRole('button', { name: 'Confirm' }),
+  ).toBeInTheDocument();
 });
