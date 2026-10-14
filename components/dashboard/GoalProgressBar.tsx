@@ -1,9 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useEffect, useState } from 'react';
 
 /** 목표 카드가 처음 나타날 때 0%부터 채웁니다. 검색 재렌더링에는 반복하지 않습니다. */
 export default function GoalProgressBar({ progress }: { progress: number }) {
+  const nextIntlDashboard = useTranslations('Dashboard');
   // 막대가 영역 밖으로 늘어나지 않도록 표시 범위를 0~100으로 제한합니다.
   const percentage = Math.min(100, Math.max(0, progress));
   const [displayProgress, setDisplayProgress] = useState(0);
@@ -24,7 +27,7 @@ export default function GoalProgressBar({ progress }: { progress: number }) {
   return (
     <div
       role="progressbar"
-      aria-label={`목표 진행률 ${percentage}%`}
+      aria-label={nextIntlDashboard('goalProgressLabel', { percentage })}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={percentage}

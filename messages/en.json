@@ -241,5 +241,20 @@
     "logoutError": "Couldn't log out. Please try again.",
     "openNotifications": "Open notifications",
     "withUnreadNotifications": "{label} (unread notifications)"
+  },
+  "Dashboard": {
+    "noRecentGoals": "You haven’t added any goals yet.",
+    "noRecentTodos": "You haven’t added any to-dos recently.",
+    "userProgress": "{name}'s progress",
+    "loadingProgress": "Loading progress…",
+    "fetchProgressError": "Couldn’t load progress.",
+    "goalSearchLabel": "Search to-dos for {title}",
+    "loadMoreLabel": "Load more {status} to-dos for {title}",
+    "more": "Load more",
+    "loading": "Loading…",
+    "loadMoreTodosError": "Couldn’t load more to-dos. Please try again.",
+    "loadingMoreGoals": "Loading more goals…",
+    "loadMoreGoalsError": "Couldn’t load more goals.",
+    "goalProgressLabel": "Goal progress {percentage}%"
   }
 }

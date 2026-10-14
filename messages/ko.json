@@ -241,5 +241,20 @@
     "logoutError": "로그아웃하지 못했어요. 다시 시도해주세요.",
     "openNotifications": "알림 열기",
     "withUnreadNotifications": "{label} (새 알림 있음)"
+  },
+  "Dashboard": {
+    "noRecentGoals": "최근에 등록한 목표가 없어요",
+    "noRecentTodos": "최근에 등록한 할 일이 없어요",
+    "userProgress": "{name}님의 진행도는",
+    "loadingProgress": "진행률을 불러오는 중입니다.",
+    "fetchProgressError": "진행 상황을 불러오지 못했어요",
+    "goalSearchLabel": "{title} 할 일 검색",
+    "loadMoreLabel": "{title} {status} 더보기",
+    "more": "더보기",
+    "loading": "불러오는 중입니다.",
+    "loadMoreTodosError": "추가 할 일을 불러오지 못했어요. 다시 눌러주세요.",
+    "loadingMoreGoals": "목표를 더 불러오는 중입니다.",
+    "loadMoreGoalsError": "목표를 더 불러오지 못했어요.",
+    "goalProgressLabel": "목표 진행률 {percentage}%"
   }
 }

@@ -57,7 +57,8 @@ export default function Dashboard() {
   // 헤더와 같은 쿼리 키를 사용하므로 사용자 데이터와 진행 중인 요청을 공유합니다.
   const { userName } = useCurrentUser();
   const todoLabels = useTodoItemLabels();
-  const t = useTranslations('Todo');
+  const nextIntlTodo = useTranslations('Todo');
+  const nextIntlDashboard = useTranslations('Dashboard');
   const [createGoal, setCreateGoal] = useState<Pick<
     Goal,
     'id' | 'title'
@@ -468,7 +469,9 @@ export default function Dashboard() {
     } catch {
       // 서버 성공 전까지 목록을 변경하지 않으므로 실패 시 기존 상태를 유지합니다.
       toast.error(
-        t(field === 'done' ? 'toggleTodoDoneError' : 'toggleFavoriteError'),
+        nextIntlTodo(
+          field === 'done' ? 'toggleTodoDoneError' : 'toggleFavoriteError',
+        ),
       );
     } finally {
       pendingTodoIds.current.delete(id);
@@ -503,7 +506,9 @@ export default function Dashboard() {
       {/* 컨텐츠 마크업은 여기서 부터 */}
       <div>
         <h1 className="mb-7.5 text-xl font-semibold text-heading max-md:hidden lg:mb-8.5 lg:text-2xl">
-          {userName ? `${userName}님의 대시보드` : '대시보드'}
+          {userName
+            ? nextIntlTodo('dashboardTitle', { name: userName })
+            : nextIntlTodo('dashboard')}
         </h1>
       </div>
 
@@ -535,22 +540,22 @@ export default function Dashboard() {
           <span className="mr-2 size-10">
             <Image src="/icons/icon_goal.svg" width={40} height={40} alt="" />
           </span>
-          목표별 할일
+          {nextIntlTodo('todosByGoal')}
         </h2>
         {isLoadingGoals ? (
           <DashboardLoading
-            message="목표를 불러오는 중입니다."
+            message={nextIntlTodo('loadingGoals')}
             size="md"
             color="muted"
             className="mt-4 py-6"
           />
         ) : goalsError ? (
           <p role="alert" className="mt-4 text-center text-muted">
-            목표를 불러오지 못했어요
+            {nextIntlTodo('fetchGoalsError')}
           </p>
         ) : goals.length === 0 ? (
           <div className="mt-2.5 flex min-h-60 items-center justify-center rounded-[1.75rem] bg-white-section p-6 md:min-h-100 lg:rounded-[2.5rem]">
-            <DashboardEmptyState message="최근에 등록한 목표가 없어요" />
+            <DashboardEmptyState message={nextIntlDashboard('noRecentGoals')} />
           </div>
         ) : (
           <div className="mt-2.5">
@@ -615,13 +620,15 @@ export default function Dashboard() {
                                 if (event.nativeEvent.isComposing)
                                   event.preventDefault();
                               }}
-                              aria-label={`${goal.title} 할 일 검색`}
-                              placeholder="할 일을 검색해주세요"
+                              aria-label={nextIntlDashboard('goalSearchLabel', {
+                                title: goal.title,
+                              })}
+                              placeholder={nextIntlTodo('searchTodos')}
                               className="md:w-52.5 xl:w-60"
                             />
                             <button
                               type="button"
-                              aria-label="할 일 추가"
+                              aria-label={nextIntlTodo('addTodo')}
                               onClick={() =>
                                 setCreateGoal({
                                   id: goal.id,
@@ -642,7 +649,7 @@ export default function Dashboard() {
                                 />
                               </span>
                               <span className="hidden md:inline">
-                                할 일 추가
+                                {nextIntlTodo('addTodo')}
                               </span>
                             </button>
                           </div>
@@ -659,7 +666,7 @@ export default function Dashboard() {
                               className="size-6 animate-spin rounded-full border-2 border-current border-t-transparent motion-reduce:animate-none"
                             />
                             <p className="text-sm font-medium md:text-base">
-                              할 일을 불러오는 중입니다.
+                              {nextIntlTodo('loadingTodos')}
                             </p>
                           </div>
                         ) : isGoalTodosEmpty ? (
@@ -667,8 +674,8 @@ export default function Dashboard() {
                             <DashboardEmptyState
                               message={
                                 pendingState.keyword || completedState.keyword
-                                  ? '검색 결과가 없습니다.'
-                                  : '등록된 할 일이 없어요'
+                                  ? nextIntlTodo('noSearchResults')
+                                  : nextIntlTodo('noAllTodos')
                               }
                             />
                           </div>
@@ -683,7 +690,7 @@ export default function Dashboard() {
                                   role="alert"
                                   className="mt-4 text-center text-xs text-muted"
                                 >
-                                  할 일을 불러오지 못했어요
+                                  {nextIntlTodo('fetchTodosError')}
                                 </p>
                               ) : pendingTodos.length > 0 ? (
                                 <div className={goalTodoScrollClass}>
@@ -724,8 +731,8 @@ export default function Dashboard() {
                               ) : (
                                 <p className="absolute inset-0 flex items-center justify-center px-4 text-center text-sm font-medium text-muted md:text-base">
                                   {pendingState.keyword
-                                    ? '검색 결과가 없습니다.'
-                                    : '남은 할 일이 없어요'}
+                                    ? nextIntlTodo('noSearchResults')
+                                    : nextIntlTodo('noTodos')}
                                 </p>
                               )}
                               {pendingState &&
@@ -737,8 +744,9 @@ export default function Dashboard() {
                                         role="alert"
                                         className="mb-2 text-sm text-muted"
                                       >
-                                        추가 할 일을 불러오지 못했어요. 다시
-                                        눌러주세요.
+                                        {nextIntlDashboard(
+                                          'loadMoreTodosError',
+                                        )}
                                       </p>
                                     )}
                                     <button
@@ -747,13 +755,16 @@ export default function Dashboard() {
                                         loadMoreGoalTodos(goal.id, false)
                                       }
                                       disabled={pendingState.isLoadingMore}
-                                      aria-label={`${goal.title} TO DO 더보기`}
+                                      aria-label={nextIntlDashboard(
+                                        'loadMoreLabel',
+                                        { title: goal.title, status: 'TO DO' },
+                                      )}
                                       aria-busy={pendingState.isLoadingMore}
                                       className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
                                     >
                                       {pendingState.isLoadingMore
-                                        ? '불러오는 중입니다.'
-                                        : '더보기'}
+                                        ? nextIntlDashboard('loading')
+                                        : nextIntlDashboard('more')}
                                       <svg
                                         width="24"
                                         height="24"
@@ -780,7 +791,7 @@ export default function Dashboard() {
                                   role="alert"
                                   className="mt-4 text-center text-xs text-muted"
                                 >
-                                  할 일을 불러오지 못했어요
+                                  {nextIntlTodo('fetchTodosError')}
                                 </p>
                               ) : completedTodos.length > 0 ? (
                                 <div className={goalTodoScrollClass}>
@@ -821,8 +832,8 @@ export default function Dashboard() {
                               ) : (
                                 <p className="mt-4 text-center text-sm font-medium text-muted md:text-base">
                                   {completedState.keyword
-                                    ? '검색 결과가 없습니다.'
-                                    : '완료한 할 일이 없어요'}
+                                    ? nextIntlTodo('noSearchResults')
+                                    : nextIntlTodo('noCompletedTodos')}
                                 </p>
                               )}
                               {completedState &&
@@ -834,8 +845,9 @@ export default function Dashboard() {
                                         role="alert"
                                         className="mb-2 text-sm text-muted"
                                       >
-                                        추가 할 일을 불러오지 못했어요. 다시
-                                        눌러주세요.
+                                        {nextIntlDashboard(
+                                          'loadMoreTodosError',
+                                        )}
                                       </p>
                                     )}
                                     <button
@@ -844,13 +856,16 @@ export default function Dashboard() {
                                         loadMoreGoalTodos(goal.id, true)
                                       }
                                       disabled={completedState.isLoadingMore}
-                                      aria-label={`${goal.title} DONE 더보기`}
+                                      aria-label={nextIntlDashboard(
+                                        'loadMoreLabel',
+                                        { title: goal.title, status: 'DONE' },
+                                      )}
                                       aria-busy={completedState.isLoadingMore}
                                       className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
                                     >
                                       {completedState.isLoadingMore
-                                        ? '불러오는 중입니다.'
-                                        : '더보기'}
+                                        ? nextIntlDashboard('loading')
+                                        : nextIntlDashboard('more')}
                                       <svg
                                         width="24"
                                         height="24"
@@ -883,19 +898,19 @@ export default function Dashboard() {
               >
                 {isLoadingMoreGoals ? (
                   <p role="status" className="text-sm font-medium text-muted">
-                    목표를 더 불러오는 중입니다.
+                    {nextIntlDashboard('loadingMoreGoals')}
                   </p>
                 ) : moreGoalsError ? (
                   <div className="text-center">
                     <p role="alert" className="text-sm text-muted">
-                      목표를 더 불러오지 못했어요.
+                      {nextIntlDashboard('loadMoreGoalsError')}
                     </p>
                     <button
                       type="button"
                       onClick={loadMoreGoals}
                       className="mt-2 rounded-lg px-4 py-2 text-sm font-medium text-orange-600 focus-visible:outline-2 focus-visible:outline-orange-600"
                     >
-                      다시 시도
+                      {nextIntlTodo('retry')}
                     </button>
                   </div>
                 ) : null}

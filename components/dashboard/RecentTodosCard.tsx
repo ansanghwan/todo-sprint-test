@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import Image from 'next/image';
@@ -31,6 +32,8 @@ export default function RecentTodosCard({
   onDelete,
   onOpenDetail,
 }: RecentTodosCardProps) {
+  const nextIntlTodo = useTranslations('Todo');
+  const nextIntlDashboard = useTranslations('Dashboard');
   return (
     <div className="min-w-0 md:flex-1 lg:flex-[1_1_28rem]">
       <div className="mb-2.5 flex flex-wrap px-2">
@@ -38,13 +41,13 @@ export default function RecentTodosCard({
           <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-[#ffd0aa]">
             <Image src="/icons/icon_memo.svg" width={16} height={21} alt="" />
           </span>
-          최근 등록한 할일
+          {nextIntlTodo('recentTodos')}
         </h2>
         <Link
           href="/todos"
           className="ml-auto flex items-center text-sm font-semibold text-orange-600"
         >
-          모두 보기
+          {nextIntlTodo('viewAll')}
           <span>
             <svg
               className="size-5"
@@ -66,13 +69,13 @@ export default function RecentTodosCard({
       </div>
       <div className="aspect-343/186 w-full rounded-[1.75rem] bg-orange-500 px-4.5 py-4 shadow-[0_0.625rem_2.5rem_0_#FF9E594D] md:aspect-auto md:h-46.5 lg:h-64 lg:rounded-[2.5rem] lg:px-8 lg:py-7.5">
         {isLoading ? (
-          <DashboardLoading message="할 일을 불러오는 중입니다." />
+          <DashboardLoading message={nextIntlTodo('loadingTodos')} />
         ) : error ? (
           <div
             role="alert"
             className="flex h-full items-center justify-center text-base font-semibold text-white"
           >
-            <p>할 일을 불러오지 못했어요</p>
+            <p>{nextIntlTodo('fetchTodosError')}</p>
           </div>
         ) : todos.length > 0 ? (
           <div className="size-full max-md:flex max-md:flex-col max-md:justify-center">
@@ -101,7 +104,7 @@ export default function RecentTodosCard({
           </div>
         ) : (
           <div className="flex h-full items-center justify-center text-base font-semibold text-white">
-            <p>최근에 등록한 할 일이 없어요</p>
+            <p>{nextIntlDashboard('noRecentTodos')}</p>
           </div>
         )}
       </div>
