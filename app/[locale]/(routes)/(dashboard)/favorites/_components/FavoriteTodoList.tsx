@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
+import NoteDetailDrawer from '@/components/note/note-detail/NoteDetailDrawer';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
 import TodoItem from '@/components/todo/TodoItem';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
@@ -25,7 +26,7 @@ import {
 // globals.css의 --breakpoint-md(744px)와 같은 값입니다.
 const TABLET_QUERY = '(min-width: 46.5rem)';
 
-// 상세(FN-TD-13)·노트 보기(FN-TD-11) 연결은 보류 중입니다.
+// 상세(FN-TD-13) 연결은 보류 중입니다.
 const notConnected = () => {};
 
 interface FavoriteTodoListProps {
@@ -50,6 +51,7 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
     TodoDto,
     'id' | 'title'
   > | null>(null);
+  const [noteId, setNoteId] = useState<number | null>(null);
 
   // FN-FV-01: 조회에 실패하면 에러 토스트를 띄웁니다.
   useEffect(() => {
@@ -100,7 +102,7 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
             size={isTablet ? 'large' : 'small'}
             {...actions}
             onOpenDetail={notConnected}
-            onViewNote={notConnected}
+            onViewNote={setNoteId}
             onCreateNote={(todoId) =>
               router.push(`/notes/write?todoId=${todoId}`)
             }
@@ -118,6 +120,7 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
         todo={deleteTarget}
         onClose={() => setDeleteTarget(null)}
       />
+      <NoteDetailDrawer noteId={noteId} onClose={() => setNoteId(null)} />
     </>
   );
 };

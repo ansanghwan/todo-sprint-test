@@ -14,6 +14,9 @@ import { makeTodo } from '@/test/todoMocks';
 import type { TodoDto } from '@/types/api/todo';
 import TodosView from './TodosView';
 
+// 할 일 목록의 노트 작성(FN-TD-12)이 라우터로 이동하므로 테스트에서는 라우터를 대신합니다.
+vi.mock('@/i18n/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 vi.mock('@/lib/api/todos', () => ({
   getTodos: vi.fn(),
   updateTodo: vi.fn(),

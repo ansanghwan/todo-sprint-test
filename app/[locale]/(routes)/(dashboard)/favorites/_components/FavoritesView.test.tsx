@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { toast } from '@/components/ui/toast/Toaster';
 import { getGoals } from '@/lib/api/goals';
+import { getNote } from '@/lib/api/notes';
 import {
   addTodoFavorite,
   deleteTodo,
@@ -16,7 +17,7 @@ import {
 import { installRadixDomMocks } from '@/test/domMocks';
 import IntlTestProvider from '@/test/IntlTestProvider';
 import TestProviders from '@/test/TestProviders';
-import { makeGoal, makeTodo } from '@/test/todoMocks';
+import { makeGoal, makeNote, makeTodo } from '@/test/todoMocks';
 import type { TodoDto } from '@/types/api/todo';
 import TodosView from '../../todos/_components/TodosView';
 import FavoritesView from './FavoritesView';
@@ -35,6 +36,7 @@ vi.mock('@/lib/api/todos', () => ({
   removeTodoFavorite: vi.fn(),
 }));
 vi.mock('@/lib/api/goals', () => ({ getGoals: vi.fn() }));
+vi.mock('@/lib/api/notes', () => ({ getNote: vi.fn() }));
 vi.mock('@/components/ui/toast/Toaster', () => ({
   toast: { error: vi.fn(), success: vi.fn() },
 }));
@@ -153,6 +155,24 @@ const chooseGoal = async (user: UserEvent, title: string) => {
 };
 
 describe('찜한 할 일 화면', () => {
+  it('노트 보기는 그 할 일의 노트 상세를 연다 (FN-TD-11)', async () => {
+    serverFavorites[0] = favorite(1, { noteIds: [11] });
+    vi.mocked(getNote).mockResolvedValue(
+      makeNote(serverFavorites[0], { id: 11, title: '찜 1 노트' }),
+    );
+    const user = renderFavorites();
+    await screen.findByText('찜 1');
+
+    await user.click(
+      within(itemOf('찜 1')).getByRole('button', { name: '노트 보기' }),
+    );
+
+    expect(
+      await screen.findByRole('dialog', { name: /찜 1 노트/ }),
+    ).toBeInTheDocument();
+    expect(getNote).toHaveBeenCalledWith(11, expect.anything());
+  });
+
   it('연필 버튼은 해당 할 일 ID로 노트 작성 화면을 연다', async () => {
     const user = renderFavorites();
     await screen.findByText('찜 1');

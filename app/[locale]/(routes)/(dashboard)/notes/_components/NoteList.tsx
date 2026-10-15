@@ -8,6 +8,7 @@ import type { GetNotesParams, Note } from '@/types/api/note';
 import { useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
 import DeleteNoteModal from '@/app/[locale]/(routes)/(dashboard)/notes/_components/DeleteNoteModal';
+import NoteDetailDrawer from '@/components/note/note-detail/NoteDetailDrawer';
 
 type NoteListProps = Omit<GetNotesParams, 'cursor'>;
 
@@ -15,6 +16,7 @@ export default function NoteList(params: NoteListProps) {
   const t = useTranslations('Todo');
   const router = useRouter();
   const [deletingNote, setDeletingNote] = useState<Note | null>(null);
+  const [openNoteId, setOpenNoteId] = useState<number | null>(null);
   const {
     data,
     isPending,
@@ -80,6 +82,7 @@ export default function NoteList(params: NoteListProps) {
           <li key={`note-${note.id}`}>
             <NoteItem
               noteProps={note}
+              onOpen={() => setOpenNoteId(note.id)}
               onEdit={() => router.push(`/notes/edit?noteId=${note.id}`)}
               onDelete={() => setDeletingNote(note)}
             />
@@ -101,6 +104,10 @@ export default function NoteList(params: NoteListProps) {
       <DeleteNoteModal
         note={deletingNote}
         onClose={() => setDeletingNote(null)}
+      />
+      <NoteDetailDrawer
+        noteId={openNoteId}
+        onClose={() => setOpenNoteId(null)}
       />
     </>
   );

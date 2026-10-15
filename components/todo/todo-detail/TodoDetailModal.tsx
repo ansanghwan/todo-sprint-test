@@ -13,6 +13,7 @@ import { toast } from '@/components/ui/toast/Toaster';
 import { todoQueries } from '@/queries/todo';
 import type { TodoDto } from '@/types/api/todo';
 import TodoDetailContent from './TodoDetailContent';
+import TodoDetailNote from './TodoDetailNote';
 
 export interface TodoDetailModalProps {
   /** 볼 할 일 id. null이면 닫힌 상태입니다. */
@@ -22,6 +23,8 @@ export interface TodoDetailModalProps {
   onEdit?: (todoId: number) => void;
   /** 케밥의 삭제하기. 넘기지 않으면 케밥을 그리지 않습니다. */
   onDelete?: (todo: Pick<TodoDto, 'id' | 'title'>) => void;
+  /** 작성된 노트 열기 (FN-TD-43). 넘기면 노트 제목을 보여 주고, 상세를 닫고 노트를 여는 일은 호출부가 맡습니다. */
+  onOpenNote?: (noteId: number) => void;
 }
 
 /**
@@ -41,6 +44,7 @@ const TodoDetailDialog = ({
   onClose,
   onEdit,
   onDelete,
+  onOpenNote,
 }: TodoDetailModalProps & { todoId: number }) => {
   const t = useTranslations('Todo');
   const {
@@ -97,6 +101,9 @@ const TodoDetailDialog = ({
         </ModalHeader>
 
         {todo && <TodoDetailContent todo={todo} />}
+        {todo && onOpenNote && todo.noteIds.length > 0 && (
+          <TodoDetailNote noteId={todo.noteIds[0]} onOpen={onOpenNote} />
+        )}
 
         {!todo && !isError && (
           <p

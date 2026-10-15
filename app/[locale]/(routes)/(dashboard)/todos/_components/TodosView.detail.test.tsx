@@ -10,6 +10,9 @@ import TestProviders from '@/test/TestProviders';
 import { mockTodosApi } from '@/test/todoMocks';
 import TodosView from './TodosView';
 
+// 할 일 목록의 노트 작성(FN-TD-12)이 라우터로 이동하므로 테스트에서는 라우터를 대신합니다.
+vi.mock('@/i18n/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 /**
  * 통합 검증: Storybook과 같은 mock 서버(mockTodosApi)에 실제 화면을 붙여
  * 목록 → 상세 → 수정·삭제로 넘어갈 때 대상이 맞고 모달이 겹치지 않는지 확인합니다.

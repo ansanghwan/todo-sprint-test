@@ -7,7 +7,12 @@ import IntlTestProvider from '@/test/IntlTestProvider';
 function renderNoteItem(note: Note) {
   return render(
     <IntlTestProvider>
-      <NoteItem noteProps={note} onEdit={vi.fn()} onDelete={vi.fn()} />
+      <NoteItem
+        noteProps={note}
+        onOpen={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+      />
     </IntlTestProvider>,
   );
 }

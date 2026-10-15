@@ -1,5 +1,15 @@
 import type { Editor } from '@tiptap/react';
 import { useEditorState } from '@tiptap/react';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+
+import {
+  applyEditorLink,
+  getEditorLinkTarget,
+  removeEditorLink,
+  type EditorLinkTarget,
+} from './editorLink';
+import LinkUploadModal from './LinkUploadModal';
 
 export default function NoteToolbar({ editor }: { editor: Editor }) {
   const s = useEditorState({
@@ -16,11 +26,24 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
     }),
   });
 
-  const setLink = () => {
-    const url = window.prompt('링크 주소');
-    if (url === null) return;
-    if (url === '') return editor.chain().focus().unsetLink().run();
-    editor.chain().focus().setLink({ href: url }).run();
+  const t = useTranslations('Todo');
+  // 팝업을 연 순간의 적용 위치. null이면 팝업이 닫힌 상태입니다.
+  const [linkTarget, setLinkTarget] = useState<EditorLinkTarget | null>(null);
+
+  const openLinkModal = () => setLinkTarget(getEditorLinkTarget(editor));
+
+  const handleLinkSubmit = (url: string) => {
+    if (linkTarget) {
+      applyEditorLink(editor, linkTarget, url);
+    }
+    setLinkTarget(null);
+  };
+
+  const handleLinkRemove = () => {
+    if (linkTarget) {
+      removeEditorLink(editor, linkTarget);
+    }
+    setLinkTarget(null);
   };
 
   return (
@@ -104,11 +127,24 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
       <button
         type="button"
         data-active={s.link}
-        onClick={setLink}
+        aria-label={t('link')}
+        onClick={openLinkModal}
         className={'flex items-center align-middle text-grayscale-500'}
       >
         <span className="material-symbols-outlined font-light!">link_2</span>
       </button>
+
+      <LinkUploadModal
+        isOpen={linkTarget !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setLinkTarget(null);
+          }
+        }}
+        initialUrl={linkTarget?.href}
+        onSubmit={handleLinkSubmit}
+        onRemove={handleLinkRemove}
+      />
 
       {/*<button*/}
       {/*  type="button"*/}
