@@ -173,7 +173,7 @@ describe('NoteList', () => {
 
       await user.click(screen.getByRole('menuitem', { name: '수정하기' }));
 
-      expect(push).toHaveBeenCalledWith('/note/edit?noteId=7');
+      expect(push).toHaveBeenCalledWith('/notes/edit?noteId=7');
     });
 
     it('삭제하기를 누르면 확인 모달을 연다', async () => {
@@ -231,7 +231,7 @@ describe('NoteList', () => {
 
       await user.click(screen.getByRole('menuitem', { name: '수정하기' }));
 
-      expect(push).toHaveBeenCalledWith('/note/edit?noteId=7');
+      expect(push).toHaveBeenCalledWith('/notes/edit?noteId=7');
     });
 
     it('삭제하기를 누르면 확인 모달을 연다', async () => {

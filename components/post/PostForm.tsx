@@ -117,7 +117,7 @@ export default function PostForm({
                       maxLength={30}
                       placeholder={t('postTitlePlaceholder')}
                       className={
-                        'w-full pl-3 text-2xl font-semibold outline-none placeholder:text-[#BBBBBB]'
+                        'w-full text-2xl font-semibold outline-none placeholder:text-[#BBBBBB]'
                       }
                     />
                     <span className={'ml-auto text-xs'}>

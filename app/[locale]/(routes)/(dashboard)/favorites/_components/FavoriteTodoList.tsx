@@ -102,7 +102,7 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
             onOpenDetail={notConnected}
             onViewNote={notConnected}
             onCreateNote={(todoId) =>
-              router.push(`/note/write?todoId=${todoId}`)
+              router.push(`/notes/write?todoId=${todoId}`)
             }
             kebabSlot={
               <TodoItemKebab

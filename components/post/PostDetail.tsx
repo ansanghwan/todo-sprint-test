@@ -5,6 +5,7 @@ import usePostDetail from '@/hooks/post/usePostDetail';
 import { formatUtcDateToYmd } from '@/lib/formatter';
 import PostActions from './PostActions';
 import WriterAvatar from './WriterAvatar';
+import PostContentViewer from '@/components/ui/editor/PostContentViewer';
 
 interface PostDetailProps {
   postId: number;
@@ -30,9 +31,9 @@ const PostDetail = ({ postId }: PostDetailProps) => {
               <span className="truncate">{writer.name}</span>
             </div>
           </header>
-          <p className="text-sm wrap-break-word whitespace-pre-wrap text-foreground md:text-base">
-            {content}
-          </p>
+          <div className="text-sm wrap-break-word text-foreground md:text-base">
+            <PostContentViewer html={content} />
+          </div>
         </div>
         {image && (
           <div className="relative size-37.5 overflow-hidden rounded-[1.25rem] border border-subtle md:size-58 md:rounded-3xl">

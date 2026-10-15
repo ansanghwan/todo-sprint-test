@@ -159,7 +159,7 @@ describe('찜한 할 일 화면', () => {
     await user.click(
       within(itemOf('찜 1')).getByRole('button', { name: '노트 작성하기' }),
     );
-    expect(push).toHaveBeenCalledWith('/note/write?todoId=1');
+    expect(push).toHaveBeenCalledWith('/notes/write?todoId=1');
   });
 
   describe('조회 (FN-FV-01, 02)', () => {

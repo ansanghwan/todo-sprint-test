@@ -80,7 +80,7 @@ export default function NoteList(params: NoteListProps) {
           <li key={`note-${note.id}`}>
             <NoteItem
               noteProps={note}
-              onEdit={() => router.push(`/note/edit?noteId=${note.id}`)}
+              onEdit={() => router.push(`/notes/edit?noteId=${note.id}`)}
               onDelete={() => setDeletingNote(note)}
             />
           </li>

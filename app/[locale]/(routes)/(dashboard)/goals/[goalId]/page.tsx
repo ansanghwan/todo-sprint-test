@@ -123,7 +123,7 @@ export default function GoalDetailPage() {
         <GoalTitleCard key={goal.id} goal={goal} />
         <div className="min-w-0">
           <div className="gap-6 md:grid md:grid-cols-2 md:gap-5">
-            <div className="relative isolate flex aspect-[343/160] min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-orange-500 text-white shadow-[0_0.625rem_2.5rem_0_#FF9E594D] max-md:mb-4 md:aspect-auto md:h-40 md:rounded-[2rem] md:pb-[2.1875rem]">
+            <div className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-orange-500 text-white shadow-[0_0.625rem_2.5rem_0_#FF9E594D] max-md:mb-4 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75">
               {/* 조회 실패·로딩을 먼저 처리하고, 숫자가 준비됐을 때만 차트와 퍼센트를 표시합니다. */}
               {todoQuery.isError || doneQuery.isError ? (
                 <p
@@ -162,7 +162,7 @@ export default function GoalDetailPage() {
 
             <Link
               href={`/notes?goalId=${id}`}
-              className="relative isolate flex aspect-[343/160] min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-blue-200 pb-8 pl-10 text-white shadow-[0_0.625rem_2.5rem_0_#00D4BE3D] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-[2rem] md:pb-[2.1875rem] md:before:size-[6.0625rem]"
+              className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-blue-200 pb-8 pl-10 text-white shadow-[0_0.625rem_2.5rem_0_#00D4BE3D] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75 md:before:size-24.25"
             >
               <span className="relative z-10 inline-flex items-center gap-1.5 text-2xl font-bold">
                 노트 모아보기
@@ -225,7 +225,7 @@ export default function GoalDetailPage() {
                 <p role="alert">할 일을 불러오지 못했습니다.</p>
               </div>
             ) : (
-              <div className="md:flex md:max-h-[calc(36rem-2rem)] md:min-h-0 md:flex-1 md:flex-col lg:max-h-[calc(36rem-3rem)]">
+              <div className="md:flex md:max-h-136 md:min-h-0 md:flex-1 md:flex-col lg:max-h-132">
                 {/* 최대 576px에서 카드 패딩을 제외하고, 목록과 하단 버튼에 공간을 배분합니다. */}
                 <div className="max-h-69 scrollbar-thin overflow-y-auto md:max-h-none md:min-h-0 md:flex-1">
                   {todoQuery.data.pages[0]?.totalCount === 0 ? (
@@ -247,7 +247,7 @@ export default function GoalDetailPage() {
                           {...actions}
                           onOpenDetail={setDetailTodoId}
                           onCreateNote={(todoId) =>
-                            router.push(`/note/write?todoId=${todoId}`)
+                            router.push(`/notes/write?todoId=${todoId}`)
                           }
                           onViewNote={() => router.push(`/notes?goalId=${id}`)}
                           kebabSlot={
@@ -332,7 +332,7 @@ export default function GoalDetailPage() {
                 <p role="alert">할 일을 불러오지 못했습니다.</p>
               </div>
             ) : (
-              <div className="md:flex md:max-h-[calc(36rem-2rem)] md:min-h-0 md:flex-1 md:flex-col lg:max-h-[calc(36rem-3rem)]">
+              <div className="md:flex md:max-h-136 md:min-h-0 md:flex-1 md:flex-col lg:max-h-132">
                 {/* 최대 576px에서 카드 패딩을 제외하고, 목록과 하단 버튼에 공간을 배분합니다. */}
                 <div className="max-h-69 scrollbar-thin overflow-y-auto md:max-h-none md:min-h-0 md:flex-1">
                   {doneQuery.data.pages[0]?.totalCount === 0 ? (
@@ -354,7 +354,7 @@ export default function GoalDetailPage() {
                           {...actions}
                           onOpenDetail={setDetailTodoId}
                           onCreateNote={(todoId) =>
-                            router.push(`/note/write?todoId=${todoId}`)
+                            router.push(`/notes/write?todoId=${todoId}`)
                           }
                           onViewNote={() => router.push(`/notes?goalId=${id}`)}
                           kebabSlot={

@@ -3,6 +3,7 @@ import type { PostDto } from '@/types/api/post';
 import { formatDateToRelativeTime } from '@/lib/formatter';
 import CommentCount from './CommentCount';
 import WriterAvatar from './WriterAvatar';
+import { htmlToText } from '@/lib/htmlToText';
 
 export type PostListItemData = Pick<
   PostDto,
@@ -31,7 +32,7 @@ const PostListItem = ({ post }: PostListItemProps) => {
             {title}
           </h3>
           <p className="truncate text-foreground md:line-clamp-2 md:whitespace-normal">
-            {content}
+            {htmlToText(content)}
           </p>
         </div>
         <div className="flex items-center gap-1 text-xs text-muted md:gap-2 md:text-base">

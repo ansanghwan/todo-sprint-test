@@ -14,6 +14,12 @@ type Props = {
   onImageClick: () => void;
   children: React.ReactNode;
 };
+
+export const postEditorExtensions = [
+  StarterKit,
+  TextAlign.configure({ types: ['paragraph', 'heading'] }),
+];
+
 export default function PostEditor({
   value,
   placeholder,
@@ -25,8 +31,7 @@ export default function PostEditor({
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ link: { openOnClick: false } }),
-      TextAlign.configure({ types: ['paragraph', 'heading'] }),
+      ...postEditorExtensions,
       Placeholder.configure({
         placeholder: `${placeholder}`,
       }),
