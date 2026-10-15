@@ -79,7 +79,7 @@ export default function RecentTodosCard({
           </div>
         ) : todos.length > 0 ? (
           <div className="size-full max-md:flex max-md:flex-col max-md:justify-center">
-            <ul className="flex h-full flex-col justify-between max-md:max-h-56">
+            <ul className="grid h-full grid-rows-4 max-md:max-h-70">
               {todos.map((todo) => (
                 <TodoItem
                   key={todo.id}
