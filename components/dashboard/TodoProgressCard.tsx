@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import ProgressChart from '@/components/dashboard/ProgressChart';
 import DashboardLoading from '@/components/dashboard/DashboardLoading';
@@ -16,6 +17,8 @@ export default function TodoProgressCard({
   isLoading,
   error,
 }: TodoProgressCardProps) {
+  const nextIntlTodo = useTranslations('Todo');
+  const nextIntlDashboard = useTranslations('Dashboard');
   return (
     <div className="min-w-0 max-md:mt-10 md:flex-1 lg:flex-[1_1_28rem]">
       <div className="mb-2.5 flex flex-wrap px-2">
@@ -23,7 +26,7 @@ export default function TodoProgressCard({
           <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-blue-100">
             <Image src="/icons/icon_chart.svg" width={16} height={21} alt="" />
           </span>{' '}
-          내 진행 상황
+          {nextIntlTodo('myProgress')}
         </h2>{' '}
       </div>
 
@@ -31,13 +34,13 @@ export default function TodoProgressCard({
         {/* 장식용 문어 일러스트는 ::before 배경 레이어로 처리합니다. */}
 
         {isLoading ? (
-          <DashboardLoading message="진행률을 불러 오는 중입니다" />
+          <DashboardLoading message={nextIntlDashboard('loadingProgress')} />
         ) : error ? (
           <div
             role="alert"
             className="relative z-10 flex h-full items-center justify-center text-base font-semibold text-white"
           >
-            <p>진행 상황을 불러오지 못했어요</p>
+            <p>{nextIntlDashboard('fetchProgressError')}</p>
           </div>
         ) : (
           <div className="absolute top-1/2 left-0 z-10 flex w-full -translate-y-1/2 items-center gap-5 px-6 lg:gap-8 lg:px-10">
@@ -48,7 +51,9 @@ export default function TodoProgressCard({
 
             <div className="min-w-0 text-white">
               <p className="text-sm font-semibold lg:text-xl">
-                {userName ? `${userName}님의 진행도는` : '내 진행 상황'}
+                {userName
+                  ? nextIntlDashboard('userProgress', { name: userName })
+                  : nextIntlTodo('myProgress')}
               </p>
               <p className="flex items-baseline">
                 <span className="text-display-lg leading-none font-bold lg:text-display-xl">

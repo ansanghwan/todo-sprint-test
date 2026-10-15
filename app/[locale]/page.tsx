@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import LandingStartButton from '@/components/landing/LandingStartButton';
 import LandingSmoothScroll from '@/components/landing/LandingSmoothScroll';
 
@@ -19,6 +20,7 @@ const stepCardClass =
   'relative flex flex-col items-center rounded-[2rem] border border-white bg-white px-5 py-8 shadow-[0_0.75rem_2.5rem_#824c3510] md:px-4 md:py-10 max-md:group-data-[steps-pinned]/steps:col-start-1 max-md:group-data-[steps-pinned]/steps:row-start-1 max-md:group-data-[steps-pinned]/steps:w-full max-md:group-data-[steps-pinned]/steps:max-w-96 max-md:group-data-[steps-pinned]/steps:justify-self-center max-md:group-data-[steps-pinned]/steps:py-6';
 
 export default function Home() {
+  const nextIntlLanding = useTranslations('Landing');
   return (
     <LandingSmoothScroll>
       {/* JavaScript 비활성화 시에도 콘텐츠를 표시합니다. */}
@@ -43,16 +45,17 @@ export default function Home() {
         <div className="mx-auto flex size-full max-w-7xl flex-col items-center justify-center gap-[clamp(2rem,5svh,3.5rem)] px-5 py-[clamp(2.5rem,6svh,5rem)] text-center md:px-12">
           <div data-enter="text">
             <p data-enter="text" className={eyebrowClass}>
-              슬리드투두 하나로 정리부터 실행까지
+              {nextIntlLanding('eyebrow')}
             </p>
             <h1 className={hdadingManinClass}>
-              오늘의 할 일,
-              <br />
-              <span>슬리드투두</span>로 계획해요
+              {nextIntlLanding.rich('heroTitle', {
+                br: () => <br />,
+                brand: (chunks) => <span>{chunks}</span>,
+              })}
             </h1>
           </div>
           <LandingStartButton className={startClass}>
-            시작하기
+            {nextIntlLanding('start')}
           </LandingStartButton>
           <div
             data-enter="image"
@@ -68,7 +71,7 @@ export default function Home() {
             </div>
             <Image
               src="/images/landing/sec01.png"
-              alt="할 일 목록과 진행률을 한눈에 확인하는 슬리드 투두 대시보드"
+              alt={nextIntlLanding('heroImageAlt')}
               width={1328}
               height={635}
               sizes="(min-width: 1120px) 1024px, 94vw"
@@ -93,10 +96,13 @@ export default function Home() {
             className="mx-auto w-full max-w-160 text-center lg:text-left"
           >
             <p className="inline-block rounded-[999px] border border-[#ffffff40] bg-[#ffffff1f] px-3.5 py-1.5 text-[0.875rem] font-semibold">
-              더 똑똑한 할 일 관리
+              {nextIntlLanding('featuresEyebrow')}
             </p>
             <h2 className="mt-4 text-[clamp(1.5rem,5.8vw,2rem)] leading-[1.3] font-extrabold tracking-[-0.04em] text-balance break-keep md:text-[2.5rem] lg:text-6xl [&>span]:inline-block lg:[&>span]:block">
-              <span>슬리드 투두가</span> <span>특별한 이유</span>
+              {nextIntlLanding.rich('featuresTitle', {
+                first: (chunks) => <span>{chunks}</span>,
+                second: (chunks) => <span>{chunks}</span>,
+              })}
             </h2>
             <ul className="mt-[clamp(1.75rem,4svh,2.5rem)] grid gap-3 text-left lg:mt-10 lg:gap-4">
               <li className={featureItemClass}>
@@ -107,7 +113,7 @@ export default function Home() {
                   height={40}
                   className={featureIconClass}
                 />
-                스마트한 할 일 관리
+                {nextIntlLanding('featureTasks')}
               </li>
               <li className={featureItemClass}>
                 <Image
@@ -117,7 +123,7 @@ export default function Home() {
                   height={40}
                   className={featureIconClass}
                 />
-                진행 상황 시각화
+                {nextIntlLanding('featureProgress')}
               </li>
               <li className={featureItemClass}>
                 <Image
@@ -127,7 +133,7 @@ export default function Home() {
                   height={40}
                   className={featureIconClass}
                 />
-                편리한 학습 노트
+                {nextIntlLanding('featureNotes')}
               </li>
             </ul>
           </div>
@@ -137,7 +143,7 @@ export default function Home() {
           >
             <Image
               src="/images/landing/img_sec02.png"
-              alt="완료한 할 일과 학습 노트, 진행률을 보여주는 화면"
+              alt={nextIntlLanding('featuresImageAlt')}
               width={744}
               height={424}
               sizes="(min-width: 1696px) 915px, (min-width: 1280px) 56vw, (min-width: 1024px) 52vw, (min-width: 744px) 640px, 92vw"
@@ -154,8 +160,8 @@ export default function Home() {
       >
         <div className="mx-auto w-full max-w-7xl text-center">
           <div data-steps-heading>
-            <p className={eyebrowClass}>목표 설정부터 기록까지</p>
-            <h2 className={headingClass}>쉽고 빠르게 할 일을 시작해요</h2>
+            <p className={eyebrowClass}>{nextIntlLanding('stepsEyebrow')}</p>
+            <h2 className={headingClass}>{nextIntlLanding('stepsTitle')}</h2>
           </div>
           {/* 카드 내용은 개별 작성하고 카드 외형만 공통으로 적용합니다. */}
           <ol className="relative mt-10 grid gap-5 max-md:group-data-steps-pinned/steps:mt-6 md:grid-cols-3 md:gap-6 lg:mt-26">
@@ -172,12 +178,12 @@ export default function Home() {
                 className="mt-4 size-30 lg:mt-6 lg:size-36"
               />
               <h3 className="mt-6 text-xl font-bold md:text-lg lg:mt-8 lg:text-2xl">
-                목표 설정하기
+                {nextIntlLanding('stepGoalTitle')}
               </h3>
               <p className="mt-3 text-base/relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
-                달성하고 싶은 목표를 만들고
-                <br />
-                이름을 정하세요
+                {nextIntlLanding.rich('stepGoalDescription', {
+                  br: () => <br />,
+                })}
               </p>
             </li>
             <li className={stepCardClass}>
@@ -193,12 +199,12 @@ export default function Home() {
                 className="mt-4 size-30 lg:mt-6 lg:size-36"
               />
               <h3 className="mt-6 text-xl font-bold md:text-lg lg:mt-8 lg:text-2xl">
-                할 일 추가하기
+                {nextIntlLanding('stepTodoTitle')}
               </h3>
               <p className="mt-3 text-base/relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
-                목표에 맞는 할 일을 추가하고
-                <br />
-                자료를 첨부하세요
+                {nextIntlLanding.rich('stepTodoDescription', {
+                  br: () => <br />,
+                })}
               </p>
             </li>
             <li className={stepCardClass}>
@@ -214,12 +220,12 @@ export default function Home() {
                 className="mt-4 size-30 lg:mt-6 lg:size-36"
               />
               <h3 className="mt-6 text-xl font-bold md:text-lg lg:mt-8 lg:text-2xl">
-                학습하고 기록하기
+                {nextIntlLanding('stepNoteTitle')}
               </h3>
               <p className="mt-3 text-base/relaxed text-[#777777] md:text-sm lg:mt-4 lg:text-base">
-                할 일을 완료하며 학습하고,
-                <br />
-                노트로 기록하세요
+                {nextIntlLanding.rich('stepNoteDescription', {
+                  br: () => <br />,
+                })}
               </p>
             </li>
           </ol>
@@ -242,21 +248,19 @@ export default function Home() {
             <p
               className={`${eyebrowClass} text-center md:text-right lg:text-left`}
             >
-              활발한 소통 게시판
+              {nextIntlLanding('communityEyebrow')}
             </p>
             <h2
               className={`${headingClass} text-center leading-relaxed md:text-right lg:text-left`}
             >
-              다양한 사람들과
-              <br />
-              서로의 목표를 응원해요
+              {nextIntlLanding.rich('communityTitle', { br: () => <br /> })}
             </h2>
           </div>
           <Image
             data-enter="image"
             src="/images/landing/img_sec04.png"
             loading="eager"
-            alt="말풍선 속 캐릭터들이 서로 소통하는 모습"
+            alt={nextIntlLanding('communityImageAlt')}
             width={737}
             height={491}
             sizes="(min-width: 1024px) 52vw, 95vw"
@@ -302,14 +306,14 @@ export default function Home() {
           </div>
           <div data-reveal-trigger className="text-center">
             <p data-enter="text" className={eyebrowClass}>
-              슬리드투두 하나로 정리부터 실행까지
+              {nextIntlLanding('eyebrow')}
             </p>
 
             <h2 data-enter="text" className={hdadingManinClass}>
-              오늘의 할 일, <br /> 슬리드 투두로 계획해요
+              {nextIntlLanding.rich('finaleTitle', { br: () => <br /> })}
             </h2>
             <LandingStartButton className={`${startClass} mt-10 md:mt-12`}>
-              시작하기
+              {nextIntlLanding('start')}
             </LandingStartButton>
           </div>
         </div>

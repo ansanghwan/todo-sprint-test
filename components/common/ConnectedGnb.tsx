@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import GoalCreateModal from '@/components/goal/goal-create/GoalCreateModal';
 import useCreateGoal from '@/hooks/goal/useCreateGoal';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
@@ -25,6 +26,8 @@ import useCurrentUser from '@/hooks/useCurrentUser';
  * 필요한 화면에서 useCurrentUser를 사용해 동일한 React Query 캐시를 공유합니다.
  */
 export default function ConnectedGnb() {
+  const nextIntlTodo = useTranslations('Todo');
+  const nextIntlGnb = useTranslations('Gnb');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isGoalCreateOpen, setIsGoalCreateOpen] = useState(false);
   const createGoal = useCreateGoal();
@@ -59,7 +62,7 @@ export default function ConnectedGnb() {
       router.replace('/login');
       router.refresh();
     } catch {
-      toast.error('로그아웃하지 못했어요. 다시 시도해주세요.');
+      toast.error(nextIntlGnb('logoutError'));
       loggingOut.current = false;
       setIsLoggingOut(false);
     }
@@ -77,14 +80,18 @@ export default function ConnectedGnb() {
   };
   // URL 첫 경로(키)에 맞는 모바일 헤더 제목(값)을 선택합니다. 페이지를 생성하는 설정은 아닙니다.
   const titles: Record<string, string> = {
-    dashboard: userName ? `${userName}님의 대시보드` : '대시보드',
-    goals: userName ? `${userName}님의 목표` : '목표',
-    todos: '모든 할 일',
-    calendar: '캘린더',
-    posts: '소통 게시판',
-    notes: '노트 모아보기',
-    favorites: '찜한 할 일',
-    mypage: '내 정보 관리',
+    dashboard: userName
+      ? nextIntlTodo('dashboardTitle', { name: userName })
+      : nextIntlTodo('dashboard'),
+    goals: userName
+      ? nextIntlTodo('myGoals', { name: userName })
+      : nextIntlTodo('goal'),
+    todos: nextIntlTodo('allTodos'),
+    calendar: nextIntlTodo('calendar'),
+    posts: nextIntlTodo('community'),
+    notes: nextIntlTodo('notes'),
+    favorites: nextIntlTodo('favoriteTodos'),
+    mypage: nextIntlTodo('profile'),
   };
   const retryGoals = () => {
     if (goalMenuQuery.isFetchNextPageError) {
@@ -118,8 +125,8 @@ export default function ConnectedGnb() {
         onLogout={() => void handleLogout()}
         isLoggingOut={isLoggingOut}
         activeMenu={menus[page] ?? null}
-        pageTitle={titles[page] ?? '슬리드 투두'}
-        userName={userName || '사용자'}
+        pageTitle={titles[page] ?? nextIntlGnb('appName')}
+        userName={userName || nextIntlGnb('userFallback')}
         userEmail={userEmail}
         userImage={userImage}
         hasNotification={false}

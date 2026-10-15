@@ -10,6 +10,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import type { AnchorHTMLAttributes, ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import messages from '@/messages/ko.json';
+import enMessages from '@/messages/en.json';
 import Gnb from './Gnb';
 
 vi.mock('next/link', () => ({
@@ -105,7 +106,7 @@ describe('주 메뉴 활성 상태', () => {
   });
 });
 
-it('배치 위치가 달라도 같은 알림 상태와 열기 함수를 사용한다', () => {
+it('남아 있는 알림 버튼에 전달된 알림 상태와 열기 함수를 사용한다', () => {
   const onOpenNotifications = vi.fn();
   const view = render(
     <Gnb
@@ -116,20 +117,20 @@ it('배치 위치가 달라도 같은 알림 상태와 열기 함수를 사용�
     { wrapper },
   );
   expect(screen.getByText('내 정보 관리')).toBeInTheDocument();
-  // jsdom은 반응형 CSS를 계산하지 않으므로 세 배치의 공통 연결을 검증합니다.
+  // 미개발로 두 배치는 주석 처리돼 있어 현재 남아 있는 연결만 검증합니다.
   const buttons = screen.getAllByRole('button', {
     name: '알림 열기 (새 알림 있음)',
   });
-  expect(buttons).toHaveLength(3);
+  expect(buttons).toHaveLength(1);
   buttons.forEach((button) => fireEvent.click(button));
-  expect(onOpenNotifications).toHaveBeenCalledTimes(3);
+  expect(onOpenNotifications).toHaveBeenCalledTimes(1);
   view.rerender(
     <Gnb hasNotification={false} onOpenNotifications={onOpenNotifications} />,
   );
   expect(
     screen.queryByRole('button', { name: '알림 열기 (새 알림 있음)' }),
   ).not.toBeInTheDocument();
-  expect(screen.getAllByRole('button', { name: '알림 열기' })).toHaveLength(3);
+  expect(screen.getAllByRole('button', { name: '알림 열기' })).toHaveLength(1);
 });
 
 it.each([false, true])(
@@ -176,4 +177,37 @@ it('프로필 링크에 사용자 이미지를 보여주고, 없으면 기본 �
 
   rerender(<Gnb userImage={null} />);
   expect(avatar()?.getAttribute('src')).toContain('img_profile.jpg');
+});
+
+it('영문에서는 메뉴·버튼·접근성 문구를 번역하고 사용자 목표명은 유지한다', () => {
+  render(
+    <NextIntlClientProvider locale="en" messages={enMessages}>
+      <Gnb
+        goalMenu={{
+          goals: [{ id: 683, title: '한국어 목표' }],
+          isPending: false,
+          isFetching: false,
+          isError: false,
+          hasNextPage: false,
+          onExpand: vi.fn(),
+          onLoadMore: vi.fn(),
+          onRetry: vi.fn(),
+        }}
+      />
+    </NextIntlClientProvider>,
+  );
+  const nav = within(
+    screen.getByRole('navigation', { name: 'Main navigation' }),
+  );
+  expect(nav.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument();
+  expect(
+    nav.getByRole('link', { name: 'Favorite To-dos' }),
+  ).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'New Goal' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'New To-do' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Expand Goal list' }));
+  expect(
+    screen.getByRole('button', { name: 'Collapse Goal list' }),
+  ).toBeInTheDocument();
+  expect(nav.getByRole('link', { name: '한국어 목표' })).toBeInTheDocument();
 });

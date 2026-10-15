@@ -63,9 +63,9 @@ beforeEach(() => {
     removeEventListener: vi.fn(),
   }));
 });
-function setup() {
+function setup(locale: 'ko' | 'en' = 'ko') {
   render(
-    <TestProviders>
+    <TestProviders locale={locale}>
       <GoalDetailPage />
     </TestProviders>,
   );
@@ -153,4 +153,27 @@ it('할 일 제목은 해당 ID의 상세를 열고 연필은 새 노트 작성 
   await user.click(screen.getByRole('button', { name: '상세 닫기' }));
   await user.click(screen.getByRole('button', { name: '노트 작성하기' }));
   expect(push).toHaveBeenCalledWith('/notes/write?todoId=7');
+});
+
+it('영문 목표 상세에서 빈 목록·노트·캘린더 링크 문구를 번역한다', async () => {
+  vi.mocked(getTodos).mockResolvedValue({
+    todos: [],
+    totalCount: 0,
+    nextCursor: null,
+  });
+  setup('en');
+  expect(
+    await screen.findByText('There are no to-dos yet.'),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText('There are no completed to-dos yet.'),
+  ).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Calendar View/ })).toHaveAttribute(
+    'href',
+    '/calendar?goalId=683',
+  );
+  expect(screen.getByRole('link', { name: /Notes/ })).toHaveAttribute(
+    'href',
+    '/notes?goalId=683',
+  );
 });

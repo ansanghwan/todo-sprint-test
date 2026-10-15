@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
 const placeholder = 'bg-grayscale-200 dark:bg-grayscale-800';
@@ -42,13 +43,14 @@ export function GoalTodoSkeletonRows() {
 
 /** 실제 목표 상세와 같은 분기를 사용해 사이드바와 기기 폭에 맞춰 배치합니다. */
 export default function GoalDetailSkeleton() {
+  const nextIntlGoalDetail = useTranslations('GoalDetail');
   return (
     <div
       role="status"
       aria-busy="true"
       className="lg:mx-auto lg:w-full lg:max-w-328"
     >
-      <span className="sr-only">목표 상세를 불러오는 중입니다.</span>
+      <span className="sr-only">{nextIntlGoalDetail('loadingDetail')}</span>
       <div aria-hidden="true">
         <div
           className={cn(

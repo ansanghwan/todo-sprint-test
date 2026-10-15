@@ -2,6 +2,7 @@
 
 import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import ActionButton from '@/components/ui/button/ActionButton';
 import NotificationButton from '@/components/common/NotificationButton';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
@@ -44,13 +45,17 @@ export default function Gnb({
   onCreateGoal,
   onLogout,
   isLoggingOut = false,
-  pageTitle = '대시보드',
-  userName = '사용자',
+  pageTitle,
+  userName,
   userEmail = '',
   userImage,
   hasNotification = false,
   onOpenNotifications,
 }: GnbProps = {}) {
+  // 기존 메뉴 번역은 Todo 묶음을 재사용하고,
+  // GNB 전용 문구만 Gnb 묶음에 추가했습니다.
+  const nextIntlTodo = useTranslations('Todo');
+  const nextIntlGnb = useTranslations('Gnb');
   // TODO(알림 기능 구현 위치): 이 Gnb는 클라이언트 컴포넌트입니다.
   // 알림 조회·읽음 처리 로직은 공통 훅/상태 관리에 구현하고, 이 위치에서 한 번 연결해
   // 아래 notificationProps에 실제 미확인 알림 여부와 목록 열기 함수를 넣어주세요.
@@ -139,7 +144,7 @@ export default function Gnb({
         <Link
           href="/dashboard"
           className="hidden font-semibold whitespace-nowrap md:inline md:group-data-[open=false]/gnb:mx-auto md:group-data-[open=false]/gnb:block md:group-data-[open=false]/gnb:w-fit lg:group-data-[open=false]/gnb:mx-0 lg:group-data-[open=false]/gnb:block lg:group-data-[open=false]/gnb:w-auto lg:group-data-[open=true]/gnb:mx-auto lg:group-data-[open=true]/gnb:block lg:group-data-[open=true]/gnb:w-fit"
-          aria-label="대시보드"
+          aria-label={nextIntlTodo('dashboard')}
         >
           <Image
             src="/icons/gnb/logo.svg"
@@ -161,7 +166,7 @@ export default function Gnb({
           type="button"
           ref={toggleRef}
           className="flex size-8 shrink-0 items-center justify-center md:absolute md:top-4 md:right-4 lg:group-data-[open=true]/gnb:right-auto lg:group-data-[open=true]/gnb:left-1/2 lg:group-data-[open=true]/gnb:-translate-x-1/2"
-          aria-label="메뉴 열기·닫기"
+          aria-label={nextIntlGnb('toggleMenu')}
           aria-controls="gnb-menu"
           onClick={() => {
             if (isOpen) closeMenu();
@@ -194,7 +199,7 @@ export default function Gnb({
         {/* 개발 연동: pageTitle에 현재 페이지 제목을 전달해주세요.
             기본 문구는 대시보드 시안용이며, 내 정보 링크가 아닙니다. */}
         <span className="min-w-0 flex-1 truncate text-base font-semibold md:hidden">
-          {pageTitle}
+          {pageTitle ?? nextIntlTodo('dashboard')}
         </span>
         {/* 모바일: 메뉴를 닫았을 때 상단 헤더에서만 표시합니다. */}
         {/* 개발 미완료로 잠쉬 숨김 처리 <div className="shrink-0 md:hidden">
@@ -220,7 +225,7 @@ export default function Gnb({
             <Link href="/dashboard" className="block w-83.75 max-w-full">
               <Image
                 src="/icons/gnb/logo.svg"
-                alt="Slid to-do 대시보드"
+                alt={nextIntlGnb('dashboardLink')}
                 width={284}
                 height={80}
                 className="h-auto w-full"
@@ -229,7 +234,7 @@ export default function Gnb({
             <button
               type="button"
               className="absolute top-4 right-4 flex size-8 items-center justify-center"
-              aria-label="메뉴 닫기"
+              aria-label={nextIntlGnb('closeMenu')}
               onClick={closeMenu}
             >
               <span
@@ -248,12 +253,12 @@ export default function Gnb({
           </div>
 
           <div className="min-h-0 flex-1 scrollbar-thin overflow-x-hidden overflow-y-auto overscroll-contain px-5 md:px-0">
-            <nav aria-label="주 메뉴">
+            <nav aria-label={nextIntlGnb('mainNavigation')}>
               <ul className="space-y-3">
                 <li>
                   <SideMenuLink
                     href="/dashboard"
-                    title="대시보드"
+                    title={nextIntlTodo('dashboard')}
                     icon="dashboard"
                     active={activeMenu === 'dashboard'}
                   />
@@ -261,7 +266,7 @@ export default function Gnb({
                 {/* 시연에서는 목표 메뉴를 숨깁니다. 목표 목록 연동 후 복구합니다. */}
                 <li>
                   <SideMenuAccordion
-                    title="목표"
+                    title={nextIntlTodo('goal')}
                     icon={
                       <SideMenuIcon
                         name="flag"
@@ -296,7 +301,7 @@ export default function Gnb({
                     ))}
                     {goalMenu?.isFetching && (
                       <li role="status" className="px-6 py-2 text-muted">
-                        목표를 불러오는 중입니다.
+                        {nextIntlTodo('loadingGoals')}
                       </li>
                     )}
                     {goalMenu?.isError && (
@@ -306,7 +311,7 @@ export default function Gnb({
                           onClick={goalMenu.onRetry}
                           className="text-orange-600 hover:underline"
                         >
-                          다시 시도
+                          {nextIntlTodo('retry')}
                         </button>
                       </li>
                     )}
@@ -315,7 +320,7 @@ export default function Gnb({
                       !goalMenu.isError &&
                       goalMenu.goals.length === 0 && (
                         <li className="px-6 py-2 text-muted">
-                          등록된 목표가 없어요
+                          {nextIntlTodo('form.noGoals')}
                         </li>
                       )}
                   </SideMenuAccordion>
@@ -323,7 +328,7 @@ export default function Gnb({
                 <li>
                   <SideMenuLink
                     href="/calendar"
-                    title="캘린더"
+                    title={nextIntlTodo('calendar')}
                     icon="calendar"
                     active={activeMenu === 'calendar'}
                   />
@@ -331,7 +336,7 @@ export default function Gnb({
                 <li>
                   <SideMenuLink
                     href="/posts"
-                    title="소통 게시판"
+                    title={nextIntlTodo('community')}
                     icon="message"
                     active={activeMenu === 'board'}
                   />
@@ -339,7 +344,7 @@ export default function Gnb({
                 {/* <li>
                   <SideMenuLink
                     href="/notes"
-                    title="노트 모아보기"
+                    title={nextIntlTodo('notes')}
                     icon="note"
                     active={activeMenu === 'notes'}
                   />
@@ -347,7 +352,7 @@ export default function Gnb({
                 <li>
                   <SideMenuLink
                     href="/favorites"
-                    title="찜한 할 일"
+                    title={nextIntlTodo('favoriteTodos')}
                     icon="star"
                     active={activeMenu === 'favorites'}
                   />
@@ -362,7 +367,7 @@ export default function Gnb({
                     className="flex h-11 w-full items-center gap-2 rounded-2xl px-4 py-0 font-normal text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 md:h-14 md:text-lg"
                   >
                     <SideMenuIcon name="setting" />
-                    <span>설정</span>
+                    <span>{nextIntlTodo('settings')}</span>
                   </Link>
                 </li>
                 <li>
@@ -373,7 +378,11 @@ export default function Gnb({
                     className="flex h-11 w-full cursor-pointer items-center gap-2 rounded-2xl px-4 py-0 font-normal text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 disabled:cursor-not-allowed disabled:opacity-50 md:h-14 md:text-lg"
                   >
                     <SideMenuIcon name="logout" />
-                    <span>{isLoggingOut ? '로그아웃 중…' : '로그아웃'}</span>
+                    <span>
+                      {isLoggingOut
+                        ? nextIntlGnb('loggingOut')
+                        : nextIntlTodo('logout')}
+                    </span>
                   </button>
                 </li>
               </ul>
@@ -390,7 +399,9 @@ export default function Gnb({
                       closeMenu();
                       onCreateGoal?.();
                     }}
-                  />
+                  >
+                    {nextIntlTodo('newGoal')}
+                  </ActionButton>
                 </li>
                 <li className="flex min-w-0 justify-center">
                   <ActionButton
@@ -401,7 +412,9 @@ export default function Gnb({
                       closeMenu();
                       onCreateTodo?.();
                     }}
-                  />
+                  >
+                    {nextIntlTodo('newTodo')}
+                  </ActionButton>
                 </li>
               </ul>
             </div>
@@ -412,7 +425,7 @@ export default function Gnb({
                   {/* 사용자 정보는 연결 컴포넌트에서 전달합니다. */}
                   <Link
                     href="/mypage"
-                    aria-label="내 정보 관리"
+                    aria-label={nextIntlTodo('profile')}
                     className="flex h-16 w-full items-center gap-2 rounded-full border border-solid border-subtle p-3 text-left text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
                   >
                     <Image
@@ -424,7 +437,9 @@ export default function Gnb({
                     />
                     <span className="min-w-0">
                       <span className="flex items-center font-medium tracking-[-0.03em] text-foreground">
-                        <span className="truncate">{userName}</span>
+                        <span className="truncate">
+                          {userName ?? nextIntlGnb('userFallback')}
+                        </span>
                         <span
                           aria-hidden="true"
                           className="size-4 shrink-0 bg-grayscale-400"
@@ -536,6 +551,7 @@ function SideMenuAccordion({
   active = false,
   children,
 }: SideMenuAccordionProps) {
+  const nextIntlGnb = useTranslations('Gnb');
   const [isExpanded, setIsExpanded] = useState(defaultOpen);
   const panelId = useId();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -560,7 +576,9 @@ function SideMenuAccordion({
       <button
         type="button"
         data-active={active}
-        aria-label={`${title} 목록 ${isExpanded ? '접기' : '펼치기'}`}
+        aria-label={nextIntlGnb(isExpanded ? 'collapseList' : 'expandList', {
+          title,
+        })}
         aria-expanded={isExpanded}
         aria-controls={panelId}
         onClick={() => {

@@ -245,7 +245,7 @@ describe('목표별 검색', () => {
     fireEvent.change(input, { target: { value: '없는 제목' } });
     fireEvent.click(screen.getByRole('button', { name: '검색' }));
     await waitFor(() =>
-      expect(screen.getAllByText('검색 결과가 없습니다.')).toHaveLength(1),
+      expect(screen.getAllByText('검색 결과가 없습니다')).toHaveLength(1),
     );
     expect(
       screen.queryByRole('button', { name: '테스트 목표 TO DO 더보기' }),
@@ -275,7 +275,7 @@ describe('목표별 검색', () => {
     });
     fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Enter' });
     await waitFor(() =>
-      expect(screen.getAllByText('검색 결과가 없습니다.')).toHaveLength(1),
+      expect(screen.getAllByText('검색 결과가 없습니다')).toHaveLength(1),
     );
     expect(oldSignal.aborted).toBe(true);
     await act(async () => {
@@ -293,7 +293,7 @@ describe('목표 없음 안내', () => {
       await screen.findByText('최근에 등록한 목표가 없어요'),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: '목표별 할일' }),
+      screen.getByRole('heading', { name: '목표 별 할일' }),
     ).toBeInTheDocument();
     expect(getGoalTodos).not.toHaveBeenCalled();
   });
@@ -397,14 +397,45 @@ it('한쪽 빈 결과가 먼저 와도 양쪽 조회 완료 전까지 빈 안내
   render(<Dashboard />, { wrapper: TestProviders });
   await screen.findByRole('heading', { name: '테스트 목표' });
   await waitFor(() => expect(getGoalTodos).toHaveBeenCalledTimes(2));
-  expect(screen.getByText('할 일을 불러오는 중입니다.')).toBeInTheDocument();
-  expect(screen.queryByText('등록된 할 일이 없어요')).not.toBeInTheDocument();
-  expect(screen.queryByText('완료한 할 일이 없어요')).not.toBeInTheDocument();
+  expect(screen.getByText('할 일을 불러오는 중이에요')).toBeInTheDocument();
+  expect(
+    screen.queryByText('아직 등록한 할 일이 없어요'),
+  ).not.toBeInTheDocument();
+  expect(screen.queryByText('완료한 일이 아직 없어요')).not.toBeInTheDocument();
   await act(async () => {
     finish({ todos: [], nextCursor: null });
   });
-  expect(screen.getAllByText('등록된 할 일이 없어요')).toHaveLength(1);
+  expect(screen.getAllByText('아직 등록한 할 일이 없어요')).toHaveLength(1);
   expect(
-    screen.queryByText('할 일을 불러오는 중입니다.'),
+    screen.queryByText('할 일을 불러오는 중이에요'),
   ).not.toBeInTheDocument();
+});
+
+it('영문 대시보드는 제목·검색·더보기·빈 상태를 번역하고 목표명은 유지한다', async () => {
+  getGoalTodos.mockImplementation((_id, _signal, cursor, done) =>
+    Promise.resolve(page(done, cursor)),
+  );
+  render(
+    <TestProviders locale="en">
+      <Dashboard />
+    </TestProviders>,
+  );
+  expect(
+    await screen.findByRole('heading', { name: '테스트 목표' }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { name: 'To-dos by Goal' }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { name: 'Recently Added To-dos' }),
+  ).toBeInTheDocument();
+  expect(screen.getByPlaceholderText('Search for a to-do')).toBeInTheDocument();
+  expect(
+    await screen.findByRole('button', {
+      name: 'Load more TO DO to-dos for 테스트 목표',
+    }),
+  ).toBeInTheDocument();
+  expect(
+    await screen.findByText('You haven’t added any to-dos recently.'),
+  ).toBeInTheDocument();
 });

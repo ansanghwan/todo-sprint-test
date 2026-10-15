@@ -16,7 +16,7 @@ export default function LandingStartButton({
   className?: string;
 }) {
   const router = useRouter();
-  const t = useTranslations('Landing');
+  const nextIntlLanding = useTranslations('Landing');
   const [pending, setPending] = useState(false);
   const inFlight = useRef(false);
 
@@ -33,7 +33,7 @@ export default function LandingStartButton({
         return;
       }
       // 서버·통신 장애는 비로그인으로 단정하지 않고 현재 화면에서 재시도하게 합니다.
-      toast.error(t('sessionCheckError'));
+      toast.error(nextIntlLanding('sessionCheckError'));
       inFlight.current = false;
       setPending(false);
       return;
@@ -50,9 +50,9 @@ export default function LandingStartButton({
       onClick={start}
       disabled={pending}
       aria-busy={pending}
-      aria-label={pending ? t('checkingSession') : undefined}
+      aria-label={pending ? nextIntlLanding('checkingSession') : undefined}
     >
-      {pending ? t('checkingSession') : children}
+      {pending ? nextIntlLanding('checkingSession') : children}
     </button>
   );
 }
