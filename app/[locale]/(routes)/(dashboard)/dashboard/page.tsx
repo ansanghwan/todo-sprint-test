@@ -26,6 +26,7 @@ import TodoItem, { type TodoItemData } from '@/components/todo/TodoItem';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
 import SearchInput from '@/components/ui/SearchInput';
 import type { GoalDto as Goal } from '@/types/api/goal';
+import type { TodoDto } from '@/types/api/todo';
 import { getGoalTodos, getRecentTodos, getTodoProgress } from '@/lib/api/todos';
 import { getGoals } from '@/lib/api/goals';
 
@@ -408,26 +409,44 @@ export default function Dashboard() {
 
   // 공용 mutation은 Query 캐시를 갱신합니다. 대시보드의 자체 상태도 다시 조회합니다.
   // 검색어는 유지하고 각 할 일 목록은 첫 페이지로 갱신해 오래된 커서를 재사용하지 않습니다.
-  const refreshDashboard = useCallback(() => {
-    refreshingGoals.current = true;
-    moreGoalsRequest.current?.abort();
-    moreGoalsRequest.current = null;
-    setIsLoadingMoreGoals(false);
-    setMoreGoalsError(false);
-    setRefreshVersion((version) => version + 1);
-    goals.forEach((goal) => {
-      const keyword = goalKeywords.current.get(goal.id);
-      loadGoalFirstPage(goal.id, keyword);
-    });
-  }, [goals, loadGoalFirstPage]);
+  const refreshDashboard = useCallback(
+    (createdGoalId?: number | null) => {
+      refreshingGoals.current = true;
+      moreGoalsRequest.current?.abort();
+      moreGoalsRequest.current = null;
+      setIsLoadingMoreGoals(false);
+      setMoreGoalsError(false);
+      setRefreshVersion((version) => version + 1);
+      goals.forEach((goal) => {
+        // 생성 시에는 해당 목표만 갱신합니다. 수정·삭제 등은 기존처럼 모두 갱신합니다.
+        if (createdGoalId !== undefined && goal.id !== createdGoalId) return;
+        const keyword = goalKeywords.current.get(goal.id);
+        loadGoalFirstPage(goal.id, keyword);
+      });
+    },
+    [goals, loadGoalFirstPage],
+  );
+
+  const onCreated = useCallback(
+    (todo: TodoDto) => {
+      refreshDashboard(todo.goalId);
+    },
+    [refreshDashboard],
+  );
 
   // GNB 모달은 레이아웃에 있으므로 생성 완료 알림을 받아 자체 목록도 갱신합니다.
   useEffect(() => {
-    window.addEventListener('gnb:todo-created', refreshDashboard);
-    window.addEventListener('gnb:goal-created', refreshDashboard);
+    const onTodoCreated = (event: Event) => {
+      // 생성 정보가 없는 기존 알림은 전체 갱신으로 처리합니다.
+      const todo = (event as CustomEvent<TodoDto | undefined>).detail;
+      refreshDashboard(todo?.goalId);
+    };
+    const onGoalCreated = () => refreshDashboard();
+    window.addEventListener('gnb:todo-created', onTodoCreated);
+    window.addEventListener('gnb:goal-created', onGoalCreated);
     return () => {
-      window.removeEventListener('gnb:todo-created', refreshDashboard);
-      window.removeEventListener('gnb:goal-created', refreshDashboard);
+      window.removeEventListener('gnb:todo-created', onTodoCreated);
+      window.removeEventListener('gnb:goal-created', onGoalCreated);
     };
   }, [refreshDashboard]);
 
@@ -925,7 +944,7 @@ export default function Dashboard() {
         onOpenChange={(open) => {
           if (!open) setCreateGoal(null);
         }}
-        onCreated={refreshDashboard}
+        onCreated={onCreated}
       />
       <TodoDetailModal
         todoId={detailTodoId}

@@ -143,7 +143,11 @@ export default function ConnectedGnb() {
         isOpen={isCreateOpen}
         onOpenChange={setIsCreateOpen}
         // Query 캐시 외에 자체 상태로 관리하는 대시보드 목록에도 생성 완료를 알립니다.
-        onCreated={() => window.dispatchEvent(new Event('gnb:todo-created'))}
+        onCreated={(todo) =>
+          window.dispatchEvent(
+            new CustomEvent('gnb:todo-created', { detail: todo }),
+          )
+        }
       />
     </>
   );

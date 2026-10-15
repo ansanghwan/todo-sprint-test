@@ -293,3 +293,53 @@ it('목표 생성 알림을 받으면 목표 목록을 다시 조회한다', asy
   });
   await waitFor(() => expect(getGoals).toHaveBeenCalled());
 });
+
+it.each(['card', 'gnb', 'no-goal'] as const)(
+  '할일 생성 후 해당 목표만 재조회하고 공통 정보는 갱신한다 (%s)',
+  async (source) => {
+    vi.mocked(getGoals).mockResolvedValue({
+      goals: [
+        makeGoal(7, { title: '목표 A' }),
+        makeGoal(8, { title: '목표 B' }),
+      ],
+      nextCursor: null,
+      totalCount: 2,
+    });
+    const user = userEvent.setup();
+    render(
+      <TestProviders>
+        <Dashboard />
+      </TestProviders>,
+    );
+    await waitFor(() => expect(getGoalTodos).toHaveBeenCalledTimes(4));
+    await waitFor(() => expect(getTodoProgress).toHaveBeenCalledTimes(1));
+    vi.mocked(getGoalTodos).mockClear();
+    vi.mocked(getGoals).mockClear();
+    vi.mocked(getRecentTodos).mockClear();
+    vi.mocked(getTodoProgress).mockClear();
+
+    if (source === 'card') {
+      await user.click(
+        screen.getAllByRole('button', { name: '할 일 추가' })[0],
+      );
+      await user.click(screen.getByRole('button', { name: '생성 성공' }));
+    } else {
+      act(() => {
+        window.dispatchEvent(
+          new CustomEvent('gnb:todo-created', {
+            detail: makeTodo(2, { goalId: source === 'no-goal' ? null : 7 }),
+          }),
+        );
+      });
+    }
+
+    await waitFor(() => expect(getGoals).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(getRecentTodos).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(getTodoProgress).toHaveBeenCalledTimes(1));
+    expect(getGoalTodos).toHaveBeenCalledTimes(source === 'no-goal' ? 0 : 2);
+    expect(
+      vi.mocked(getGoalTodos).mock.calls.every(([goalId]) => goalId === 7),
+    ).toBe(true);
+    expect(screen.getByRole('heading', { name: '목표 B' })).toBeInTheDocument();
+  },
+);
