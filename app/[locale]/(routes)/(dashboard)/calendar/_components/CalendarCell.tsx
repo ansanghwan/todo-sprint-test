@@ -60,8 +60,8 @@ const CalendarCell = ({
   return (
     <div
       className={cn(
-        'relative isolate flex min-h-22 flex-col gap-1.5 border-r border-b border-subtle p-1.5 nth-[7n]:border-r-0 md:min-h-38 md:gap-1 md:p-2',
-        isOutsideMonth ? 'bg-background' : 'bg-white-section',
+        'relative isolate flex min-h-22 flex-col gap-1.5 border-r border-b border-subtle p-1.5 nth-[7n]:border-r-0 md:min-h-25 lg:min-h-38 lg:gap-1 lg:p-2',
+        isOutsideMonth ? 'bg-muted-section' : 'bg-white-section',
       )}
     >
       {/* after로 셀 전체를 클릭 영역으로 넓힙니다. 칩·점은 표시 전용이라 그 아래에 둡니다. */}
@@ -86,7 +86,7 @@ const CalendarCell = ({
 
       <div
         aria-hidden
-        className={cn('flex gap-1 pl-1 md:hidden', fadedClassName)}
+        className={cn('flex gap-1 pl-1 lg:hidden', fadedClassName)}
       >
         {visibleTodos.map((todo) => (
           <span
@@ -98,7 +98,7 @@ const CalendarCell = ({
           />
         ))}
       </div>
-      <ul className={cn('hidden flex-col gap-1 md:flex', fadedClassName)}>
+      <ul className={cn('hidden flex-col gap-1 lg:flex', fadedClassName)}>
         {visibleTodos.map((todo) => (
           <li key={todo.id}>
             <CalendarTodoChip todo={todo} />
@@ -109,7 +109,7 @@ const CalendarCell = ({
       {hiddenCount > 0 && (
         <span
           className={cn(
-            'pl-1 text-xs font-semibold text-subtle md:pl-2',
+            'pl-1 text-xs font-semibold text-subtle lg:pl-2',
             fadedClassName,
           )}
         >

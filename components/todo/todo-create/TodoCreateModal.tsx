@@ -29,6 +29,8 @@ export interface TodoCreateModalProps {
   onOpenChange: (isOpen: boolean) => void;
   /** 미리 선택해 둘 목표. 사용자가 다른 목표로 바꿀 수 있습니다. */
   initialGoal?: Pick<GoalDto, 'id' | 'title'>;
+  /** 미리 채워 둘 마감기한 'YYYY-MM-DD'. 사용자가 바꿀 수 있습니다. */
+  initialDueDate?: string;
   /**
    * 생성 성공 후 모달과 폼을 정리한 다음 호출합니다.
    * 할 일 목록 query 무효화는 생성 mutation이 처리합니다.
@@ -52,6 +54,7 @@ const TodoCreateDialog = ({
   isOpen,
   onOpenChange,
   initialGoal,
+  initialDueDate,
   onCreated,
 }: TodoCreateModalProps) => {
   const t = useTranslations('Todo');
@@ -59,6 +62,7 @@ const TodoCreateDialog = ({
   const initialValues: TodoFormInput = {
     ...EMPTY_TODO_FORM,
     goalId: initialGoal?.id ?? null,
+    dueDate: initialDueDate ?? EMPTY_TODO_FORM.dueDate,
   };
   const {
     control,

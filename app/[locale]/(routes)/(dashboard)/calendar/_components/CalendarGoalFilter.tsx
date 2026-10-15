@@ -34,7 +34,7 @@ const CalendarGoalFilter = ({
 
   return (
     <DropdownMenu.Root onOpenChange={handleOpenChange}>
-      <DropdownMenu.Trigger className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-2xl border border-orange-500 bg-input px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 lg:w-87.5">
+      <DropdownMenu.Trigger className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-2xl border border-orange-500 bg-muted-section px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 lg:w-87.5">
         <span className="flex min-w-0 items-center gap-2">
           <Image
             src="/icons/img_goal.svg"
