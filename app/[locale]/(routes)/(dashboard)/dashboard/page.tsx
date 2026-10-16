@@ -27,8 +27,7 @@ import TodoItem, { type TodoItemData } from '@/components/todo/TodoItem';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
 import SearchInput from '@/components/ui/SearchInput';
 import type { GoalDto as Goal } from '@/types/api/goal';
-import { getGoalTodos } from '@/lib/api/todos';
-import { getDashboardTodoData } from '@/lib/api/dashboard';
+import { getGoalTodos, getRecentTodos, getTodoProgress } from '@/lib/api/todos';
 import { getGoals } from '@/lib/api/goals';
 
 // TO DO·DONE에 같은 스크롤 높이를 적용합니다. 모바일 276px / 태블릿 248px / PC 324px.
@@ -142,6 +141,49 @@ export default function Dashboard() {
       initialGoalTodoStates.some((state) => state?.error),
   );
 
+  // 처음에는 목표를 최대 2개 조회하고, 응답의 goals 배열을 화면 상태에 저장합니다.
+  useEffect(() => {
+    const controller = new AbortController();
+
+    // 갱신할 때도 표시 중인 목표 수를 유지하도록 필요한 페이지까지 조회합니다.
+    const fetchVisibleGoals = async () => {
+      const visibleGoals: Goal[] = [];
+      let cursor: number | undefined;
+      let nextCursor: number | null = null;
+      do {
+        const page = await getGoals({ limit: 2, cursor }, controller.signal);
+        visibleGoals.push(...page.goals);
+        nextCursor = page.nextCursor;
+        if (
+          nextCursor === null ||
+          nextCursor === cursor ||
+          page.goals.length === 0
+        )
+          break;
+        cursor = nextCursor;
+      } while (visibleGoals.length < loadedGoalCount.current);
+      return { goals: visibleGoals, nextCursor };
+    };
+    fetchVisibleGoals()
+      .then((data) => {
+        if (controller.signal.aborted) return;
+        setGoalsError(false);
+        setGoals(data.goals);
+        setNextGoalCursor(data.nextCursor ?? null);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setGoalsError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          refreshingGoals.current = false;
+          setIsLoadingGoals(false);
+        }
+      });
+
+    return () => controller.abort();
+  }, [refreshVersion]);
+
   // 첫 조회와 검색은 같은 함수를 사용합니다. 같은 영역의 이전 요청은 취소합니다.
   const loadGoalFirstPage = useCallback((goalId: number, keyword?: string) => {
     goalKeywords.current.set(goalId, keyword);
@@ -178,55 +220,6 @@ export default function Dashboard() {
         });
     });
   }, []);
-
-  // 처음에는 목표를 최대 2개 조회하고, 응답의 goals 배열을 화면 상태에 저장합니다.
-  useEffect(() => {
-    const controller = new AbortController();
-
-    // 갱신할 때도 표시 중인 목표 수를 유지하도록 필요한 페이지까지 조회합니다.
-    const fetchVisibleGoals = async () => {
-      const visibleGoals: Goal[] = [];
-      let cursor: number | undefined;
-      let nextCursor: number | null = null;
-      do {
-        const page = await getGoals({ limit: 2, cursor }, controller.signal);
-        visibleGoals.push(...page.goals);
-        nextCursor = page.nextCursor;
-        if (
-          nextCursor === null ||
-          nextCursor === cursor ||
-          page.goals.length === 0
-        )
-          break;
-        cursor = nextCursor;
-      } while (visibleGoals.length < loadedGoalCount.current);
-      return { goals: visibleGoals, nextCursor };
-    };
-    fetchVisibleGoals()
-      .then((data) => {
-        if (controller.signal.aborted) return;
-        // React의 다음 렌더/effect까지 기다리지 않고 목표별 조회를 시작합니다.
-        data.goals.forEach((goal) => {
-          if (loadedGoalIds.current.has(goal.id)) return;
-          loadedGoalIds.current.add(goal.id);
-          loadGoalFirstPage(goal.id);
-        });
-        setGoalsError(false);
-        setGoals(data.goals);
-        setNextGoalCursor(data.nextCursor ?? null);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setGoalsError(true);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) {
-          refreshingGoals.current = false;
-          setIsLoadingGoals(false);
-        }
-      });
-
-    return () => controller.abort();
-  }, [refreshVersion, loadGoalFirstPage]);
 
   // 새로 추가된 목표만 조회하여 기존 목표의 검색 결과와 더보기 상태를 유지합니다.
   useEffect(() => {
@@ -392,8 +385,7 @@ export default function Dashboard() {
   useEffect(() => {
     const controller = new AbortController();
 
-    const data = getDashboardTodoData(controller.signal);
-    data.recentTodos
+    getRecentTodos(controller.signal)
       .then((todos) => {
         // 성공: 받은 목록을 저장하면 TodoItem 또는 빈 목록 안내가 표시됩니다.
         if (!controller.signal.aborted) {
@@ -410,8 +402,15 @@ export default function Dashboard() {
         if (!controller.signal.aborted) setIsLoadingRecentTodos(false);
       });
 
-    // 최근 목록의 전체 개수를 공유하지만 표시와 오류 상태는 따로 유지합니다.
-    data.progress
+    // 페이지를 벗어날 때 요청을 취소하고, 이전 요청이 화면 상태를 바꾸지 않게 합니다.
+    return () => controller.abort();
+  }, [refreshVersion]);
+
+  // 전체·완료 할 일 수로 계산한 진행률을 차트와 퍼센트 텍스트에 전달합니다.
+  useEffect(() => {
+    const controller = new AbortController();
+
+    getTodoProgress(controller.signal)
       .then((percentage) => {
         if (!controller.signal.aborted) {
           setProgress(percentage);

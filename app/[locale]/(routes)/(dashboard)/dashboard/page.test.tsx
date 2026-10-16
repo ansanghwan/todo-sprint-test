@@ -1,4 +1,3 @@
-import { getRecentTodos, getTodoProgress } from '@/lib/api/todos';
 import {
   act,
   cleanup,
@@ -16,13 +15,6 @@ const { getGoals, getGoalTodos } = vi.hoisted(() => ({
   getGoalTodos: vi.fn(),
 }));
 
-// 화면 동작 테스트에서는 영역별 결과를 제어하고, 실제 요청 공유는 dashboard.test에서 검증합니다.
-vi.mock('@/lib/api/dashboard', () => ({
-  getDashboardTodoData: (signal?: AbortSignal) => ({
-    recentTodos: getRecentTodos(signal),
-    progress: getTodoProgress(signal),
-  }),
-}));
 vi.mock('@/lib/api/goals', () => ({ getGoals }));
 vi.mock('@/lib/api/todos', () => ({
   getGoalTodos,
