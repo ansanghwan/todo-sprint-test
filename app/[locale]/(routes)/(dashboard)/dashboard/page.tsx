@@ -141,49 +141,6 @@ export default function Dashboard() {
       initialGoalTodoStates.some((state) => state?.error),
   );
 
-  // 처음에는 목표를 최대 2개 조회하고, 응답의 goals 배열을 화면 상태에 저장합니다.
-  useEffect(() => {
-    const controller = new AbortController();
-
-    // 갱신할 때도 표시 중인 목표 수를 유지하도록 필요한 페이지까지 조회합니다.
-    const fetchVisibleGoals = async () => {
-      const visibleGoals: Goal[] = [];
-      let cursor: number | undefined;
-      let nextCursor: number | null = null;
-      do {
-        const page = await getGoals({ limit: 2, cursor }, controller.signal);
-        visibleGoals.push(...page.goals);
-        nextCursor = page.nextCursor;
-        if (
-          nextCursor === null ||
-          nextCursor === cursor ||
-          page.goals.length === 0
-        )
-          break;
-        cursor = nextCursor;
-      } while (visibleGoals.length < loadedGoalCount.current);
-      return { goals: visibleGoals, nextCursor };
-    };
-    fetchVisibleGoals()
-      .then((data) => {
-        if (controller.signal.aborted) return;
-        setGoalsError(false);
-        setGoals(data.goals);
-        setNextGoalCursor(data.nextCursor ?? null);
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) setGoalsError(true);
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) {
-          refreshingGoals.current = false;
-          setIsLoadingGoals(false);
-        }
-      });
-
-    return () => controller.abort();
-  }, [refreshVersion]);
-
   // 첫 조회와 검색은 같은 함수를 사용합니다. 같은 영역의 이전 요청은 취소합니다.
   const loadGoalFirstPage = useCallback((goalId: number, keyword?: string) => {
     goalKeywords.current.set(goalId, keyword);
@@ -220,6 +177,59 @@ export default function Dashboard() {
         });
     });
   }, []);
+
+  // 처음에는 목표를 최대 2개 조회하고, 응답의 goals 배열을 화면 상태에 저장합니다.
+  useEffect(() => {
+    const controller = new AbortController();
+
+    // 갱신할 때도 표시 중인 목표 수를 유지하도록 필요한 페이지까지 조회합니다.
+    const fetchVisibleGoals = async () => {
+      const visibleGoals: Goal[] = [];
+      let cursor: number | undefined;
+      let nextCursor: number | null = null;
+      do {
+        const page = await getGoals({ limit: 2, cursor }, controller.signal);
+        visibleGoals.push(...page.goals);
+        nextCursor = page.nextCursor;
+        if (
+          nextCursor === null ||
+          nextCursor === cursor ||
+          page.goals.length === 0
+        )
+          break;
+        cursor = nextCursor;
+      } while (visibleGoals.length < loadedGoalCount.current);
+      return { goals: visibleGoals, nextCursor };
+    };
+    fetchVisibleGoals()
+      .then((data) => {
+        if (controller.signal.aborted) return;
+        // 첫 진입만: 화면 반영/effect를 기다리지 않고 하위 요청을 시작합니다.
+        // ID를 먼저 기록해 아래 goals effect의 중복 조회를 막습니다.
+        // 조작 후 갱신(refreshVersion > 0)은 기존 흐름을 유지합니다.
+        if (refreshVersion === 0) {
+          data.goals.forEach((goal) => {
+            if (loadedGoalIds.current.has(goal.id)) return;
+            loadedGoalIds.current.add(goal.id);
+            loadGoalFirstPage(goal.id);
+          });
+        }
+        setGoalsError(false);
+        setGoals(data.goals);
+        setNextGoalCursor(data.nextCursor ?? null);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setGoalsError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          refreshingGoals.current = false;
+          setIsLoadingGoals(false);
+        }
+      });
+
+    return () => controller.abort();
+  }, [refreshVersion, loadGoalFirstPage]);
 
   // 새로 추가된 목표만 조회하여 기존 목표의 검색 결과와 더보기 상태를 유지합니다.
   useEffect(() => {
