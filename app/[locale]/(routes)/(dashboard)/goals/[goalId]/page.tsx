@@ -20,6 +20,7 @@ import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
 import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
 import TodoDetailModal from '@/components/todo/todo-detail/TodoDetailModal';
+import NoteDetailDrawer from '@/components/note/note-detail/NoteDetailDrawer';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import useTodoItemActions from '@/hooks/todo/useTodoItemActions';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
@@ -45,6 +46,7 @@ export default function GoalDetailPage() {
   const isTablet = useMediaQuery('(min-width: 46.5rem)');
   const router = useRouter();
   const [detailTodoId, setDetailTodoId] = useState<number | null>(null);
+  const [noteId, setNoteId] = useState<number | null>(null);
   const [editTodoId, setEditTodoId] = useState<number | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Pick<
     TodoDto,
@@ -265,7 +267,8 @@ export default function GoalDetailPage() {
                           onCreateNote={(todoId) =>
                             router.push(`/notes/write?todoId=${todoId}`)
                           }
-                          onViewNote={() => router.push(`/notes?goalId=${id}`)}
+                          // FN-TD-11: 그 할 일의 노트(noteIds[0])를 노트 상세로 엽니다.
+                          onViewNote={setNoteId}
                           kebabSlot={
                             <span className={goalTodoKebabClass}>
                               <TodoItemKebab
@@ -374,7 +377,8 @@ export default function GoalDetailPage() {
                           onCreateNote={(todoId) =>
                             router.push(`/notes/write?todoId=${todoId}`)
                           }
-                          onViewNote={() => router.push(`/notes?goalId=${id}`)}
+                          // FN-TD-11: 그 할 일의 노트(noteIds[0])를 노트 상세로 엽니다.
+                          onViewNote={setNoteId}
                           kebabSlot={
                             <span className={goalTodoKebabClass}>
                               <TodoItemKebab
@@ -455,7 +459,13 @@ export default function GoalDetailPage() {
           setDetailTodoId(null);
           setDeleteTarget(todo);
         }}
+        // FN-TD-43: 상세를 닫고 노트 상세를 엽니다. 노트 상세를 닫아도 할 일 상세는 다시 열지 않습니다.
+        onOpenNote={(noteIdToOpen) => {
+          setDetailTodoId(null);
+          setNoteId(noteIdToOpen);
+        }}
       />
+      <NoteDetailDrawer noteId={noteId} onClose={() => setNoteId(null)} />
       <TodoEditModal todoId={editTodoId} onClose={() => setEditTodoId(null)} />
       <DeleteTodoModal
         todo={deleteTarget}

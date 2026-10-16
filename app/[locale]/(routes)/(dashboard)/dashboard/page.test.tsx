@@ -15,6 +15,11 @@ const { getGoals, getGoalTodos } = vi.hoisted(() => ({
   getGoalTodos: vi.fn(),
 }));
 
+// 노트 작성(FN-TD-12)이 라우터로 이동하므로 useRouter만 대신하고 Link는 그대로 씁니다.
+vi.mock('@/i18n/navigation', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/i18n/navigation')>()),
+  useRouter: () => ({ push: vi.fn() }),
+}));
 vi.mock('@/lib/api/goals', () => ({ getGoals }));
 vi.mock('@/lib/api/todos', () => ({
   getGoalTodos,

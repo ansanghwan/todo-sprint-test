@@ -18,6 +18,10 @@ type RecentTodosCardProps = {
   onCopyLink: TodoItemProps['onCopyLink'];
   onDelete: (todo: TodoItemData) => void;
   onOpenDetail: TodoItemProps['onOpenDetail'];
+  /** 노트 보기 (FN-TD-11) */
+  onViewNote: TodoItemProps['onViewNote'];
+  /** 노트 작성 (FN-TD-12) */
+  onCreateNote: TodoItemProps['onCreateNote'];
 };
 
 /** 최근 할 일의 표시만 담당합니다. 조회와 상태 변경은 페이지에서 전달합니다. */
@@ -31,6 +35,8 @@ export default function RecentTodosCard({
   onCopyLink,
   onDelete,
   onOpenDetail,
+  onViewNote,
+  onCreateNote,
 }: RecentTodosCardProps) {
   const nextIntlTodo = useTranslations('Todo');
   const nextIntlDashboard = useTranslations('Dashboard');
@@ -90,14 +96,12 @@ export default function RecentTodosCard({
                   kebabSlot={
                     <TodoItemKebab isWhite onDelete={() => onDelete(todo)} />
                   }
-                  showCreateNote={false}
                   onToggleDone={onToggleDone}
                   onToggleFavorite={onToggleFavorite}
-                  // 노트 보기는 별도 연결 단계에서 처리합니다.
                   onOpenDetail={onOpenDetail}
                   onCopyLink={onCopyLink}
-                  onViewNote={() => undefined}
-                  onCreateNote={() => undefined}
+                  onViewNote={onViewNote}
+                  onCreateNote={onCreateNote}
                 />
               ))}
             </ul>

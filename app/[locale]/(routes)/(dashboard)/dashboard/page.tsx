@@ -2,13 +2,14 @@
 
 import useCurrentUser from '@/hooks/useCurrentUser';
 
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
 import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
 import TodoDetailModal from '@/components/todo/todo-detail/TodoDetailModal';
+import NoteDetailDrawer from '@/components/note/note-detail/NoteDetailDrawer';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import { toast } from '@/components/ui/toast/Toaster';
 import {
@@ -64,6 +65,11 @@ export default function Dashboard() {
     'id' | 'title'
   > | null>(null);
   const [detailTodoId, setDetailTodoId] = useState<number | null>(null);
+  const [noteId, setNoteId] = useState<number | null>(null);
+  const router = useRouter();
+  // FN-TD-12: 할 일 ID를 넘겨 노트 작성 화면을 엽니다.
+  const handleCreateNote = (todoId: number) =>
+    router.push(`/notes/write?todoId=${todoId}`);
   const [editTodoId, setEditTodoId] = useState<number | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Pick<
     TodoItemData,
@@ -516,6 +522,8 @@ export default function Dashboard() {
         {/* 최근 등록한일 */}
         <RecentTodosCard
           onOpenDetail={setDetailTodoId}
+          onViewNote={setNoteId}
+          onCreateNote={handleCreateNote}
           labels={todoLabels}
           todos={recentTodos}
           isLoading={isLoadingRecentTodos}
@@ -716,14 +724,12 @@ export default function Dashboard() {
                                             />
                                           </span>
                                         }
-                                        showCreateNote={false}
-                                        // 노트 보기는 별도 연결 단계에서 처리합니다.
                                         onToggleDone={onToggleDone}
                                         onToggleFavorite={onToggleFavorite}
                                         onOpenDetail={setDetailTodoId}
                                         onCopyLink={onCopyLink}
-                                        onViewNote={() => undefined}
-                                        onCreateNote={() => undefined}
+                                        onViewNote={setNoteId}
+                                        onCreateNote={handleCreateNote}
                                       />
                                     ))}
                                   </ul>
@@ -817,14 +823,12 @@ export default function Dashboard() {
                                             />
                                           </span>
                                         }
-                                        showCreateNote={false}
-                                        // 노트 보기는 별도 연결 단계에서 처리합니다.
                                         onToggleDone={onToggleDone}
                                         onToggleFavorite={onToggleFavorite}
                                         onOpenDetail={setDetailTodoId}
                                         onCopyLink={onCopyLink}
-                                        onViewNote={() => undefined}
-                                        onCreateNote={() => undefined}
+                                        onViewNote={setNoteId}
+                                        onCreateNote={handleCreateNote}
                                       />
                                     ))}
                                   </ul>
@@ -938,7 +942,13 @@ export default function Dashboard() {
           setDetailTodoId(null);
           setDeleteTarget(todo);
         }}
+        // FN-TD-43: 상세를 닫고 노트 상세를 엽니다. 노트 상세를 닫아도 할 일 상세는 다시 열지 않습니다.
+        onOpenNote={(id) => {
+          setDetailTodoId(null);
+          setNoteId(id);
+        }}
       />
+      <NoteDetailDrawer noteId={noteId} onClose={() => setNoteId(null)} />
       <TodoEditModal
         todoId={editTodoId}
         onClose={() => setEditTodoId(null)}

@@ -1,9 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getTodos } from '@/lib/api/todos';
 import TestProviders from '@/test/TestProviders';
-import { makeTodo } from '@/test/todoMocks';
+import { makeNote, makeTodo } from '@/test/todoMocks';
+import { getNote } from '@/lib/api/notes';
 import GoalDetailPage from './page';
 import { getGoal } from '@/lib/api/goals';
 
@@ -28,6 +29,7 @@ vi.mock('@/hooks/useCurrentUser', () => ({
   default: () => ({ userName: '테스트' }),
 }));
 vi.mock('@/lib/api/goals', () => ({ getGoal: vi.fn() }));
+vi.mock('@/lib/api/notes', () => ({ getNote: vi.fn() }));
 vi.mock('@/components/goal/GoalTitleCard', () => ({ default: () => null }));
 vi.mock('@/components/todo/todo-create/TodoCreateModal', () => ({
   default: () => null,
@@ -36,13 +38,18 @@ vi.mock('@/components/todo/todo-detail/TodoDetailModal', () => ({
   default: ({
     todoId,
     onClose,
+    onOpenNote,
   }: {
     todoId: number | null;
     onClose: () => void;
+    onOpenNote?: (noteId: number) => void;
   }) =>
     todoId === null ? null : (
       <div role="dialog" aria-label={`할 일 상세 ${todoId}`}>
         <button onClick={onClose}>상세 닫기</button>
+        {onOpenNote && (
+          <button onClick={() => onOpenNote(70)}>작성된 노트 열기</button>
+        )}
       </div>
     ),
 }));
@@ -176,4 +183,49 @@ it('영문 목표 상세에서 빈 목록·노트·캘린더 링크 문구를 �
     'href',
     '/notes?goalId=683',
   );
+});
+
+describe('할 일 노트 보기 (FN-TD-11, 43)', () => {
+  const WITH_NOTE = makeTodo(7, { title: '노트 있는 할 일', noteIds: [70] });
+
+  beforeEach(() => {
+    vi.mocked(getTodos).mockImplementation(async (params) => ({
+      todos: params.done === 'true' ? [] : [WITH_NOTE],
+      totalCount: params.done === 'true' ? 0 : 1,
+      nextCursor: null,
+    }));
+    vi.mocked(getNote).mockResolvedValue(
+      makeNote(WITH_NOTE, { id: 70, title: '목표 상세 노트' }),
+    );
+  });
+
+  it('노트 아이콘은 목표별 노트 목록 대신 그 할 일의 노트 상세를 연다', async () => {
+    const user = setup();
+
+    await user.click(await screen.findByRole('button', { name: '노트 보기' }));
+
+    expect(
+      await screen.findByRole('dialog', { name: /목표 상세 노트/ }),
+    ).toBeInTheDocument();
+    expect(getNote).toHaveBeenCalledWith(70, expect.anything());
+    expect(push).not.toHaveBeenCalled();
+    // 목표별 노트 목록 진입점은 그대로 둡니다.
+    expect(
+      document.querySelector('a[href="/notes?goalId=683"]'),
+    ).toBeInTheDocument();
+  });
+
+  it('할 일 상세에서 노트를 열면 상세를 닫고 노트 상세만 연다', async () => {
+    const user = setup();
+    await user.click(
+      await screen.findByRole('button', { name: '노트 있는 할 일' }),
+    );
+
+    await user.click(screen.getByRole('button', { name: '작성된 노트 열기' }));
+
+    await screen.findByRole('dialog', { name: /목표 상세 노트/ });
+    expect(
+      screen.queryByRole('dialog', { name: '할 일 상세 7' }),
+    ).not.toBeInTheDocument();
+  });
 });
