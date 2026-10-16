@@ -1,6 +1,7 @@
 'use client';
 
 import useCurrentUser from '@/hooks/useCurrentUser';
+import useDashboardLoadMeasurement from '@/hooks/useDashboardLoadMeasurement';
 
 import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
@@ -119,6 +120,26 @@ export default function Dashboard() {
   const hasProgress = progress !== null;
   // 원형 차트와 퍼센트 텍스트에 표시할 값입니다. 진행률 데이터가 없으면 0%로 표시합니다.
   const displayProgress = hasProgress ? progress : 0;
+
+  // 최초 목표 2개만 포함합니다. 스크롤로 추가되는 목표·더보기는 별도 동작입니다.
+  // 빈 목록과 진행률 0도 정상 완료이며, 실패 화면은 성공 시간으로 기록하지 않습니다.
+  const initialGoalTodoStates = goals
+    .slice(0, 2)
+    .flatMap((goal) => [
+      todosByGoal[`${goal.id}-false`],
+      todosByGoal[`${goal.id}-true`],
+    ]);
+  useDashboardLoadMeasurement(
+    !isLoadingGoals &&
+      !isLoadingRecentTodos &&
+      !isLoadingProgress &&
+      hasProgress &&
+      initialGoalTodoStates.every((state) => state !== undefined),
+    goalsError ||
+      recentTodosError ||
+      progressError ||
+      initialGoalTodoStates.some((state) => state?.error),
+  );
 
   // 처음에는 목표를 최대 2개 조회하고, 응답의 goals 배열을 화면 상태에 저장합니다.
   useEffect(() => {
