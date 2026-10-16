@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 
 import NoteDetailDrawer from '@/components/note/note-detail/NoteDetailDrawer';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
+import TodoDetailModal from '@/components/todo/todo-detail/TodoDetailModal';
+import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
 import TodoItem from '@/components/todo/TodoItem';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import Button from '@/components/ui/button/Button';
@@ -25,9 +27,6 @@ import {
 
 // globals.css의 --breakpoint-md(744px)와 같은 값입니다.
 const TABLET_QUERY = '(min-width: 46.5rem)';
-
-// 상세(FN-TD-13) 연결은 보류 중입니다.
-const notConnected = () => {};
 
 interface FavoriteTodoListProps {
   status: TodoStatus;
@@ -52,6 +51,9 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
     'id' | 'title'
   > | null>(null);
   const [noteId, setNoteId] = useState<number | null>(null);
+  // FN-FV-06: 모든 할 일과 같이 상세(FN-TD-13)·수정(FN-TD-29)을 엽니다.
+  const [detailTodoId, setDetailTodoId] = useState<number | null>(null);
+  const [editTodoId, setEditTodoId] = useState<number | null>(null);
 
   // FN-FV-01: 조회에 실패하면 에러 토스트를 띄웁니다.
   useEffect(() => {
@@ -101,13 +103,14 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
             labels={labels}
             size={isTablet ? 'large' : 'small'}
             {...actions}
-            onOpenDetail={notConnected}
+            onOpenDetail={setDetailTodoId}
             onViewNote={setNoteId}
             onCreateNote={(todoId) =>
               router.push(`/notes/write?todoId=${todoId}`)
             }
             kebabSlot={
               <TodoItemKebab
+                onEdit={() => setEditTodoId(todo.id)}
                 onDelete={() =>
                   setDeleteTarget({ id: todo.id, title: todo.title })
                 }
@@ -119,6 +122,24 @@ const FavoriteTodoList = ({ status, goalId }: FavoriteTodoListProps) => {
       <DeleteTodoModal
         todo={deleteTarget}
         onClose={() => setDeleteTarget(null)}
+      />
+      <TodoEditModal todoId={editTodoId} onClose={() => setEditTodoId(null)} />
+      {/* 상세에서 다른 창으로 넘어갈 때는 상세를 먼저 닫아 창이 겹치지 않게 합니다. */}
+      <TodoDetailModal
+        todoId={detailTodoId}
+        onClose={() => setDetailTodoId(null)}
+        onEdit={(todoId) => {
+          setDetailTodoId(null);
+          setEditTodoId(todoId);
+        }}
+        onDelete={(todo) => {
+          setDetailTodoId(null);
+          setDeleteTarget(todo);
+        }}
+        onOpenNote={(id) => {
+          setDetailTodoId(null);
+          setNoteId(id);
+        }}
       />
       <NoteDetailDrawer noteId={noteId} onClose={() => setNoteId(null)} />
     </>
