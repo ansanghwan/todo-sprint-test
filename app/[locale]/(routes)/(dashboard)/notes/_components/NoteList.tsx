@@ -36,7 +36,7 @@ export default function NoteList(params: NoteListProps) {
   if (isError) {
     return (
       <div className={'flex flex-col items-center gap-3 py-10'}>
-        <p>노트를 불러오지 못했어요.</p>
+        <p>작업 기록을 불러오지 못했어요.</p>
         <button
           type="button"
           onClick={() => refetch()}
@@ -62,7 +62,7 @@ export default function NoteList(params: NoteListProps) {
           src="/images/no_note.svg"
           width={130}
           height={140}
-          alt="노트 아이콘"
+          alt="작업 기록 아이콘"
         />
         <p className={'mt-5'}>
           {params.search ? t('noSearchResults') : t('noNotes')}

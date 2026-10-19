@@ -43,7 +43,7 @@ export default function NotesView() {
         <h2 className="text-2xl font-semibold max-md:hidden">{t('notes')}</h2>
         <div className="flex flex-row items-center gap-2">
           <SearchInput
-            aria-label="노트 검색"
+            aria-label="작업 기록 검색"
             placeholder={t('searchNotes')}
             defaultValue={search}
             onSearch={(query) => updateQuery('search', query.trim())}

@@ -310,7 +310,7 @@ export default function Home() {
             </p>
 
             <h2 data-enter="text" className={hdadingManinClass}>
-              {nextIntlLanding.rich('finaleTitle', { br: () => <br /> })}
+              {nextIntlLanding.rich('heroTitle', { br: () => <br /> })}
             </h2>
             <LandingStartButton className={`${startClass} mt-10 md:mt-12`}>
               {nextIntlLanding('start')}

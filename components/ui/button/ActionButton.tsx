@@ -43,7 +43,9 @@ export default function ActionButton({
           }
         />
       </span>
-      <span>{children ?? (variant === 'goal' ? '새 목표' : '새 할일')}</span>
+      <span>
+        {children ?? (variant === 'goal' ? '새 프로젝트' : '새 할일')}
+      </span>
     </button>
   );
 }

@@ -22,7 +22,7 @@ export default function NoteGoalBanner({ goalId }: NoteGoalBannerProps) {
         className="mr-6"
       />
       <h3 className="text-2xl font-semibold">
-        {isError ? '목표를 찾을 수 없어요' : (goal?.title ?? '')}
+        {isError ? '프로젝트를 찾을 수 없어요' : (goal?.title ?? '')}
       </h3>
     </div>
   );
