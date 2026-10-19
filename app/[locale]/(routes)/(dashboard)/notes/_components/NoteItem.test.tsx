@@ -55,7 +55,7 @@ describe('NoteItem', () => {
     expect(screen.getByText('API 문서 작성')).toBeInTheDocument();
     expect(screen.getByText('2026.02.16')).toBeInTheDocument();
     expect(
-      screen.getByRole('img', { name: '노트 아이콘' }),
+      screen.getByRole('img', { name: '작업 기록 아이콘' }),
     ).toBeInTheDocument();
   });
 

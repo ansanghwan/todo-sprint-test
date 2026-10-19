@@ -113,7 +113,7 @@ describe('노트 작성·삭제 후 할 일 쪽 노트 정보', { timeout: 20_00
     const { user, show } = setup();
     expect(
       within(await itemOf(WITHOUT_NOTE)).getByRole('button', {
-        name: '노트 작성하기',
+        name: '작업 기록 작성',
       }),
     ).toBeInTheDocument();
 
@@ -124,7 +124,7 @@ describe('노트 작성·삭제 후 할 일 쪽 노트 정보', { timeout: 20_00
     await waitFor(async () =>
       expect(
         within(await itemOf(WITHOUT_NOTE)).getByRole('button', {
-          name: '노트 보기',
+          name: '작업 기록 보기',
         }),
       ).toBeInTheDocument(),
     );
@@ -134,7 +134,7 @@ describe('노트 작성·삭제 후 할 일 쪽 노트 정보', { timeout: 20_00
     const { user, show } = setup();
     expect(
       within(await itemOf(WITH_NOTE)).getByRole('button', {
-        name: '노트 보기',
+        name: '작업 기록 보기',
       }),
     ).toBeInTheDocument();
 
@@ -145,7 +145,7 @@ describe('노트 작성·삭제 후 할 일 쪽 노트 정보', { timeout: 20_00
     await waitFor(async () =>
       expect(
         within(await itemOf(WITH_NOTE)).getByRole('button', {
-          name: '노트 작성하기',
+          name: '작업 기록 작성',
         }),
       ).toBeInTheDocument(),
     );
@@ -156,7 +156,7 @@ describe('노트 작성·삭제 후 할 일 쪽 노트 정보', { timeout: 20_00
     show('favorites');
     expect(
       within(await itemOf(WITH_NOTE)).getByRole('button', {
-        name: '노트 보기',
+        name: '작업 기록 보기',
       }),
     ).toBeInTheDocument();
 
@@ -167,7 +167,7 @@ describe('노트 작성·삭제 후 할 일 쪽 노트 정보', { timeout: 20_00
     await waitFor(async () =>
       expect(
         within(await itemOf(WITH_NOTE)).getByRole('button', {
-          name: '노트 작성하기',
+          name: '작업 기록 작성',
         }),
       ).toBeInTheDocument(),
     );
@@ -179,7 +179,9 @@ describe('노트 작성·삭제 후 할 일 쪽 노트 정보', { timeout: 20_00
     const detail = await screen.findByRole('dialog', {
       name: new RegExp(WITH_NOTE),
     });
-    expect(await within(detail).findByText('작성된 노트')).toBeInTheDocument();
+    expect(
+      await within(detail).findByText('작성된 작업 기록'),
+    ).toBeInTheDocument();
     await user.click(within(detail).getByRole('button', { name: '닫기' }));
     await waitFor(() =>
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
@@ -193,10 +195,10 @@ describe('노트 작성·삭제 후 할 일 쪽 노트 정보', { timeout: 20_00
       name: new RegExp(WITH_NOTE),
     });
 
-    await within(reopened).findByText('목표', { selector: 'dt' });
+    await within(reopened).findByText('프로젝트', { selector: 'dt' });
     await waitFor(() =>
       expect(
-        within(reopened).queryByText('작성된 노트'),
+        within(reopened).queryByText('작성된 작업 기록'),
       ).not.toBeInTheDocument(),
     );
   });

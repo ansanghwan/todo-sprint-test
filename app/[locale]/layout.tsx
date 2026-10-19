@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'BrickByBrick',
-  description: '할 일을 관리하는 Todo Sprint',
+  description: '오늘 쌓은 하나의 할 일, 내일의 단단한 포트폴리오.',
 };
 
 export function generateStaticParams() {

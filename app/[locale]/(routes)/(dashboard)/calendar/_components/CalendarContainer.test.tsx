@@ -237,7 +237,7 @@ describe('CalendarContainer', () => {
     renderCalendar();
 
     expect(
-      await screen.findByRole('heading', { name: '체다치즈님의 캘린더' }),
+      await screen.findByRole('heading', { name: '체다치즈님의 빌드 캘린더' }),
     ).toBeInTheDocument();
   });
 
@@ -285,7 +285,7 @@ describe('CalendarContainer', () => {
       .getByRole('button', { name: '할 일 1' })
       .closest('li')!;
     await user.click(
-      within(dayItem).getByRole('button', { name: '노트 보기' }),
+      within(dayItem).getByRole('button', { name: '작업 기록 보기' }),
     );
 
     const drawer = await screen.findByRole('dialog', { name: '할 일 1 정리' });
@@ -310,7 +310,7 @@ describe('CalendarContainer', () => {
       .getByRole('button', { name: '할 일 2' })
       .closest('li')!;
     await user.click(
-      within(dayItem).getByRole('button', { name: '노트 작성하기' }),
+      within(dayItem).getByRole('button', { name: '작업 기록 작성' }),
     );
 
     expect(routerPush).toHaveBeenCalledWith('/notes/write?todoId=2');
@@ -449,12 +449,12 @@ describe('CalendarContainer', () => {
     const user = userEvent.setup();
     renderCalendar();
 
-    await user.click(screen.getByRole('button', { name: '전체 목표' }));
+    await user.click(screen.getByRole('button', { name: '전체 프로젝트' }));
 
     await screen.findByRole('menuitemradio', { name: '목표 2' });
     expect(
       screen.getAllByRole('menuitemradio').map((item) => item.textContent),
-    ).toEqual(['전체 목표', '목표 1', '목표 2']);
+    ).toEqual(['전체 프로젝트', '목표 1', '목표 2']);
     expect(mockedGetGoals.mock.calls.map(([params]) => params)).toEqual([
       { limit: 100, cursor: undefined },
       { limit: 100, cursor: 2 },
@@ -465,7 +465,7 @@ describe('CalendarContainer', () => {
     const user = userEvent.setup();
     renderCalendar();
 
-    await user.click(screen.getByRole('button', { name: '전체 목표' }));
+    await user.click(screen.getByRole('button', { name: '전체 프로젝트' }));
     await user.click(
       await screen.findByRole('menuitemradio', { name: '목표 2' }),
     );
@@ -477,10 +477,12 @@ describe('CalendarContainer', () => {
     });
 
     await user.click(filterButton);
-    await user.click(screen.getByRole('menuitemradio', { name: '전체 목표' }));
+    await user.click(
+      screen.getByRole('menuitemradio', { name: '전체 프로젝트' }),
+    );
 
     expect(
-      screen.getByRole('button', { name: '전체 목표' }),
+      screen.getByRole('button', { name: '전체 프로젝트' }),
     ).toBeInTheDocument();
     await screen.findAllByText('할 일 1');
     expect(mockedGetTodos.mock.lastCall?.[0].goalId).toBeUndefined();
@@ -499,7 +501,9 @@ describe('CalendarContainer', () => {
     expect(url.getSearch()).toBe('goalId=1');
 
     await user.click(screen.getByRole('button', { name: '목표 1' }));
-    await user.click(screen.getByRole('menuitemradio', { name: '전체 목표' }));
+    await user.click(
+      screen.getByRole('menuitemradio', { name: '전체 프로젝트' }),
+    );
     expect(url.getSearch()).toBe('');
   });
 
@@ -512,7 +516,7 @@ describe('CalendarContainer', () => {
       await screen.findAllByText('할 일 1');
       expect(mockedGetGoals).toHaveBeenCalledTimes(2);
       expect(
-        screen.getByRole('button', { name: '전체 목표' }),
+        screen.getByRole('button', { name: '전체 프로젝트' }),
       ).toBeInTheDocument();
       expect(mockedGetTodos.mock.lastCall?.[0].goalId).toBeUndefined();
     },
@@ -523,17 +527,17 @@ describe('CalendarContainer', () => {
     mockedGetGoals.mockRejectedValue(new Error('mock network error'));
     renderCalendar();
 
-    await user.click(screen.getByRole('button', { name: '전체 목표' }));
+    await user.click(screen.getByRole('button', { name: '전체 프로젝트' }));
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      '목표를 불러오지 못했어요',
+      '프로젝트를 불러오지 못했어요',
     );
     expect(
-      screen.getByRole('menuitemradio', { name: '전체 목표' }),
+      screen.getByRole('menuitemradio', { name: '전체 프로젝트' }),
     ).toBeInTheDocument();
 
     mockedGetGoals.mockImplementation(respondGoals);
     await user.keyboard('{Escape}');
-    await user.click(screen.getByRole('button', { name: '전체 목표' }));
+    await user.click(screen.getByRole('button', { name: '전체 프로젝트' }));
 
     expect(
       await screen.findByRole('menuitemradio', { name: '목표 2' }),

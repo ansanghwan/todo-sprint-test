@@ -62,7 +62,7 @@ const setup = (options: Partial<Parameters<typeof mockTodosApi>[0]> = {}) => {
 };
 
 const heading = (count: number) =>
-  screen.findByRole('heading', { name: `모든 할 일 ${count}` });
+  screen.findByRole('heading', { name: `브릭 로그 ${count}` });
 const modal = () => screen.getByRole('dialog', { name: '할 일 생성' });
 const firstTodoTitle = () =>
   within(screen.getAllByRole('list')[0]).getAllByRole('listitem')[0];
@@ -75,7 +75,7 @@ const openModal = async (user: UserEvent) => {
 const fillRequired = async (user: UserEvent, title: string) => {
   await user.click(within(modal()).getByRole('textbox', { name: '제목' }));
   await user.paste(title);
-  await user.click(within(modal()).getByRole('combobox', { name: '목표' }));
+  await user.click(within(modal()).getByRole('combobox', { name: '프로젝트' }));
   await user.click((await screen.findAllByRole('option'))[1]);
   await user.click(within(modal()).getByRole('button', { name: /^마감기한/ }));
   const grid = await screen.findByRole('grid');
@@ -168,7 +168,9 @@ describe(
       await heading(12);
       await openModal(user);
 
-      await user.click(within(modal()).getByRole('combobox', { name: '목표' }));
+      await user.click(
+        within(modal()).getByRole('combobox', { name: '프로젝트' }),
+      );
       expect(await screen.findAllByRole('option')).toHaveLength(10);
 
       await act(async () => triggerIntersect());
@@ -203,7 +205,7 @@ describe(
         within(modal()).getByRole('textbox', { name: '제목' }),
       ).toHaveValue('실패할 할 일');
       expect(
-        screen.getByRole('heading', { name: '모든 할 일 12', hidden: true }),
+        screen.getByRole('heading', { name: '브릭 로그 12', hidden: true }),
       ).toBeInTheDocument();
     });
 

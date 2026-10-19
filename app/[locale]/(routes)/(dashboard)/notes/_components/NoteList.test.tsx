@@ -101,7 +101,7 @@ describe('NoteList', () => {
     renderNoteList();
 
     expect(
-      await screen.findByText('아직 등록된 노트가 없어요'),
+      await screen.findByText('아직 남긴 작업 기록이 없어요'),
     ).toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
@@ -114,7 +114,7 @@ describe('NoteList', () => {
     renderNoteList();
 
     expect(
-      await screen.findByText('노트를 불러오지 못했어요.'),
+      await screen.findByText('작업 기록을 불러오지 못했어요.'),
     ).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '다시 시도' }));
@@ -186,7 +186,7 @@ describe('NoteList', () => {
       await user.click(screen.getByRole('menuitem', { name: '삭제하기' }));
 
       expect(
-        screen.getByRole('dialog', { name: '노트를 삭제하시겠어요?' }),
+        screen.getByRole('dialog', { name: '작업 기록을 삭제하시겠어요?' }),
       ).toBeInTheDocument();
       expect(mockedDeleteNote).not.toHaveBeenCalled();
     });
@@ -212,7 +212,9 @@ describe('NoteList', () => {
       await user.click(screen.getByRole('button', { name: '확인' }));
 
       await waitFor(() =>
-        expect(toast.error).toHaveBeenCalledWith('노트를 삭제하지 못했어요'),
+        expect(toast.error).toHaveBeenCalledWith(
+          '작업 기록을 삭제하지 못했어요',
+        ),
       );
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
@@ -244,7 +246,7 @@ describe('NoteList', () => {
       await user.click(screen.getByRole('menuitem', { name: '삭제하기' }));
 
       expect(
-        screen.getByRole('dialog', { name: '노트를 삭제하시겠어요?' }),
+        screen.getByRole('dialog', { name: '작업 기록을 삭제하시겠어요?' }),
       ).toBeInTheDocument();
       expect(mockedDeleteNote).not.toHaveBeenCalled();
     });
@@ -270,7 +272,9 @@ describe('NoteList', () => {
       await user.click(screen.getByRole('button', { name: '확인' }));
 
       await waitFor(() =>
-        expect(toast.error).toHaveBeenCalledWith('노트를 삭제하지 못했어요'),
+        expect(toast.error).toHaveBeenCalledWith(
+          '작업 기록을 삭제하지 못했어요',
+        ),
       );
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });

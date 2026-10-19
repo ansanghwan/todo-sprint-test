@@ -62,14 +62,14 @@ function setup(locale: 'ko' | 'en' = 'ko') {
   return { client, user: userEvent.setup() };
 }
 async function select(user: ReturnType<typeof userEvent.setup>, name: string) {
-  await user.click(screen.getByRole('button', { name: '목표 더보기' }));
+  await user.click(screen.getByRole('button', { name: '프로젝트 더보기' }));
   await user.click(await screen.findByRole('menuitem', { name }));
 }
 it('제목을 저장하고 기존 할 일 데이터를 유지한다', async () => {
   vi.mocked(updateGoal).mockResolvedValue({ ...goal, title: '수정 목표' });
   const { client, user } = setup();
   await select(user, '수정하기');
-  fireEvent.change(screen.getByRole('textbox', { name: '목표명' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: '프로젝트명' }), {
     target: { value: '  수정 목표  ' },
   });
   await user.click(screen.getByRole('button', { name: '저장' }));
@@ -82,7 +82,7 @@ it('제목을 저장하고 기존 할 일 데이터를 유지한다', async () =
 it('빈 제목은 저장하지 않고 Esc는 수정을 취소한다', async () => {
   const { user } = setup();
   await select(user, '수정하기');
-  const input = screen.getByRole('textbox', { name: '목표명' });
+  const input = screen.getByRole('textbox', { name: '프로젝트명' });
   fireEvent.change(input, { target: { value: ' ' } });
   expect(screen.getByRole('button', { name: '저장' })).toBeDisabled();
   fireEvent.keyDown(input, { key: 'Escape' });
@@ -95,12 +95,12 @@ it('수정 실패하면 입력을 유지한다', async () => {
   vi.mocked(updateGoal).mockRejectedValue(new Error('Offline'));
   const { user } = setup();
   await select(user, '수정하기');
-  fireEvent.change(screen.getByRole('textbox', { name: '목표명' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: '프로젝트명' }), {
     target: { value: '수정 목표' },
   });
   await user.click(screen.getByRole('button', { name: '저장' }));
   await waitFor(() => expect(error).toHaveBeenCalled());
-  expect(screen.getByRole('textbox', { name: '목표명' })).toHaveValue(
+  expect(screen.getByRole('textbox', { name: '프로젝트명' })).toHaveValue(
     '수정 목표',
   );
 });
@@ -133,19 +133,23 @@ it('영문에서 수정·삭제 문구를 번역하고 사용자가 작성한 �
   expect(
     screen.getByRole('heading', { name: '기존 목표' }),
   ).toBeInTheDocument();
-  await user.click(screen.getByRole('button', { name: 'More goal actions' }));
+  await user.click(
+    screen.getByRole('button', { name: 'More project actions' }),
+  );
   await user.click(await screen.findByRole('menuitem', { name: 'Edit' }));
-  expect(screen.getByRole('textbox', { name: 'Goal title' })).toHaveValue(
+  expect(screen.getByRole('textbox', { name: 'Project title' })).toHaveValue(
     '기존 목표',
   );
   await user.click(screen.getByRole('button', { name: 'Cancel' }));
-  await user.click(screen.getByRole('button', { name: 'More goal actions' }));
+  await user.click(
+    screen.getByRole('button', { name: 'More project actions' }),
+  );
   await user.click(await screen.findByRole('menuitem', { name: 'Delete' }));
   const dialog = screen.getByRole('dialog', {
-    name: 'Are you sure you want to delete this goal?',
+    name: 'Are you sure you want to delete this project?',
   });
   expect(
-    within(dialog).getByText('Deleted goals cannot be recovered.'),
+    within(dialog).getByText('Deleted projects cannot be recovered.'),
   ).toBeInTheDocument();
   expect(
     within(dialog).getByRole('button', { name: 'Confirm' }),
