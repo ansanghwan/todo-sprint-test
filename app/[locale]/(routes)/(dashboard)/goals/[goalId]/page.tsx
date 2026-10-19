@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
 import useCurrentUser from '@/hooks/useCurrentUser';
+import useGoalDetailLoadMeasurement from '@/hooks/useGoalDetailLoadMeasurement';
 import { useParams } from 'next/navigation';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { todoQueries } from '@/queries/todo';
@@ -88,6 +89,17 @@ export default function GoalDetailPage() {
     }),
     enabled: Number.isInteger(id) && id > 0,
   });
+
+  // 조회 조건·캐시·로딩 UI는 바꾸지 않고 첫 성공 화면의 표시 시간만 기록합니다.
+  useGoalDetailLoadMeasurement(
+    Number.isInteger(id) &&
+      id > 0 &&
+      !!goal &&
+      !isPending &&
+      todoQuery.isSuccess &&
+      doneQuery.isSuccess,
+    isError || todoQuery.isError || doneQuery.isError,
+  );
 
   // 더보기로 받아온 페이지를 합쳐 각 목록에 표시합니다.
   const todoItems = todoQuery.data?.pages.flatMap((page) => page.todos) ?? [];

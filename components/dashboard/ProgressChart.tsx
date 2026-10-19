@@ -65,7 +65,7 @@ export default function ProgressChart({
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           transform="rotate(-90 46 46)"
-          className="transition-[stroke-dashoffset] duration-700 ease-out"
+          className="transition-[stroke-dashoffset] duration-300 ease-out"
         />
       </g>
     </svg>
