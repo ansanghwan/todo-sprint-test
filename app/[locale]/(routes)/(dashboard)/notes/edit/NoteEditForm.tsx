@@ -9,6 +9,8 @@ import NoteForm, { type NoteFormValues } from '@/components/note/NoteForm';
 import TodoStatusChip from '@/components/todo/TodoStatusChip';
 import { formatUtcDateToYmd } from '@/lib/formatter';
 import MetaRow from '@/components/note/MetaRow';
+import TagChip from '@/components/todo/todo-form/fields/TagChip';
+import { getTagColor } from '@/components/todo/todo-form/tagColors';
 
 interface NoteEditFormProps {
   noteId: number;
@@ -57,7 +59,19 @@ export default function NoteEditForm({ noteId }: NoteEditFormProps) {
             <TodoStatusChip isTodo={note.todo.done} className="ml-1 shrink-0" />
           </MetaRow>
           <MetaRow icon="tag" label={t('tag')}>
-            {note.todo.tags?.map((tag) => tag.name).join(', ') || '-'}
+            {note.todo.tags && note.todo.tags.length > 0 ? (
+              <ul className="flex flex-wrap gap-1">
+                {note.todo.tags.map((tag, index) => (
+                  <TagChip
+                    key={tag.id}
+                    label={tag.name}
+                    color={getTagColor(index)}
+                  />
+                ))}
+              </ul>
+            ) : (
+              '-'
+            )}
           </MetaRow>
         </>
       }
