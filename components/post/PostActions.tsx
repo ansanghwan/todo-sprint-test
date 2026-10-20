@@ -48,7 +48,10 @@ const PostActions = ({ postId, writerId }: PostActionsProps) => {
   };
 
   const menuItems: KebabMenuItem[] = [
-    { label: '수정하기', onSelect: () => router.push(`/posts/${postId}/edit`) },
+    {
+      label: '수정하기',
+      onSelect: () => router.push(`/posts/edit?postId=${postId}`),
+    },
     { label: '삭제하기', onSelect: () => setIsDeleteModalOpen(true) },
   ];
 

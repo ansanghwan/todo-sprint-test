@@ -19,7 +19,11 @@ export default function PostEditForm({ postId }: PostEditFormProps) {
     data: post,
     isPending: isLoading,
     isError,
-  } = useQuery(postQueries.detail(postId));
+  } = useQuery({
+    ...postQueries.detail(postId),
+    // 상세 조회마다 조회수가 오르므로, 상세 화면에서 받아 둔 캐시가 있으면 다시 받지 않습니다.
+    refetchOnMount: false,
+  });
   const { mutateAsync: updatePost, isPending } = useMutation(
     postMutations.update(postId),
   );

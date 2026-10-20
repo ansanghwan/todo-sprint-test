@@ -3,6 +3,7 @@ import QueryErrorBoundary from '@/components/boundaries/QueryErrorBoundary';
 import BestPostList from '@/components/post/BestPostList';
 import BestPostListSkeleton from '@/components/post/BestPostListSkeleton';
 import PostListSection from '@/components/post/PostListSection';
+import PostWriteLink from '@/components/post/PostWriteLink';
 
 export default function PostsPage() {
   return (
@@ -16,6 +17,7 @@ export default function PostsPage() {
         </ClientSuspense>
       </QueryErrorBoundary>
       <PostListSection />
+      <PostWriteLink />
     </div>
   );
 }

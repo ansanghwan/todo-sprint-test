@@ -52,6 +52,18 @@ describe('게시글 케밥 메뉴', () => {
     expect(screen.queryByRole('button')).toBeNull();
   });
 
+  it('수정하기를 고르면 수정 페이지로 이동한다', async () => {
+    renderActions(1);
+    const user = userEvent.setup();
+
+    await user.click(
+      await screen.findByRole('button', { name: '게시글 메뉴' }),
+    );
+    await user.click(screen.getByRole('menuitem', { name: '수정하기' }));
+
+    expect(router.push).toHaveBeenCalledWith('/posts/edit?postId=5');
+  });
+
   it('삭제를 확인하면 DELETE 요청 후 목록으로 이동한다', async () => {
     renderActions(1);
 

@@ -1,4 +1,5 @@
 import {
+  type InfiniteData,
   infiniteQueryOptions,
   mutationOptions,
   queryOptions,
@@ -52,6 +53,15 @@ export const postQueries = {
       refetchOnReconnect: false,
     }),
 };
+
+/** 다시 돌아왔을 때 1페이지만 재조회되도록 첫 페이지만 남깁니다(스펙: 커서 초기화). */
+export const keepFirstPage = <TPage, TPageParam>(
+  data: InfiniteData<TPage, TPageParam> | undefined,
+) =>
+  data && {
+    pages: data.pages.slice(0, 1),
+    pageParams: data.pageParams.slice(0, 1),
+  };
 
 export const postMutations = {
   delete: () =>
