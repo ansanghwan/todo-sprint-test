@@ -35,7 +35,7 @@ export default function NoteItem({
             src="../icons/img_note.svg"
             width={40}
             height={40}
-            alt="노트 아이콘"
+            alt="작업 기록 아이콘"
             className="mr-4"
           />
           {/* 버튼의 클릭 영역(after)을 카드 전체로 넓혀 카드를 누르면 상세가 열립니다. */}

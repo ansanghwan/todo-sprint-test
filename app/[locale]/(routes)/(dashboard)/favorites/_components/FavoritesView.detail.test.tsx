@@ -76,7 +76,7 @@ const openDetail = async (user: UserEvent, title: string) => {
   const dialog = await screen.findByRole('dialog', {
     name: new RegExp(title),
   });
-  await within(dialog).findByText('목표', { selector: 'dt' });
+  await within(dialog).findByText('프로젝트', { selector: 'dt' });
   return dialog;
 };
 

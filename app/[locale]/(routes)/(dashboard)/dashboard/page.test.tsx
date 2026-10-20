@@ -212,7 +212,7 @@ describe('목표별 검색', () => {
       [678, expect.any(AbortSignal), undefined, true, '공부'],
     ]);
     expect(screen.getByText('다른 목표 할 일')).toBeInTheDocument();
-    expect(screen.getByLabelText('목표 진행률 50%')).toBeInTheDocument();
+    expect(screen.getByLabelText('빌드 진행률 50%')).toBeInTheDocument();
     fireEvent.change(input, { target: { value: '아직 실행하지 않은 검색어' } });
     fireEvent.click(
       screen.getByRole('button', { name: '테스트 목표 TO DO 더보기' }),
@@ -295,10 +295,10 @@ describe('목표 없음 안내', () => {
     getGoals.mockResolvedValue({ goals: [], nextCursor: null, totalCount: 0 });
     render(<Dashboard />, { wrapper: TestProviders });
     expect(
-      await screen.findByText('최근에 등록한 목표가 없어요'),
+      await screen.findByText('아직 만든 프로젝트가 없어요'),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: '목표 별 할일' }),
+      screen.getByRole('heading', { name: '프로젝트별 다음 브릭' }),
     ).toBeInTheDocument();
     expect(getGoalTodos).not.toHaveBeenCalled();
   });
@@ -307,10 +307,10 @@ describe('목표 없음 안내', () => {
     getGoals.mockRejectedValue(new Error('network'));
     render(<Dashboard />, { wrapper: TestProviders });
     expect(
-      await screen.findByText('목표를 불러오지 못했어요'),
+      await screen.findByText('프로젝트를 불러오지 못했어요'),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText('최근에 등록한 목표가 없어요'),
+      screen.queryByText('아직 만든 프로젝트가 없어요'),
     ).not.toBeInTheDocument();
   });
 });
@@ -429,10 +429,10 @@ it('영문 대시보드는 제목·검색·더보기·빈 상태를 번역하고
     await screen.findByRole('heading', { name: '테스트 목표' }),
   ).toBeInTheDocument();
   expect(
-    screen.getByRole('heading', { name: 'To-dos by Goal' }),
+    screen.getByRole('heading', { name: 'Next Bricks by Project' }),
   ).toBeInTheDocument();
   expect(
-    screen.getByRole('heading', { name: 'Recently Added To-dos' }),
+    screen.getByRole('heading', { name: 'Next Bricks to Build' }),
   ).toBeInTheDocument();
   expect(screen.getByPlaceholderText('Search for a to-do')).toBeInTheDocument();
   expect(

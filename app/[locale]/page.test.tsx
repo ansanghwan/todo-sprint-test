@@ -15,7 +15,7 @@ vi.mock('@/components/landing/LandingStartButton', () => ({
 }));
 
 it.each(['ko', 'en'] as const)(
-  '랜딩의 %s 문장과 줄바꿈·강조·시작 버튼을 표시한다',
+  '랜딩의 %s 문장과 줄바꿈·시작 버튼을 표시한다',
   (locale) => {
     render(
       <IntlTestProvider locale={locale}>
@@ -26,13 +26,10 @@ it.each(['ko', 'en'] as const)(
     const heading = screen.getByRole('heading', { level: 1 });
     expect(heading).toHaveTextContent(
       english
-        ? 'Plan today’s to-doswith Slid to-do'
-        : '오늘의 할 일,슬리드투두로 계획해요',
+        ? 'One task accomplished today,a solid portfolio tomorrow.'
+        : '오늘 쌓은 하나의 할 일,내일의 단단한 포트폴리오.',
     );
     expect(heading.querySelector('br')).toBeInTheDocument();
-    expect(heading.querySelector('span')).toHaveTextContent(
-      english ? 'Slid to-do' : '슬리드투두',
-    );
     expect(
       screen.getAllByRole('button', {
         name: english ? 'Get Started' : '시작하기',

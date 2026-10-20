@@ -158,7 +158,7 @@ it('할 일 제목은 해당 ID의 상세를 열고 연필은 새 노트 작성 
     screen.getByRole('dialog', { name: '할 일 상세 7' }),
   ).toBeInTheDocument();
   await user.click(screen.getByRole('button', { name: '상세 닫기' }));
-  await user.click(screen.getByRole('button', { name: '노트 작성하기' }));
+  await user.click(screen.getByRole('button', { name: '작업 기록 작성' }));
   expect(push).toHaveBeenCalledWith('/notes/write?todoId=7');
 });
 
@@ -179,7 +179,7 @@ it('영문 목표 상세에서 빈 목록·노트·캘린더 링크 문구를 �
     'href',
     '/calendar?goalId=683',
   );
-  expect(screen.getByRole('link', { name: /Notes/ })).toHaveAttribute(
+  expect(screen.getByRole('link', { name: /Work Logs/ })).toHaveAttribute(
     'href',
     '/notes?goalId=683',
   );
@@ -202,7 +202,9 @@ describe('할 일 노트 보기 (FN-TD-11, 43)', () => {
   it('노트 아이콘은 목표별 노트 목록 대신 그 할 일의 노트 상세를 연다', async () => {
     const user = setup();
 
-    await user.click(await screen.findByRole('button', { name: '노트 보기' }));
+    await user.click(
+      await screen.findByRole('button', { name: '작업 기록 보기' }),
+    );
 
     expect(
       await screen.findByRole('dialog', { name: /목표 상세 노트/ }),

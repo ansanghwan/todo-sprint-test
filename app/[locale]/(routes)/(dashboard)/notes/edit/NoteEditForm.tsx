@@ -24,15 +24,15 @@ export default function NoteEditForm({ noteId }: NoteEditFormProps) {
 
   // ⚠️ 노트를 다 불러온 "뒤에" 폼을 그려야 에디터에 기존 내용이 들어가요
   if (isLoading) return <p>불러오는 중…</p>;
-  if (isError) return <p>노트를 불러오지 못했어요.</p>;
+  if (isError) return <p>작업 기록을 불러오지 못했어요.</p>;
 
   const handleSubmit = (values: NoteFormValues) => {
     updateNote(values, {
       onSuccess: () => {
-        toast.success('노트가 수정되었어요');
+        toast.success('작업 기록이 수정되었어요');
         router.push('/notes');
       },
-      onError: () => toast.error('노트를 수정하지 못했어요'),
+      onError: () => toast.error('작업 기록을 수정하지 못했어요'),
     });
   };
 

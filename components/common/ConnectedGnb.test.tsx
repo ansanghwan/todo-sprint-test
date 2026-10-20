@@ -84,7 +84,7 @@ it('실제 사용자명을 모바일 제목과 프로필에 표시한다', async
       <ConnectedGnb />
     </TestProviders>,
   );
-  expect(await screen.findByText('상환님의 대시보드')).toBeInTheDocument();
+  expect(await screen.findByText('상환님의 작업대')).toBeInTheDocument();
   expect(screen.getByText('test@example.com')).toBeInTheDocument();
   expect(screen.queryByText('체다치즈')).not.toBeInTheDocument();
 });
@@ -94,15 +94,15 @@ it('현재 페이지가 바뀌면 제목도 바뀐다', async () => {
       <ConnectedGnb />
     </TestProviders>,
   );
-  await screen.findByText('상환님의 대시보드');
+  await screen.findByText('상환님의 작업대');
   pathname = '/todos';
   view.rerender(
     <TestProviders>
       <ConnectedGnb />
     </TestProviders>,
   );
-  expect(screen.getByText('모든 할 일')).toBeInTheDocument();
-  expect(screen.queryByText('상환님의 대시보드')).not.toBeInTheDocument();
+  expect(screen.getByText('브릭 로그')).toBeInTheDocument();
+  expect(screen.queryByText('상환님의 작업대')).not.toBeInTheDocument();
 });
 it('대시보드에서는 해당 메뉴만 활성화하고 경로가 바뀌면 선택도 갱신한다', async () => {
   const view = render(
@@ -110,10 +110,10 @@ it('대시보드에서는 해당 메뉴만 활성화하고 경로가 바뀌면 �
       <ConnectedGnb />
     </TestProviders>,
   );
-  await screen.findByText('상환님의 대시보드');
+  await screen.findByText('상환님의 작업대');
   const nav = screen.getByRole('navigation', { name: '주 메뉴' });
-  const dashboard = within(nav).getByRole('link', { name: '대시보드' });
-  const goal = within(nav).getByRole('link', { name: '노트 모아보기' });
+  const dashboard = within(nav).getByRole('link', { name: '작업대' });
+  const goal = within(nav).getByRole('link', { name: '작업 기록' });
   expect(nav.querySelectorAll('a[data-active="true"]')).toHaveLength(1);
   expect(dashboard).toHaveAttribute('aria-current', 'page');
   expect(dashboard).toHaveAttribute('aria-current', 'page');
@@ -143,7 +143,7 @@ it('사용자 조회 실패 시 임시 이름 대신 기본 제목을 표시한�
     </TestProviders>,
   );
   await waitFor(() => expect(getMe).toHaveBeenCalled());
-  expect(screen.queryByText(/님의 대시보드/)).not.toBeInTheDocument();
+  expect(screen.queryByText(/님의 작업대/)).not.toBeInTheDocument();
   expect(screen.queryByText('chedacheese@slid.kr')).not.toBeInTheDocument();
 });
 it('헤더와 페이지가 동시에 조회해도 요청을 공유한다', async () => {
@@ -158,7 +158,7 @@ it('헤더와 페이지가 동시에 조회해도 요청을 공유한다', async
     </TestProviders>,
   );
   await screen.findByText('페이지 사용자: 상환');
-  await screen.findByText('상환님의 대시보드');
+  await screen.findByText('상환님의 작업대');
   expect(getMe).toHaveBeenCalledTimes(1);
 });
 
@@ -168,16 +168,16 @@ it('시연 메뉴를 숨기고 실제 경로를 연결한다', async () => {
       <ConnectedGnb />
     </TestProviders>,
   );
-  await screen.findByText('상환님의 대시보드');
+  await screen.findByText('상환님의 작업대');
   const nav = within(screen.getByRole('navigation'));
-  expect(nav.queryByRole('link', { name: '목표' })).not.toBeInTheDocument();
+  expect(nav.queryByRole('link', { name: '프로젝트' })).not.toBeInTheDocument();
   expect(screen.queryByRole('link', { name: '설정' })).not.toBeInTheDocument();
   for (const [name, href] of [
-    ['대시보드', '/dashboard'],
-    ['캘린더', '/calendar'],
+    ['작업대', '/dashboard'],
+    ['빌드 캘린더', '/calendar'],
     ['소통 게시판', '/posts'],
-    ['노트 모아보기', '/notes'],
-    ['찜한 할 일', '/favorites'],
+    ['작업 기록', '/notes'],
+    ['대표 기록', '/favorites'],
   ]) {
     expect(nav.getByRole('link', { name })).toHaveAttribute('href', href);
   }
@@ -194,7 +194,7 @@ it('로그아웃 성공 시 로그인으로 이동하고 중복 클릭을 막는
       <ConnectedGnb />
     </TestProviders>,
   );
-  await screen.findByText('상환님의 대시보드');
+  await screen.findByText('상환님의 작업대');
   const button = screen.getByRole('button', { name: '로그아웃' });
   fireEvent.click(button);
   fireEvent.click(button);
@@ -212,7 +212,7 @@ it('로그아웃 실패 시 이동하지 않고 재시도할 수 있다', async 
       <ConnectedGnb />
     </TestProviders>,
   );
-  await screen.findByText('상환님의 대시보드');
+  await screen.findByText('상환님의 작업대');
   fireEvent.click(screen.getByRole('button', { name: '로그아웃' }));
   await waitFor(() => expect(toastError).toHaveBeenCalled());
   expect(replace).not.toHaveBeenCalled();
@@ -228,7 +228,7 @@ it('GNB 새 할 일에서 목표 선택 모달을 열고 성공 시 갱신 알�
         <ConnectedGnb />
       </TestProviders>,
     );
-    await screen.findByText('상환님의 대시보드');
+    await screen.findByText('상환님의 작업대');
     fireEvent.click(screen.getByRole('button', { name: '새 할일' }));
     expect(
       screen.getByRole('dialog', { name: '할 일 생성' }),
@@ -262,10 +262,10 @@ it('새 목표 버튼에서 실제 목표 폼을 열고 등록 성공 시 닫으
         <ConnectedGnb />
       </TestProviders>,
     );
-    await screen.findByText('상환님의 대시보드');
-    fireEvent.click(screen.getByRole('button', { name: '새 목표' }));
-    const dialog = screen.getByRole('dialog', { name: '목표 생성' });
-    const input = within(dialog).getByRole('textbox', { name: /목표명/ });
+    await screen.findByText('상환님의 작업대');
+    fireEvent.click(screen.getByRole('button', { name: '새 프로젝트' }));
+    const dialog = screen.getByRole('dialog', { name: '프로젝트 만들기' });
+    const input = within(dialog).getByRole('textbox', { name: /프로젝트명/ });
     expect(
       within(dialog).getByRole('button', { name: '등록하기' }),
     ).toBeDisabled();
@@ -300,9 +300,9 @@ it('목표 생성 실패 시 팝업과 입력값을 유지하고 재시도할 �
       <ConnectedGnb />
     </TestProviders>,
   );
-  await screen.findByText('상환님의 대시보드');
-  fireEvent.click(screen.getByRole('button', { name: '새 목표' }));
-  const input = screen.getByRole('textbox', { name: /목표명/ });
+  await screen.findByText('상환님의 작업대');
+  fireEvent.click(screen.getByRole('button', { name: '새 프로젝트' }));
+  const input = screen.getByRole('textbox', { name: /프로젝트명/ });
   fireEvent.change(input, { target: { value: '프로젝트 완성' } });
   fireEvent.click(screen.getByRole('button', { name: '등록하기' }));
   await waitFor(() => expect(toastError).toHaveBeenCalled());
@@ -358,7 +358,7 @@ it('목표를 펼칠 때 20개를 조회하고 내부 끝에서 추가 조회하
   );
   expect(getGoals).not.toHaveBeenCalled();
   fireEvent.click(
-    screen.getByRole('button', { name: '목표 목록 펼치기', hidden: true }),
+    screen.getByRole('button', { name: '프로젝트 목록 펼치기', hidden: true }),
   );
   expect(
     await screen.findByRole('link', { name: '목표 20', hidden: true }),
@@ -396,5 +396,5 @@ it('영문 모바일 헤더는 사용자 이름을 유지하고 목표 제목을
       <ConnectedGnb />
     </TestProviders>,
   );
-  expect(await screen.findByText("상환's Goals")).toBeInTheDocument();
+  expect(await screen.findByText("상환's Projects")).toBeInTheDocument();
 });

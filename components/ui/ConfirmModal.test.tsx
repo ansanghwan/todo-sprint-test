@@ -49,13 +49,15 @@ describe('ConfirmModal', () => {
       />,
     );
     expect(
-      screen.queryByText('삭제된 목표는 복구할 수 없습니다.'),
+      screen.queryByText('삭제된 프로젝트는 복구할 수 없습니다.'),
     ).not.toBeInTheDocument();
     unmount();
 
-    renderConfirmModal({ description: '삭제된 목표는 복구할 수 없습니다.' });
+    renderConfirmModal({
+      description: '삭제된 프로젝트는 복구할 수 없습니다.',
+    });
     expect(
-      screen.getByText('삭제된 목표는 복구할 수 없습니다.'),
+      screen.getByText('삭제된 프로젝트는 복구할 수 없습니다.'),
     ).toBeInTheDocument();
   });
 

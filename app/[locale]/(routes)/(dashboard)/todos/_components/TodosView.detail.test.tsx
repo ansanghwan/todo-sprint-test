@@ -74,7 +74,7 @@ const openDetail = async (user: UserEvent, title: string) => {
     name: new RegExp(title),
   });
   // 상세 값이 그려질 때까지 기다립니다.
-  await within(dialog).findByText('목표', { selector: 'dt' });
+  await within(dialog).findByText('프로젝트', { selector: 'dt' });
   return dialog;
 };
 

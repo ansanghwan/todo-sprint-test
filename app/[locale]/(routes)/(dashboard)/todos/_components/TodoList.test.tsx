@@ -95,7 +95,7 @@ describe('TodoList', () => {
     expect(await screen.findByText('할 일 1')).toBeInTheDocument();
     expect(screen.getByText('할 일 2')).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: '모든 할 일 2' }),
+      screen.getByRole('heading', { name: '브릭 로그 2' }),
     ).toBeInTheDocument();
     expect(mockedGetTodos).toHaveBeenCalledWith(
       { sort: 'latest', limit: 40, cursor: undefined },
@@ -180,7 +180,7 @@ describe('TodoList', () => {
       .mockResolvedValueOnce(page([], 41, 1))
       .mockResolvedValueOnce(page([todo(41)], null, 1));
     renderTodos();
-    await screen.findByRole('heading', { name: '모든 할 일 1' });
+    await screen.findByRole('heading', { name: '브릭 로그 1' });
 
     expect(
       screen.queryByText('아직 등록한 할 일이 없어요'),
@@ -248,8 +248,8 @@ describe('TodoList', () => {
     renderTodos(noteActions);
     await screen.findByText('할 일 1');
 
-    await user.click(screen.getByRole('button', { name: '노트 보기' }));
-    await user.click(screen.getByRole('button', { name: '노트 작성하기' }));
+    await user.click(screen.getByRole('button', { name: '작업 기록 보기' }));
+    await user.click(screen.getByRole('button', { name: '작업 기록 작성' }));
 
     expect(noteActions.onViewNote).toHaveBeenCalledWith(7);
     expect(noteActions.onCreateNote).toHaveBeenCalledWith(2);

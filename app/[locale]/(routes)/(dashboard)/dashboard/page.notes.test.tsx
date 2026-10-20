@@ -124,11 +124,11 @@ describe('대시보드 노트 연결', () => {
 
     items.forEach((item) =>
       expect(
-        within(item).getByRole('button', { name: '노트 작성하기' }),
+        within(item).getByRole('button', { name: '작업 기록 작성' }),
       ).toBeInTheDocument(),
     );
     await user.click(
-      within(items[0]).getByRole('button', { name: '노트 작성하기' }),
+      within(items[0]).getByRole('button', { name: '작업 기록 작성' }),
     );
 
     expect(push).toHaveBeenCalledWith('/notes/write?todoId=1');
@@ -140,7 +140,7 @@ describe('대시보드 노트 연결', () => {
     const items = await findItems();
 
     await user.click(
-      within(items[1]).getByRole('button', { name: '노트 보기' }),
+      within(items[1]).getByRole('button', { name: '작업 기록 보기' }),
     );
 
     expect(
@@ -183,10 +183,10 @@ describe('대시보드 노트 연결', () => {
 
     items.forEach((item) => {
       expect(
-        within(item).getByRole('button', { name: '노트 보기' }),
+        within(item).getByRole('button', { name: '작업 기록 보기' }),
       ).toBeInTheDocument();
       expect(
-        within(item).queryByRole('button', { name: '노트 작성하기' }),
+        within(item).queryByRole('button', { name: '작업 기록 작성' }),
       ).not.toBeInTheDocument();
     });
   });

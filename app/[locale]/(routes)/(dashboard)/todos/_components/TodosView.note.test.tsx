@@ -76,7 +76,7 @@ describe(
 
       await user.click(
         within(await itemOf(WITH_NOTE)).getByRole('button', {
-          name: '노트 보기',
+          name: '작업 기록 보기',
         }),
       );
 
@@ -91,7 +91,7 @@ describe(
 
       await user.click(
         within(await itemOf(WITHOUT_NOTE)).getByRole('button', {
-          name: '노트 작성하기',
+          name: '작업 기록 작성',
         }),
       );
 
@@ -126,9 +126,11 @@ describe(
       const detail = await screen.findByRole('dialog', {
         name: new RegExp(WITHOUT_NOTE),
       });
-      await within(detail).findByText('목표', { selector: 'dt' });
+      await within(detail).findByText('프로젝트', { selector: 'dt' });
 
-      expect(within(detail).queryByText('작성된 노트')).not.toBeInTheDocument();
+      expect(
+        within(detail).queryByText('작성된 작업 기록'),
+      ).not.toBeInTheDocument();
     });
   },
 );

@@ -70,7 +70,7 @@ describe('NoteDetailDrawer', () => {
     const dialog = await findDrawer();
 
     expect(mockedGetNote).toHaveBeenCalledWith(4, expect.anything());
-    expect(metaValue(dialog, '목표')).toHaveTextContent('웹 서비스 만들기');
+    expect(metaValue(dialog, '프로젝트')).toHaveTextContent('웹 서비스 만들기');
     expect(metaValue(dialog, '작성일')).toHaveTextContent('2026.10.01');
     expect(metaValue(dialog, '할 일')).toHaveTextContent(
       '자바스크립트 기초 듣기',
@@ -96,7 +96,7 @@ describe('NoteDetailDrawer', () => {
     setup();
 
     expect(screen.getByRole('status')).toHaveTextContent(
-      '노트를 불러오는 중이에요',
+      '작업 기록을 불러오는 중이에요',
     );
   });
 
@@ -106,7 +106,7 @@ describe('NoteDetailDrawer', () => {
 
     await user.click(await screen.findByRole('button', { name: '다시 시도' }));
 
-    expect(toast.error).toHaveBeenCalledWith('노트를 불러오지 못했어요');
+    expect(toast.error).toHaveBeenCalledWith('작업 기록을 불러오지 못했어요');
     expect(await findDrawer()).toBeInTheDocument();
     expect(mockedGetNote).toHaveBeenCalledTimes(2);
   });

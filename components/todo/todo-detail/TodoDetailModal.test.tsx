@@ -84,7 +84,7 @@ describe('TodoDetailModal', () => {
 
       expect(mockedGetTodo).toHaveBeenCalledWith(TODO_ID, expect.anything());
       expect(within(dialog).getByText('TO DO')).toBeInTheDocument();
-      expect(infoValue(dialog, '목표')).toHaveTextContent('목표 1');
+      expect(infoValue(dialog, '프로젝트')).toHaveTextContent('목표 1');
       expect(infoValue(dialog, '마감기한')).toHaveTextContent('2026. 10. 10');
       const tags = within(infoValue(dialog, '태그') as HTMLElement);
       expect(
@@ -104,7 +104,7 @@ describe('TodoDetailModal', () => {
       renderWith({ goalId: null, goal: null, dueDate: null, tags: [] });
       const dialog = await findDetail();
 
-      expect(infoValue(dialog, '목표')).toHaveTextContent('-');
+      expect(infoValue(dialog, '프로젝트')).toHaveTextContent('-');
       expect(infoValue(dialog, '마감기한')).toHaveTextContent('-');
       expect(infoValue(dialog, '태그')).toHaveTextContent('-');
     });
@@ -228,7 +228,7 @@ describe('TodoDetailModal', () => {
       const { user } = setup({ onOpenNote });
       const dialog = await findDetail();
 
-      expect(within(dialog).getByText('작성된 노트')).toBeInTheDocument();
+      expect(within(dialog).getByText('작성된 작업 기록')).toBeInTheDocument();
       await user.click(
         await within(dialog).findByRole('button', { name: '보고서 메모' }),
       );
@@ -241,7 +241,9 @@ describe('TodoDetailModal', () => {
       setup();
       const dialog = await findDetail();
 
-      expect(within(dialog).queryByText('작성된 노트')).not.toBeInTheDocument();
+      expect(
+        within(dialog).queryByText('작성된 작업 기록'),
+      ).not.toBeInTheDocument();
       expect(getNote).not.toHaveBeenCalled();
     });
   });

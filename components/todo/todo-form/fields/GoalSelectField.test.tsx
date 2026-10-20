@@ -71,7 +71,7 @@ const Harness = ({
   );
 };
 
-const trigger = () => screen.getByRole('combobox', { name: '목표' });
+const trigger = () => screen.getByRole('combobox', { name: '프로젝트' });
 const optionLabels = () =>
   screen.getAllByRole('option').map((option) => option.textContent);
 
@@ -81,7 +81,7 @@ describe('GoalSelectField', () => {
     render(<Harness />);
 
     expect(trigger()).toHaveAttribute('aria-required', 'true');
-    expect(trigger()).toHaveTextContent('목표를 선택해주세요');
+    expect(trigger()).toHaveTextContent('프로젝트를 선택해주세요');
     await act(async () => {});
   });
 
@@ -261,7 +261,9 @@ describe('GoalSelectField', () => {
 
     await user.click(trigger());
 
-    expect(await screen.findByText('등록된 목표가 없어요')).toBeVisible();
+    expect(
+      await screen.findByText('아직 만든 프로젝트가 없어요'),
+    ).toBeVisible();
   });
 
   it('오류가 있으면 문구를 보여 주고 trigger와 연결한다', async () => {
@@ -270,6 +272,6 @@ describe('GoalSelectField', () => {
     await act(async () => {});
 
     expect(trigger()).toHaveAttribute('aria-invalid', 'true');
-    expect(trigger()).toHaveAccessibleDescription('목표를 선택해주세요');
+    expect(trigger()).toHaveAccessibleDescription('프로젝트를 선택해주세요');
   });
 });
