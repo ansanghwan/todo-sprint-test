@@ -681,7 +681,7 @@ export default function Dashboard() {
                                 className="inline-flex size-5 shrink-0 items-center justify-center"
                               >
                                 <Image
-                                  src="/icons/icon_plus_orange.svg"
+                                  src="/icons/icon_plus_blue.svg"
                                   width={20}
                                   height={20}
                                   alt=""
