@@ -8,7 +8,7 @@ const DEFAULT_STROKE_WIDTH = 12.1716;
 type ProgressChartProps = {
   progress: number;
   className?: string;
-  /** 카드 색에 맞는 원의 바탕색. 기본값은 대시보드 청록색입니다. */
+  /** 카드 색에 맞는 원의 바탕색. 기본값은 보조 Yellow 팔레트입니다. */
   trackColor?: string;
   /** 92px viewBox 기준 선 두께. 바깥 지름은 유지합니다. */
   strokeWidth?: number;
@@ -21,7 +21,7 @@ type ProgressChartProps = {
 export default function ProgressChart({
   progress,
   className,
-  trackColor = '#009D97',
+  trackColor = 'var(--color-blue-300)',
   strokeWidth = DEFAULT_STROKE_WIDTH,
 }: ProgressChartProps) {
   const radius = (92 - strokeWidth) / 2;

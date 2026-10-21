@@ -296,7 +296,7 @@ export default function Gnb({
                               ? 'page'
                               : undefined
                           }
-                          className="block truncate px-6 py-2 focus-visible:outline-2 focus-visible:outline-orange-500 data-[active=false]:hover:text-orange-700 data-[active=true]:text-orange-700"
+                          className="block truncate px-6 py-2 text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-orange-500 data-[active=false]:hover:bg-orange-menu-background/40 data-[active=false]:hover:text-orange-menu-active data-[active=true]:bg-orange-menu-background/60 data-[active=true]:font-bold data-[active=true]:text-orange-menu-active dark:data-[active=false]:hover:bg-orange-400/10 dark:data-[active=false]:hover:text-orange-300 dark:data-[active=true]:bg-orange-400/15 dark:data-[active=true]:text-orange-300"
                         >
                           {goal.title}
                         </Link>
