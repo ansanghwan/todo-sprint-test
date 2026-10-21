@@ -3,13 +3,16 @@
 import { useTranslations } from 'next-intl';
 
 import Button from '@/components/ui/button/Button';
+import { toast } from '@/components/ui/toast/Toaster';
 import useLoginForm from '@/hooks/auth/useLoginForm';
 import AuthTextField from './AuthTextField';
 
 /** 로그인 폼. 시안에 보이는 라벨이 없어 aria-label로 이름을 줍니다. */
 const LoginForm = () => {
   const t = useTranslations('Auth');
-  const { formProps, fields, errors, isLoggingIn } = useLoginForm();
+  const { formProps, fields, errors, isLoggingIn } = useLoginForm({
+    onLoginFailed: () => toast.error(t('loginFailed')),
+  });
 
   return (
     <form noValidate {...formProps} className="flex flex-col gap-6 md:gap-8">

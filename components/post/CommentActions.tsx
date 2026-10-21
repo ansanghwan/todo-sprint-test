@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import KebabMenu, {
@@ -9,10 +10,12 @@ import { toast } from '@/components/ui/toast/Toaster';
 import useDeleteComment from '@/hooks/post/useDeleteComment';
 import type { ApiHttpCategory } from '@/lib/api/errors';
 
-const DELETE_ERROR_MESSAGES: Record<ApiHttpCategory, string> = {
-  forbidden: '댓글을 삭제할 권한이 없어요.',
-  notFound: '이미 삭제된 댓글이에요.',
-  other: '댓글을 삭제하지 못했어요.',
+const DELETE_ERROR_KEYS: Record<ApiHttpCategory, string> = {
+  unauthorized: 'deleteCommentError',
+  forbidden: 'deleteCommentForbidden',
+  notFound: 'commentAlreadyDeleted',
+  conflict: 'deleteCommentError',
+  other: 'deleteCommentError',
 };
 
 interface CommentActionsProps {
@@ -22,6 +25,7 @@ interface CommentActionsProps {
 }
 
 const CommentActions = ({ postId, commentId, onEdit }: CommentActionsProps) => {
+  const t = useTranslations('Todo');
   const { deleteComment, isDeleting } = useDeleteComment(postId);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -30,7 +34,7 @@ const CommentActions = ({ postId, commentId, onEdit }: CommentActionsProps) => {
       onSuccess: () => setIsDeleteModalOpen(false),
       onError: ({ httpCategory }) => {
         setIsDeleteModalOpen(false);
-        toast.error(DELETE_ERROR_MESSAGES[httpCategory]);
+        toast.error(t(DELETE_ERROR_KEYS[httpCategory]));
       },
     });
   };

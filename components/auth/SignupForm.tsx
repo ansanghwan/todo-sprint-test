@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 
 import Button from '@/components/ui/button/Button';
+import { toast } from '@/components/ui/toast/Toaster';
 import useSignupForm from '@/hooks/auth/useSignupForm';
 import { NAME_MAX_LENGTH } from '@/lib/auth/authFormSchema';
 import AuthTextField from './AuthTextField';
@@ -10,7 +11,9 @@ import AuthTextField from './AuthTextField';
 /** 회원가입 폼. passwordConfirm은 화면에서만 씁니다. */
 const SignupForm = () => {
   const t = useTranslations('Auth');
-  const { formProps, fields, errors, isSigningUp } = useSignupForm();
+  const { formProps, fields, errors, isSigningUp } = useSignupForm({
+    onSignupFailed: () => toast.error(t('signupFailed')),
+  });
 
   return (
     <form noValidate {...formProps} className="flex flex-col gap-8">

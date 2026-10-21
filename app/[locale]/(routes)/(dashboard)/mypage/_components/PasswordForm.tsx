@@ -4,11 +4,15 @@ import { useTranslations } from 'next-intl';
 
 import Button from '@/components/ui/button/Button';
 import TextField from '@/components/ui/textfield/TextField';
+import { toast } from '@/components/ui/toast/Toaster';
 import usePasswordForm from '@/hooks/user/usePasswordForm';
 
 const PasswordForm = () => {
   const t = useTranslations('MyInfo');
-  const { formProps, fields, errors, isChanging } = usePasswordForm();
+  const { formProps, fields, errors, isChanging } = usePasswordForm({
+    onChanged: () => toast.success(t('saved')),
+    onChangeFailed: () => toast.error(t('passwordChangeFailed')),
+  });
 
   return (
     <form noValidate {...formProps} className="flex flex-col gap-8 md:gap-12">

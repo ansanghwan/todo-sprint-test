@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { AxiosError, type AxiosAdapter } from 'axios';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import Toaster, { toast } from '@/components/ui/toast/Toaster';
 import { api } from '@/lib/api/client-fetcher';
 import { replyToAuthRequest } from '@/test/authApiMocks';
 import TestProviders from '@/test/TestProviders';
@@ -11,6 +12,9 @@ import PasswordForm from './PasswordForm';
 const originalAdapter = api.defaults.adapter;
 afterEach(() => {
   api.defaults.adapter = originalAdapter;
+  act(() => {
+    toast.dismiss();
+  });
 });
 
 const fillAndSubmit = async (user: ReturnType<typeof userEvent.setup>) => {
@@ -24,7 +28,13 @@ describe('PasswordForm', () => {
   it('변경에 성공하면 확인 값 없이 요청하고 입력란을 비운다', async () => {
     const user = userEvent.setup();
     const sent = replyToAuthRequest(200);
-    render(<PasswordForm />, { wrapper: TestProviders });
+    render(
+      <>
+        <PasswordForm />
+        <Toaster />
+      </>,
+      { wrapper: TestProviders },
+    );
 
     await fillAndSubmit(user);
 
@@ -37,6 +47,7 @@ describe('PasswordForm', () => {
       currentPassword: 'old-password',
       newPassword: 'new-password',
     });
+    expect(await screen.findByText('저장되었습니다.')).toBeInTheDocument();
   });
 
   // refresh 응답(refreshStatus)과 별개로 비밀번호 변경 요청에는 항상 401로 답합니다.
@@ -74,7 +85,13 @@ describe('PasswordForm', () => {
   it('현재 비밀번호가 틀리면 그 입력란 아래에 안내하고 입력값을 유지한다', async () => {
     const user = userEvent.setup();
     rejectPasswordChange(204);
-    render(<PasswordForm />, { wrapper: TestProviders });
+    render(
+      <>
+        <PasswordForm />
+        <Toaster />
+      </>,
+      { wrapper: TestProviders },
+    );
 
     await fillAndSubmit(user);
 
@@ -89,7 +106,13 @@ describe('PasswordForm', () => {
   it('세션이 끝나 refresh까지 실패하면 현재 비밀번호 오류로 안내하지 않는다', async () => {
     const user = userEvent.setup();
     const sent = rejectPasswordChange(401);
-    render(<PasswordForm />, { wrapper: TestProviders });
+    render(
+      <>
+        <PasswordForm />
+        <Toaster />
+      </>,
+      { wrapper: TestProviders },
+    );
 
     await fillAndSubmit(user);
 
@@ -102,5 +125,10 @@ describe('PasswordForm', () => {
     expect(
       screen.getByLabelText('현재 비밀번호'),
     ).not.toHaveAccessibleDescription('현재 비밀번호가 올바르지 않습니다.');
+    expect(
+      await screen.findByText(
+        '비밀번호를 변경하지 못했습니다. 잠시 후 다시 시도해 주세요.',
+      ),
+    ).toBeInTheDocument();
   });
 });

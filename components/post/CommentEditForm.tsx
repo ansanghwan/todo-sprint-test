@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState, type SubmitEvent } from 'react';
 import Button from '@/components/ui/button/Button';
 import { toast } from '@/components/ui/toast/Toaster';
@@ -9,10 +10,12 @@ import { formatUtcDateToYmd } from '@/lib/formatter';
 import type { CommentDto } from '@/types/api/comment';
 import CommentInput from './CommentInput';
 
-const UPDATE_ERROR_MESSAGES: Record<ApiHttpCategory, string> = {
-  forbidden: '댓글을 수정할 권한이 없어요.',
-  notFound: '이미 삭제된 댓글이에요.',
-  other: '댓글을 수정하지 못했어요.',
+const UPDATE_ERROR_KEYS: Record<ApiHttpCategory, string> = {
+  unauthorized: 'updateCommentError',
+  forbidden: 'updateCommentForbidden',
+  notFound: 'commentAlreadyDeleted',
+  conflict: 'updateCommentError',
+  other: 'updateCommentError',
 };
 
 interface CommentEditFormProps {
@@ -27,6 +30,7 @@ const CommentEditForm = ({
   onClose,
 }: CommentEditFormProps) => {
   const [content, setContent] = useState(comment.content);
+  const t = useTranslations('Todo');
   const { updateComment, isUpdating } = useUpdateComment(postId);
   const trimmedContent = content.trim();
 
@@ -37,7 +41,7 @@ const CommentEditForm = ({
       {
         onSuccess: onClose,
         onError: ({ httpCategory }) =>
-          toast.error(UPDATE_ERROR_MESSAGES[httpCategory]),
+          toast.error(t(UPDATE_ERROR_KEYS[httpCategory])),
       },
     );
   };

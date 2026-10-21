@@ -1,9 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { ApiError } from '@/lib/api/errors';
 import { authMutations } from '@/queries/auth';
 import type { LoginBodyDto } from '@/types/api/auth';
-
-const UNAUTHORIZED = 401;
 
 export type LoginFailure = 'invalidCredentials' | 'unknown';
 
@@ -22,10 +19,7 @@ const useLogin = () => {
     mutate(body, {
       onSuccess,
       onError: (error) => {
-        // TODO: [2026.10.02] PR #27이 병합되면 status 비교 대신 error.httpCategory로 판별하도록 리팩터링
-        // (#27의 HTTP_CATEGORY_BY_STATUS에는 403·404만 있어 401 범주를 추가해야 함)
-        const isUnauthorized =
-          error instanceof ApiError && error.status === UNAUTHORIZED;
+        const isUnauthorized = error.httpCategory === 'unauthorized';
         onFailure(isUnauthorized ? 'invalidCredentials' : 'unknown');
       },
     });

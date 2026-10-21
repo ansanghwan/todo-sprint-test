@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import KebabMenu, {
@@ -11,10 +12,12 @@ import useIsMe from '@/hooks/user/useIsMe';
 import { useRouter } from '@/i18n/navigation';
 import type { ApiHttpCategory } from '@/lib/api/errors';
 
-const DELETE_ERROR_MESSAGES: Record<ApiHttpCategory, string> = {
-  forbidden: '게시글을 삭제할 권한이 없어요.',
-  notFound: '이미 삭제된 게시글이에요.',
-  other: '게시글을 삭제하지 못했어요.',
+const DELETE_ERROR_KEYS: Record<ApiHttpCategory, string> = {
+  unauthorized: 'deletePostError',
+  forbidden: 'deletePostForbidden',
+  notFound: 'postAlreadyDeleted',
+  conflict: 'deletePostError',
+  other: 'deletePostError',
 };
 
 interface PostActionsProps {
@@ -24,6 +27,7 @@ interface PostActionsProps {
 
 const PostActions = ({ postId, writerId }: PostActionsProps) => {
   const router = useRouter();
+  const t = useTranslations('Todo');
   const isMine = useIsMe(writerId);
   const { deletePost, isDeleting } = useDeletePost();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -39,7 +43,7 @@ const PostActions = ({ postId, writerId }: PostActionsProps) => {
       onSuccess: goToList,
       onError: ({ httpCategory }) => {
         setIsDeleteModalOpen(false);
-        toast.error(DELETE_ERROR_MESSAGES[httpCategory]);
+        toast.error(t(DELETE_ERROR_KEYS[httpCategory]));
         if (httpCategory === 'notFound') {
           goToList();
         }
