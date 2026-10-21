@@ -214,7 +214,7 @@ export default function GoalDetailPage() {
                 href={`/calendar?goalId=${id}`}
                 className={cn(
                   'inline-flex h-10 shrink-0 items-center justify-center gap-1 rounded-full border border-[#ccc] px-4 text-sm leading-none font-semibold tracking-[-0.03em] whitespace-nowrap text-grayscale-500 transition-colors hover:border-[#bbb] hover:text-grayscale-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600',
-                  isKorean ? 'w-30' : 'w-auto',
+                  isKorean ? 'w-34' : 'w-auto',
                 )}
               >
                 <Image
