@@ -7,6 +7,7 @@ import ActionButton from '@/components/ui/button/ActionButton';
 import NotificationButton from '@/components/common/NotificationButton';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { getProfileImageProps } from '@/lib/user/profileImage';
+import SettingModal from '@/components/setting/SettingModal';
 
 export type MenuId =
   'dashboard' | 'goal' | 'calendar' | 'board' | 'favorites' | 'notes';
@@ -76,6 +77,8 @@ export default function Gnb({
   const notificationProps = { hasNotification, onOpen: onOpenNotifications };
   const [isOpen, setIsOpen] = useState(false);
   const [closeImmediately, setCloseImmediately] = useState(false);
+  // 설정 팝업 오픈 여부
+  const [isSettingOpen, setIsSettingOpen] = useState(false);
   // 선택 표시는 ConnectedGnb가 현재 경로로 결정합니다. 링크는 href로 이동합니다.
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -361,14 +364,18 @@ export default function Gnb({
             </nav>
             <div className="mt-3 md:mt-6">
               <ul>
-                <li hidden>
-                  <Link
-                    href="#"
-                    className="flex h-11 w-full items-center gap-2 rounded-2xl px-4 py-0 font-normal text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 md:h-14 md:text-lg"
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      closeMenu();
+                      setIsSettingOpen(true);
+                    }}
+                    className="flex h-11 w-full cursor-pointer items-center gap-2 rounded-2xl px-4 py-0 font-normal text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 md:h-14 md:text-lg"
                   >
                     <SideMenuIcon name="setting" />
                     <span>{nextIntlTodo('settings')}</span>
-                  </Link>
+                  </button>
                 </li>
                 <li>
                   <button
@@ -466,6 +473,7 @@ export default function Gnb({
           </div>
         </div>
       </div>
+      <SettingModal isOpen={isSettingOpen} onOpenChange={setIsSettingOpen} />
     </aside>
   );
 }

@@ -17,6 +17,9 @@
  * - 주황색·청록색 등 고유 배경색 안에 텍스트에는 테마로 정의한 변수 사용하지 않습니다.(이색들은 라이트, 다크테마일때 동일합니다.)
  * - 아직 화면별 클래스를 일괄 교체하지 않았습니다.
  */
+/* Tailwind의 dark: 클래스도 OS 설정 대신 data-theme을 따르게 합니다. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
 :root {
   --background: #f0f0f0; /* 기존 페이지 배경 유지 */
   --white-section: #ffffff;
@@ -31,24 +34,23 @@
   --border-default: var(--color-grayscale-700); /* 인풋 시안 기준: #333333 */
 }
 
-/* 기존 프로젝트처럼 OS 설정을 따릅니다. 수동 테마 전환 기능은 별도 작업입니다. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a; /* 기존 페이지 배경 유지 */
-    /* 다크 색상은 검토용 초안입니다. 흰색 영역의 #737373 아이콘을 유지하는 기준입니다. */
-    --white-section: var(--color-grayscale-900); /* #121212 */
-    --muted-section: #0a0a0a; /* 다크 페이지 배경과 같은 값 */
-    --input-background: var(--color-grayscale-800); /* #262626 */
-    --input-border: var(--color-grayscale-600); /* #535353 */
-    --heading: #ffffff;
-    --foreground: var(--color-grayscale-100); /* #f2f2f2 */
-    --text-muted: #bbbbbb;
-    --text-subtle: var(--color-grayscale-400); /* #a4a4a4 */
-    --border-subtle: var(--color-grayscale-600); /* #535353 */
-    --border-default: var(
-      --color-grayscale-600
-    ); /* 인풋 다크 테두리 검토용 초안: #535353 */
-  }
+/* 설정 팝업에서 고른 테마를 따릅니다. next-themes가 <html data-theme="light|dark">를 붙입니다.
+"시스템 설정"을 고르면 next-themes가 OS 설정을 읽어 같은 속성을 대신 붙입니다. */
+:root[data-theme='dark'] {
+  --background: #0a0a0a; /* 기존 페이지 배경 유지 */
+  /* 다크 색상은 검토용 초안입니다. 흰색 영역의 #737373 아이콘을 유지하는 기준입니다. */
+  --white-section: var(--color-grayscale-900); /* #121212 */
+  --muted-section: #0a0a0a; /* 다크 페이지 배경과 같은 값 */
+  --input-background: var(--color-grayscale-800); /* #262626 */
+  --input-border: var(--color-grayscale-600); /* #535353 */
+  --heading: #ffffff;
+  --foreground: var(--color-grayscale-100); /* #f2f2f2 */
+  --text-muted: #bbbbbb;
+  --text-subtle: var(--color-grayscale-400); /* #a4a4a4 */
+  --border-subtle: var(--color-grayscale-600); /* #535353 */
+  --border-default: var(
+    --color-grayscale-600
+  ); /* 인풋 다크 테두리 검토용 초안: #535353 */
 }
 
 @theme inline {

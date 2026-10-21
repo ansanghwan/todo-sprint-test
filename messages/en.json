@@ -298,5 +298,14 @@
     "deleteError": "Couldn’t delete the project. Please try again.",
     "deleteConfirm": "Are you sure you want to delete this project?",
     "deleteWarning": "Deleted projects cannot be recovered."
+  },
+  "Setting": {
+    "title": "Settings",
+    "language": "Language",
+    "darkMode": "Dark mode",
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   }
 }

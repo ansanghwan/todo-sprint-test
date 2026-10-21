@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { locale as rootLocale } from 'next/root-params';
 import { routing } from '@/i18n/routing';
+import ThemeProvider from '@/providers/ThemeProvider';
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
@@ -29,7 +30,11 @@ export default async function RootLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
 
   return (
-    <html lang={locale} className={`${geistMono.variable} h-full antialiased`}>
+    <html
+      lang={locale}
+      className={`${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
       <head>
         <link
           rel="preconnect"
@@ -44,10 +49,12 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <NextIntlClientProvider>
-          <QueryProvider>{children}</QueryProvider>
-          <Toaster />
-        </NextIntlClientProvider>
+        <ThemeProvider>
+          <NextIntlClientProvider>
+            <QueryProvider>{children}</QueryProvider>
+            <Toaster />
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

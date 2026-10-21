@@ -298,5 +298,14 @@
     "deleteError": "프로젝트를 삭제하지 못했어요. 다시 시도해주세요.",
     "deleteConfirm": "정말 삭제하시겠어요?",
     "deleteWarning": "삭제된 프로젝트는 복구할 수 없습니다."
+  },
+  "Setting": {
+    "title": "설정",
+    "language": "언어",
+    "darkMode": "다크모드",
+    "light": "라이트 모드",
+    "dark": "다크 모드",
+    "cancel": "취소",
+    "confirm": "확인"
   }
 }
