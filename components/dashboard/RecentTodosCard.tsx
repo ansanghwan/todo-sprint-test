@@ -51,12 +51,12 @@ export default function RecentTodosCard({
         </h2>
         <Link
           href="/todos"
-          className="ml-auto flex items-center text-sm font-semibold text-orange-600"
+          className="ml-auto flex items-center text-sm font-semibold text-orange-600 dark:text-orange-300"
         >
           {nextIntlTodo('viewAll')}
           <span>
             <svg
-              className="size-5"
+              className="size-5 text-orange-500 dark:text-orange-300"
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,7 @@ export default function RecentTodosCard({
             >
               <path
                 d="M7.5 15L12.5 10L7.5 5"
-                stroke="var(--color-orange-500)"
+                stroke="currentColor"
                 strokeWidth="1.67"
                 strokeLinecap="round"
                 strokeLinejoin="round"

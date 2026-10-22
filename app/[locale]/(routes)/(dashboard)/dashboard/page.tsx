@@ -27,6 +27,8 @@ import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
 import TodoItem, { type TodoItemData } from '@/components/todo/TodoItem';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
 import SearchInput from '@/components/ui/SearchInput';
+import Button from '@/components/ui/button/Button';
+import IcPlus from '@/components/ui/icons/IcPlus';
 import type { GoalDto as Goal } from '@/types/api/goal';
 import { getGoalTodos, getRecentTodos, getTodoProgress } from '@/lib/api/todos';
 import { getGoals } from '@/lib/api/goals';
@@ -665,8 +667,9 @@ export default function Dashboard() {
                               placeholder={nextIntlTodo('searchTodos')}
                               className="md:w-52.5 xl:w-60"
                             />
-                            <button
-                              type="button"
+                            <Button
+                              variant="outline"
+                              size="sm"
                               aria-label={nextIntlTodo('addTodo')}
                               onClick={() =>
                                 setCreateGoal({
@@ -674,23 +677,13 @@ export default function Dashboard() {
                                   title: goal.title,
                                 })
                               }
-                              className="absolute top-0 right-0 inline-flex size-10 shrink-0 items-center justify-center gap-1 rounded-full border border-solid border-orange-500 bg-transparent text-sm leading-none font-semibold text-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 md:static md:w-auto md:px-4"
+                              className="absolute top-0 right-0 size-10 gap-1 p-0 text-sm md:static md:w-auto md:px-4"
                             >
-                              <span
-                                aria-hidden="true"
-                                className="inline-flex size-5 shrink-0 items-center justify-center"
-                              >
-                                <Image
-                                  src="/icons/icon_plus_blue.svg"
-                                  width={20}
-                                  height={20}
-                                  alt=""
-                                />
-                              </span>
+                              <IcPlus className="size-5 shrink-0" />
                               <span className="hidden md:inline">
                                 {nextIntlTodo('addTodo')}
                               </span>
-                            </button>
+                            </Button>
                           </div>
                         </div>
                         {/* E: 목표 아이템 헤더 */}

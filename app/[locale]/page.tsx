@@ -71,6 +71,7 @@ export default function Home() {
             </div>
             <Image
               src="/images/landing/sec01.png"
+              unoptimized
               alt={nextIntlLanding('heroImageAlt')}
               width={1328}
               height={635}
@@ -143,6 +144,7 @@ export default function Home() {
           >
             <Image
               src="/images/landing/img_sec02.png"
+              unoptimized
               alt={nextIntlLanding('featuresImageAlt')}
               width={744}
               height={424}
@@ -298,6 +300,7 @@ export default function Home() {
             <Image
               data-enter="image"
               src="/images/landing/sec05_check.png"
+              unoptimized
               alt=""
               width={102}
               height={113}
