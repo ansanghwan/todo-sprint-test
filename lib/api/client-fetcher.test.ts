@@ -193,6 +193,44 @@ describe('401 refresh', () => {
     expect(calls.filter((url) => url === '/todos')).toHaveLength(6);
   });
 
+  it('refresh가 끝난 뒤 도착한 옛 토큰의 401은 refresh 없이 재요청만 한다', async () => {
+    const calls: string[] = [];
+    let refreshed = false;
+    let releaseLateResponse = () => {};
+    const lateResponse = new Promise<void>((resolve) => {
+      releaseLateResponse = resolve;
+    });
+    api.defaults.adapter = async (config) => {
+      const url = config.url ?? '';
+      calls.push(url);
+      if (url === '/auth/refresh') {
+        refreshed = true;
+        return replyWith(config, null, 204);
+      }
+      const isSentWithOldToken = !refreshed;
+      if (url === '/todos/late') {
+        await lateResponse;
+      }
+      if (isSentWithOldToken) {
+        throw failWith(config, 401);
+      }
+      return replyWith(config, page);
+    };
+
+    const lateRequest = api.get('/todos/late');
+    await getTodos();
+    releaseLateResponse();
+    await lateRequest;
+
+    expect(calls).toEqual([
+      '/todos/late',
+      '/todos',
+      '/auth/refresh',
+      '/todos',
+      '/todos/late',
+    ]);
+  });
+
   it('refresh 후에도 401이면 한 번만 재시도하고 멈춘다', async () => {
     const calls: string[] = [];
     api.defaults.adapter = async (config) => {
