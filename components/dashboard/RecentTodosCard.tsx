@@ -44,7 +44,7 @@ export default function RecentTodosCard({
     <div className="min-w-0 md:flex-1 lg:flex-[1_1_28rem]">
       <div className="mb-2.5 flex flex-wrap px-2">
         <h2 className="mr-auto inline-flex items-center text-base font-medium text-heading md:text-lg">
-          <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-[#ffd0aa]">
+          <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-orange-300">
             <Image src="/icons/icon_memo.svg" width={16} height={21} alt="" />
           </span>
           {nextIntlTodo('recentTodos')}
@@ -64,7 +64,7 @@ export default function RecentTodosCard({
             >
               <path
                 d="M7.5 15L12.5 10L7.5 5"
-                stroke="#FF8442"
+                stroke="var(--color-orange-500)"
                 strokeWidth="1.67"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -73,13 +73,16 @@ export default function RecentTodosCard({
           </span>
         </Link>
       </div>
-      <div className="aspect-343/186 w-full rounded-[1.75rem] bg-orange-500 px-4.5 py-4 shadow-[0_0.625rem_2.5rem_0_#FF9E594D] md:aspect-auto md:h-46.5 lg:h-64 lg:rounded-[2.5rem] lg:px-8 lg:py-7.5">
+      <div className="aspect-343/186 w-full rounded-[1.75rem] bg-primary-card-background px-4.5 py-4 shadow-[0_0.625rem_2.5rem_0_var(--primary-card-shadow-color)] md:aspect-auto md:h-46.5 lg:h-64 lg:rounded-[2.5rem] lg:px-8 lg:py-7.5">
         {isLoading ? (
-          <DashboardLoading message={nextIntlTodo('loadingTodos')} />
+          <DashboardLoading
+            message={nextIntlTodo('loadingTodos')}
+            color="primaryCard"
+          />
         ) : error ? (
           <div
             role="alert"
-            className="flex h-full items-center justify-center text-base font-semibold text-white"
+            className="flex h-full items-center justify-center text-base font-semibold text-primary-card-foreground"
           >
             <p>{nextIntlTodo('fetchTodosError')}</p>
           </div>
@@ -107,7 +110,7 @@ export default function RecentTodosCard({
             </ul>
           </div>
         ) : (
-          <div className="flex h-full items-center justify-center text-base font-semibold text-white">
+          <div className="flex h-full items-center justify-center text-base font-semibold text-primary-card-foreground">
             <p>{nextIntlDashboard('noRecentTodos')}</p>
           </div>
         )}

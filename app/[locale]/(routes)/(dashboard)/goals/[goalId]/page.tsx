@@ -33,7 +33,7 @@ import DashboardLoading from '@/components/dashboard/DashboardLoading';
 import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
 // 대시보드와 같은 행 강조와 케밥 버튼 배경을 사용합니다. 키보드 포커스도 함께 처리합니다.
 const goalTodoItemClass =
-  'group/goal-todo rounded-lg transition-colors hover:bg-orange-alpha-20 focus-within:bg-orange-alpha-20 hover:[&>button:nth-of-type(2)]:text-orange-600 focus-within:[&>button:nth-of-type(2)]:text-orange-600';
+  'group/goal-todo rounded-lg transition-colors hover:bg-list-hover focus-within:bg-list-hover hover:[&>button:nth-of-type(2)]:text-orange-600 focus-within:[&>button:nth-of-type(2)]:text-orange-600';
 const goalTodoKebabClass =
   'flex shrink-0 rounded-full transition-colors group-hover/goal-todo:bg-white group-focus-within/goal-todo:bg-white [&>button]:size-6 [&>button]:rounded-full [&>button[data-state=open]]:bg-white [&_svg>circle:first-child]:fill-transparent';
 
@@ -145,7 +145,7 @@ export default function GoalDetailPage() {
         <GoalTitleCard key={goal.id} goal={goal} />
         <div className="min-w-0">
           <div className="gap-6 md:grid md:grid-cols-2 md:gap-5">
-            <div className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-orange-500 text-white shadow-[0_0.625rem_2.5rem_0_#FF9E594D] max-md:mb-4 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75">
+            <div className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-primary-card-background text-white shadow-[0_0.625rem_2.5rem_0_var(--primary-card-shadow-color)] max-md:mb-4 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75">
               {/* 조회 실패·로딩을 먼저 처리하고, 숫자가 준비됐을 때만 차트와 퍼센트를 표시합니다. */}
               {todoQuery.isError || doneQuery.isError ? (
                 <p
@@ -186,16 +186,19 @@ export default function GoalDetailPage() {
 
             <Link
               href={`/notes?goalId=${id}`}
-              className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-blue-200 pb-8 pl-10 text-white shadow-[0_0.625rem_2.5rem_0_#00D4BE3D] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75 md:before:size-24.25"
+              className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-secondary-card-background pb-8 pl-10 text-secondary-card-foreground shadow-[0_0.625rem_2.5rem_0_var(--secondary-card-shadow-color)] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75 md:before:size-24.25"
             >
               <span className="relative z-10 inline-flex items-center gap-1.5 text-2xl font-bold">
                 {nextIntlTodo('notes')}
-                <Image
-                  src="/icons/icon_arrow_right.svg"
-                  width={8}
-                  height={14}
-                  alt=""
-                  className="h-3.5 w-2 shrink-0"
+                <span
+                  aria-hidden="true"
+                  className="h-3.5 w-2 shrink-0 bg-current"
+                  style={{
+                    maskImage: "url('/icons/icon_arrow_right.svg')",
+                    maskSize: 'contain',
+                    maskPosition: 'center',
+                    maskRepeat: 'no-repeat',
+                  }}
                 />
               </span>
             </Link>
@@ -213,15 +216,19 @@ export default function GoalDetailPage() {
               <Link
                 href={`/calendar?goalId=${id}`}
                 className={cn(
-                  'inline-flex h-10 shrink-0 items-center justify-center gap-1 rounded-full border border-[#ccc] px-4 text-sm leading-none font-semibold tracking-[-0.03em] whitespace-nowrap text-grayscale-500 transition-colors hover:border-[#bbb] hover:text-grayscale-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600',
-                  isKorean ? 'w-30' : 'w-auto',
+                  'inline-flex h-10 shrink-0 items-center justify-center gap-1 rounded-full border border-input-border px-4 text-sm leading-none font-semibold tracking-[-0.03em] whitespace-nowrap text-muted transition-colors hover:border-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600',
+                  isKorean ? 'w-34' : 'w-auto',
                 )}
               >
-                <Image
-                  src="/icons/icon_calendar.svg"
-                  width={20}
-                  height={20}
-                  alt=""
+                <span
+                  aria-hidden="true"
+                  className="size-5 shrink-0 bg-current"
+                  style={{
+                    maskImage: "url('/icons/icon_calendar.svg')",
+                    maskSize: 'contain',
+                    maskPosition: 'center',
+                    maskRepeat: 'no-repeat',
+                  }}
                 />
                 {nextIntlTodo('calendarView')}
               </Link>
@@ -244,7 +251,7 @@ export default function GoalDetailPage() {
             </div>
           </div>
 
-          <div className="relative min-h-34 rounded-2xl bg-[#fff6df] p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6">
+          <div className="relative min-h-34 rounded-2xl bg-todo-background p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6 dark:[&_li>button:nth-of-type(2)]:text-foreground">
             {todoQuery.isPending ? (
               <div role="status" aria-busy="true">
                 <span className="sr-only">{nextIntlTodo('loadingTodos')}</span>

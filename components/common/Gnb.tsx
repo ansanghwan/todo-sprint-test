@@ -2,6 +2,7 @@
 
 import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
+import ThemedLogo from '@/components/common/ThemedLogo';
 import { useTranslations } from 'next-intl';
 import ActionButton from '@/components/ui/button/ActionButton';
 import NotificationButton from '@/components/common/NotificationButton';
@@ -149,16 +150,15 @@ export default function Gnb({
           className="hidden font-semibold whitespace-nowrap md:inline md:group-data-[open=false]/gnb:mx-auto md:group-data-[open=false]/gnb:block md:group-data-[open=false]/gnb:w-fit lg:group-data-[open=false]/gnb:mx-0 lg:group-data-[open=false]/gnb:block lg:group-data-[open=false]/gnb:w-auto lg:group-data-[open=true]/gnb:mx-auto lg:group-data-[open=true]/gnb:block lg:group-data-[open=true]/gnb:w-fit"
           aria-label={nextIntlTodo('dashboard')}
         >
-          <Image
-            src="/icons/gnb/logo.svg"
+          <ThemedLogo
             alt=""
             width={284}
             height={80}
             className="hidden h-auto w-74.5 max-w-none md:group-data-[open=true]/gnb:block lg:group-data-[open=false]/gnb:block lg:group-data-[open=true]/gnb:hidden"
           />
           {/* 원본 80px 중 본체 48px → 전체 10/3rem이면 본체는 2rem(32px) */}
-          <Image
-            src="/icons/gnb/symbol.svg"
+          <ThemedLogo
+            symbol
             alt=""
             width={80}
             height={80}
@@ -226,8 +226,7 @@ export default function Gnb({
           {/* 모바일에서 메뉴를 펼쳤을 때 표시하는 로고·닫기 버튼 */}
           <div className="shrink-0 pt-10 md:hidden">
             <Link href="/dashboard" className="block w-83.75 max-w-full">
-              <Image
-                src="/icons/gnb/logo.svg"
+              <ThemedLogo
                 alt={nextIntlGnb('dashboardLink')}
                 width={284}
                 height={80}
@@ -296,7 +295,7 @@ export default function Gnb({
                               ? 'page'
                               : undefined
                           }
-                          className="block truncate px-6 py-2 focus-visible:outline-2 focus-visible:outline-orange-500 data-[active=false]:hover:text-orange-700 data-[active=true]:text-orange-700"
+                          className="block truncate px-6 py-2 text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-orange-500 data-[active=false]:hover:bg-orange-menu-background/40 data-[active=false]:hover:text-orange-menu-active data-[active=true]:bg-orange-menu-background/60 data-[active=true]:font-bold data-[active=true]:text-orange-menu-active dark:data-[active=false]:hover:bg-orange-400/10 dark:data-[active=false]:hover:text-orange-300 dark:data-[active=true]:bg-orange-400/15 dark:data-[active=true]:text-orange-300"
                         >
                           {goal.title}
                         </Link>
@@ -495,7 +494,7 @@ function SideMenuLink({
       href={href}
       data-active={active}
       aria-current={active ? 'page' : undefined}
-      className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg"
+      className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-orange-300"
     >
       <SideMenuIcon name={icon} active={active} />
       <span className="min-w-0 flex-1 truncate">{title}</span>
@@ -525,7 +524,7 @@ function SideMenuIcon({
     <span
       aria-hidden="true"
       data-active={active}
-      className="size-6 shrink-0 bg-grayscale-300 group-hover/menu-item:bg-orange-menu-active data-[active=true]:bg-orange-menu-active"
+      className="size-6 shrink-0 bg-grayscale-300 group-hover/menu-item:bg-orange-menu-active data-[active=true]:bg-orange-menu-active dark:data-[active=false]:group-hover/menu-item:bg-orange-300"
       style={{
         maskImage: `url(/icons/gnb/icon_${name}.svg)`,
         maskSize: 'contain',
@@ -594,7 +593,7 @@ function SideMenuAccordion({
           setIsExpanded(next);
           onExpand?.(next);
         }}
-        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg"
+        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-orange-300"
       >
         {icon && (
           <span className="flex shrink-0 items-center" aria-hidden="true">

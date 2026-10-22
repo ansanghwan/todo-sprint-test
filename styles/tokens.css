@@ -12,24 +12,35 @@
   --color-grayscale-800: #262626;
   --color-grayscale-900: #121212;
 
-  --color-orange-100: #fff8e4;
-  --color-orange-200: #feefdc;
-  --color-orange-300: #ffd19b;
-  --color-orange-400: #ffa96c;
-  --color-orange-500: #ff8442;
-  --color-orange-600: #ef6c00;
-  --color-orange-700: #dc5203;
+  /* BrickByBrick B안 컬러 적용 기준
+   * 기존 페이지·공용 컴포넌트가 참조하는 클래스명을 유지해, 여러 파일의 이름 변경과
+   * 그에 따른 누락·다른 작업과의 충돌 범위를 줄이고 색상값을 한곳에서 관리합니다.
+   * orange-*는 메인 Blue, blue-*는 보조 Yellow에 대응하며 실제 색상명이 아닙니다.
+   * 단계 번호와 기존 사용처는 유지하고, 독립적인 배경은 아래 역할 토큰으로 구분합니다.
+   * SVG·이미지 내부의 고정색은 이 토큰 변경만으로 바뀌지 않아 별도 확인이 필요합니다.
+   */
+  --color-orange-100: #f1f5fa;
+  --color-orange-200: #e2ebf4;
+  --color-orange-300: #c1d2e4;
+  --color-orange-400: #94b1ce;
+  --color-orange-500: #6489ae;
+  --color-orange-600: #31557a;
+  --color-orange-700: #233e59;
   /* 기존 메뉴 시안의 강조색: 라이트·다크에서 동일하게 유지합니다. */
-  --color-orange-menu-active: #ef7c00;
-  --color-orange-menu-background: #fff3e4;
+  --color-orange-menu-active: var(--color-orange-700);
+  --color-orange-menu-background: var(--color-orange-200);
   /* 두 alpha 토큰은 서로 다른 원본 색상에 불투명도를 적용한 값입니다. */
-  --color-orange-alpha-20: rgb(255 158 89 / 20%);
-  --color-orange-alpha-30: rgb(177 77 1 / 30%);
+  --color-orange-alpha-20: rgb(111 151 191 / 20%);
+  --color-orange-alpha-30: rgb(36 65 95 / 30%);
 
-  /* 청록 계열이지만 피그마의 blue 이름을 유지합니다. */
-  --color-blue-100: #c0e8e4;
-  --color-blue-200: #00d4be;
-  --color-blue-300: #009d97;
+  /* 기존 blue-* 이름을 유지하며 B안의 보조 Yellow 팔레트를 적용합니다. */
+  --color-blue-100: #fff2cf;
+  --color-blue-200: #ffc857;
+  --color-blue-300: #c78d20;
+
+  /* B안에서 메인 팔레트와 독립적으로 사용하는 배경 역할입니다. */
+  --color-list-hover: var(--color-orange-200);
+  /* 배경 역할의 라이트·다크 값은 theme.css에서 관리합니다. */
 
   /* Badge(태그 칩) 의미 색: 피그마 Component colors/Utility의 단계만 옮겼습니다. */
   --color-success-50: #ecfdf3;

@@ -23,6 +23,22 @@
 :root {
   --background: #f0f0f0; /* 기존 페이지 배경 유지 */
   --white-section: #ffffff;
+  /* 넓은 메인 컬러 카드만 분리해 버튼의 브랜드 색상은 유지합니다. */
+  --todo-background: #f6f4ef;
+  --primary-card-background: var(--color-orange-500);
+  --primary-card-foreground: #1b1b1b;
+  --primary-card-shadow-color: var(--color-orange-alpha-30);
+  --secondary-card-background: color-mix(
+    in srgb,
+    var(--color-blue-200) 50%,
+    transparent
+  );
+  --secondary-card-foreground: #6b491a;
+  --secondary-card-shadow-color: color-mix(
+    in srgb,
+    var(--color-blue-200) 24%,
+    transparent
+  );
   --muted-section: var(--color-grayscale-50); /* #FAFAFA */
   --input-background: #ffffff;
   --input-border: var(--color-grayscale-300); /* #CCCCCC */
@@ -38,8 +54,26 @@
 "시스템 설정"을 고르면 next-themes가 OS 설정을 읽어 같은 속성을 대신 붙입니다. */
 :root[data-theme='dark'] {
   --background: #0a0a0a; /* 기존 페이지 배경 유지 */
+  /* 글자·아이콘의 불투명도는 유지하고 카드 배경만 차분한 Blue로 조정합니다. */
+  --primary-card-background: color-mix(
+    in srgb,
+    var(--color-orange-600) 65%,
+    var(--color-grayscale-900)
+  );
+  --todo-background: #1c2229;
+  --primary-card-shadow-color: transparent;
+  --primary-card-foreground: #ffffff;
+  /* Yellow는 어두운 표면과 혼합하고 광택처럼 번지는 그림자는 제거합니다. */
+  --secondary-card-background: color-mix(
+    in srgb,
+    var(--color-blue-200) 35%,
+    var(--color-grayscale-900)
+  );
+  --secondary-card-shadow-color: transparent;
+  --secondary-card-foreground: #ffffff;
   /* 다크 색상은 검토용 초안입니다. 흰색 영역의 #737373 아이콘을 유지하는 기준입니다. */
-  --white-section: var(--color-grayscale-900); /* #121212 */
+  /* 페이지 배경(#0a0a0a)과 입력면(#262626)을 구분하는 불투명한 섹션 색상입니다. */
+  --white-section: #1c1c1c;
   --muted-section: #0a0a0a; /* 다크 페이지 배경과 같은 값 */
   --input-background: var(--color-grayscale-800); /* #262626 */
   --input-border: var(--color-grayscale-600); /* #535353 */
@@ -56,6 +90,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-white-section: var(--white-section);
+  --color-todo-background: var(--todo-background);
+  --color-primary-card-background: var(--primary-card-background);
+  --color-primary-card-foreground: var(--primary-card-foreground);
+  --color-secondary-card-background: var(--secondary-card-background);
+  --color-secondary-card-foreground: var(--secondary-card-foreground);
   --color-muted-section: var(--muted-section);
   --color-input: var(--input-background);
   --color-input-border: var(--input-border);
