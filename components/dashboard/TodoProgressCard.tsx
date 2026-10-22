@@ -34,11 +34,15 @@ export default function TodoProgressCard({
         {/* 장식용 문어 일러스트는 ::before 배경 레이어로 처리합니다. */}
 
         {isLoading ? (
-          <DashboardLoading message={nextIntlDashboard('loadingProgress')} />
+          <DashboardLoading
+            message={nextIntlDashboard('loadingProgress')}
+            color="foreground"
+            className="text-secondary-card-foreground"
+          />
         ) : error ? (
           <div
             role="alert"
-            className="relative z-10 flex h-full items-center justify-center text-base font-semibold text-white"
+            className="relative z-10 flex h-full items-center justify-center text-base font-semibold text-secondary-card-foreground"
           >
             <p>{nextIntlDashboard('fetchProgressError')}</p>
           </div>
@@ -46,10 +50,11 @@ export default function TodoProgressCard({
           <div className="absolute top-1/2 left-0 z-10 flex w-full -translate-y-1/2 items-center gap-5 px-6 lg:gap-8 lg:px-10">
             <ProgressChart
               progress={progress}
+              progressColor="var(--secondary-card-foreground)"
               className="aspect-square w-[31.2%] shrink-0 lg:size-40 lg:w-40"
             />
 
-            <div className="min-w-0 text-white">
+            <div className="min-w-0 text-secondary-card-foreground">
               <p className="text-sm font-semibold lg:text-xl">
                 {userName
                   ? nextIntlDashboard('userProgress', { name: userName })

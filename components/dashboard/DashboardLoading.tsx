@@ -8,6 +8,7 @@ const loadingVariants = cva(
     variants: {
       color: {
         white: 'text-white',
+        primaryCard: 'text-primary-card-foreground',
         muted: 'text-muted',
         foreground: 'text-foreground',
       },
@@ -26,6 +27,8 @@ const spinnerVariants = cva(
       // white는 색상 카드용, muted·foreground는 라이트/다크 테마에 대응합니다.
       color: {
         white: 'border-white/30 border-t-white',
+        primaryCard:
+          'border-primary-card-foreground/30 border-t-primary-card-foreground',
         muted: 'border-muted/30 border-t-muted',
         foreground: 'border-foreground/30 border-t-foreground',
       },

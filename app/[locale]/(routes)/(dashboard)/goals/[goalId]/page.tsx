@@ -186,16 +186,19 @@ export default function GoalDetailPage() {
 
             <Link
               href={`/notes?goalId=${id}`}
-              className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-secondary-card-background pb-8 pl-10 text-white shadow-[0_0.625rem_2.5rem_0_var(--secondary-card-shadow-color)] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75 md:before:size-24.25"
+              className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-secondary-card-background pb-8 pl-10 text-secondary-card-foreground shadow-[0_0.625rem_2.5rem_0_var(--secondary-card-shadow-color)] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75 md:before:size-24.25"
             >
               <span className="relative z-10 inline-flex items-center gap-1.5 text-2xl font-bold">
                 {nextIntlTodo('notes')}
-                <Image
-                  src="/icons/icon_arrow_right.svg"
-                  width={8}
-                  height={14}
-                  alt=""
-                  className="h-3.5 w-2 shrink-0"
+                <span
+                  aria-hidden="true"
+                  className="h-3.5 w-2 shrink-0 bg-current"
+                  style={{
+                    maskImage: "url('/icons/icon_arrow_right.svg')",
+                    maskSize: 'contain',
+                    maskPosition: 'center',
+                    maskRepeat: 'no-repeat',
+                  }}
                 />
               </span>
             </Link>

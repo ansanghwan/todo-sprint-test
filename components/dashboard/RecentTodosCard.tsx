@@ -75,11 +75,14 @@ export default function RecentTodosCard({
       </div>
       <div className="aspect-343/186 w-full rounded-[1.75rem] bg-primary-card-background px-4.5 py-4 shadow-[0_0.625rem_2.5rem_0_var(--primary-card-shadow-color)] md:aspect-auto md:h-46.5 lg:h-64 lg:rounded-[2.5rem] lg:px-8 lg:py-7.5">
         {isLoading ? (
-          <DashboardLoading message={nextIntlTodo('loadingTodos')} />
+          <DashboardLoading
+            message={nextIntlTodo('loadingTodos')}
+            color="primaryCard"
+          />
         ) : error ? (
           <div
             role="alert"
-            className="flex h-full items-center justify-center text-base font-semibold text-white"
+            className="flex h-full items-center justify-center text-base font-semibold text-primary-card-foreground"
           >
             <p>{nextIntlTodo('fetchTodosError')}</p>
           </div>
@@ -107,7 +110,7 @@ export default function RecentTodosCard({
             </ul>
           </div>
         ) : (
-          <div className="flex h-full items-center justify-center text-base font-semibold text-white">
+          <div className="flex h-full items-center justify-center text-base font-semibold text-primary-card-foreground">
             <p>{nextIntlDashboard('noRecentTodos')}</p>
           </div>
         )}
