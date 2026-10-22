@@ -30,7 +30,7 @@ const CommentEditForm = ({
   onClose,
 }: CommentEditFormProps) => {
   const [content, setContent] = useState(comment.content);
-  const t = useTranslations('Todo');
+  const t = useTranslations('Post');
   const { updateComment, isUpdating } = useUpdateComment(postId);
   const trimmedContent = content.trim();
 
@@ -52,7 +52,7 @@ const CommentEditForm = ({
         size="sm"
         value={content}
         onChange={(event) => setContent(event.target.value)}
-        aria-label="댓글 수정"
+        aria-label={t('editComment')}
       />
       <div className="flex items-center justify-between gap-2">
         <time
@@ -69,7 +69,7 @@ const CommentEditForm = ({
             disabled={isUpdating}
             onClick={onClose}
           >
-            취소
+            {t('cancel')}
           </Button>
           <Button
             type="submit"
@@ -77,7 +77,7 @@ const CommentEditForm = ({
             className="w-16 px-0"
             disabled={!trimmedContent || isUpdating}
           >
-            수정
+            {t('update')}
           </Button>
         </div>
       </div>

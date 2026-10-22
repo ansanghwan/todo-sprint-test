@@ -14,24 +14,30 @@ const DAY = 24 * HOUR;
 const MONTH = 30 * DAY;
 const YEAR = 365 * DAY;
 
-/** 작성 시간을 '방금', '5분', '1시간', '3일', '2개월', '1년' 형태로 변환합니다. */
-export const formatDateToRelativeTime = (date: string, now = new Date()) => {
+export type ElapsedTimeUnit =
+  'now' | 'minute' | 'hour' | 'day' | 'month' | 'year';
+
+/** 작성 후 지난 시간을 가장 큰 단위 하나로 나타냅니다. 문구는 화면이 번역합니다. */
+export const getElapsedTime = (
+  date: string,
+  now = new Date(),
+): { unit: ElapsedTimeUnit; count: number } => {
   const elapsed = now.getTime() - new Date(date).getTime();
 
   if (elapsed < MINUTE) {
-    return '방금';
+    return { unit: 'now', count: 0 };
   }
   if (elapsed < HOUR) {
-    return `${Math.floor(elapsed / MINUTE)}분`;
+    return { unit: 'minute', count: Math.floor(elapsed / MINUTE) };
   }
   if (elapsed < DAY) {
-    return `${Math.floor(elapsed / HOUR)}시간`;
+    return { unit: 'hour', count: Math.floor(elapsed / HOUR) };
   }
   if (elapsed < MONTH) {
-    return `${Math.floor(elapsed / DAY)}일`;
+    return { unit: 'day', count: Math.floor(elapsed / DAY) };
   }
   if (elapsed < YEAR) {
-    return `${Math.floor(elapsed / MONTH)}개월`;
+    return { unit: 'month', count: Math.floor(elapsed / MONTH) };
   }
-  return `${Math.floor(elapsed / YEAR)}년`;
+  return { unit: 'year', count: Math.floor(elapsed / YEAR) };
 };

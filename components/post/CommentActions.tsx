@@ -25,7 +25,7 @@ interface CommentActionsProps {
 }
 
 const CommentActions = ({ postId, commentId, onEdit }: CommentActionsProps) => {
-  const t = useTranslations('Todo');
+  const t = useTranslations('Post');
   const { deleteComment, isDeleting } = useDeleteComment(postId);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -40,19 +40,19 @@ const CommentActions = ({ postId, commentId, onEdit }: CommentActionsProps) => {
   };
 
   const menuItems: KebabMenuItem[] = [
-    { label: '수정하기', onSelect: onEdit },
-    { label: '삭제하기', onSelect: () => setIsDeleteModalOpen(true) },
+    { label: t('edit'), onSelect: onEdit },
+    { label: t('delete'), onSelect: () => setIsDeleteModalOpen(true) },
   ];
 
   return (
     <>
-      <KebabMenu ariaLabel="댓글 메뉴" items={menuItems} />
+      <KebabMenu ariaLabel={t('commentMenu')} items={menuItems} />
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
-        title="댓글을 삭제하시겠어요?"
-        description="삭제된 댓글은 복구할 수 없어요."
-        confirmLabel="삭제"
+        title={t('deleteCommentConfirm')}
+        description={t('deleteCommentWarning')}
+        confirmLabel={t('confirmDelete')}
         onConfirm={handleDelete}
         isPending={isDeleting}
       />

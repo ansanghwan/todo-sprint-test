@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import type { PostDto } from '@/types/api/post';
 import CommentCount from './CommentCount';
 import WriterAvatar from './WriterAvatar';
@@ -13,6 +14,7 @@ interface BestPostCardProps {
 }
 
 const BestPostCard = ({ post }: BestPostCardProps) => {
+  const t = useTranslations('Post');
   const { title, image, writer, viewCount, commentCount } = post;
 
   return (
@@ -25,7 +27,7 @@ const BestPostCard = ({ post }: BestPostCardProps) => {
           <div className="relative size-25 overflow-hidden rounded-2xl border border-subtle">
             <Image
               src={image}
-              alt={`${title} 첨부 이미지`}
+              alt={t('imageAlt', { title })}
               fill
               sizes="100px"
               className="object-cover"
@@ -37,7 +39,7 @@ const BestPostCard = ({ post }: BestPostCardProps) => {
         <div className="flex min-w-0 items-center gap-1 md:gap-2">
           <WriterAvatar image={writer.image} />
           <p className="truncate">
-            {writer.name} · 조회 {viewCount}
+            {writer.name} · {t('views', { count: viewCount })}
           </p>
         </div>
         <CommentCount count={commentCount} />

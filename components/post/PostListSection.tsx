@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useDeferredValue, useState } from 'react';
 import ClientSuspense from '@/components/boundaries/ClientSuspense';
 import QueryErrorBoundary from '@/components/boundaries/QueryErrorBoundary';
@@ -15,6 +16,7 @@ const POST_LIST_LIMIT = 10;
 const POST_LIST_SKELETON_COUNT = 5;
 
 const PostListSection = () => {
+  const t = useTranslations('Post');
   const [sort, setSort] = useState<PostSortType>('all');
   const [search, setSearch] = useState('');
   const deferredSort = useDeferredValue(sort);
@@ -56,7 +58,7 @@ const PostListSection = () => {
       >
         <QueryErrorBoundary
           key={`${deferredSort}/${deferredSearch}`}
-          message="게시글을 불러오지 못했어요."
+          message={t('fetchPostsError')}
         >
           <div
             aria-busy={isUpdating}

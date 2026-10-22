@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import useIsMe from '@/hooks/user/useIsMe';
 import { formatUtcDateToYmd } from '@/lib/formatter';
@@ -15,6 +16,7 @@ interface CommentItemProps {
 
 const CommentItem = ({ postId, comment }: CommentItemProps) => {
   const { id, content, createdAt, writer } = comment;
+  const t = useTranslations('Post');
   const isMine = useIsMe(writer.id);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -28,7 +30,7 @@ const CommentItem = ({ postId, comment }: CommentItemProps) => {
           </div>
           {isMine && (
             <span className="shrink-0 rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">
-              내 댓글
+              {t('myComment')}
             </span>
           )}
         </div>

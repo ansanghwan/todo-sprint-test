@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { NextIntlClientProvider } from 'next-intl';
+import IntlTestProvider from '@/test/IntlTestProvider';
 import { ApiError } from '@/lib/api/errors';
 import { createMockPosts } from '@/lib/test/fixtures/post';
 import { commentKeys } from '@/queries/comment';
@@ -99,7 +99,7 @@ const CommentSectionPreview = ({
   commentState,
   isLoading = false,
 }: CommentSectionPreviewProps) => (
-  <NextIntlClientProvider locale="ko" messages={{}}>
+  <IntlTestProvider>
     <QueryClientProvider client={createSeededClient(commentState)}>
       <div className="min-h-dvh bg-background p-4 md:p-6">
         <div className="mx-auto w-full max-w-3xl rounded-3xl bg-white-section px-5 py-6 md:rounded-4xl md:p-10 lg:p-14">
@@ -111,7 +111,7 @@ const CommentSectionPreview = ({
         </div>
       </div>
     </QueryClientProvider>
-  </NextIntlClientProvider>
+  </IntlTestProvider>
 );
 
 const meta = {

@@ -27,7 +27,7 @@ interface PostActionsProps {
 
 const PostActions = ({ postId, writerId }: PostActionsProps) => {
   const router = useRouter();
-  const t = useTranslations('Todo');
+  const t = useTranslations('Post');
   const isMine = useIsMe(writerId);
   const { deletePost, isDeleting } = useDeletePost();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -53,21 +53,21 @@ const PostActions = ({ postId, writerId }: PostActionsProps) => {
 
   const menuItems: KebabMenuItem[] = [
     {
-      label: '수정하기',
+      label: t('edit'),
       onSelect: () => router.push(`/posts/edit?postId=${postId}`),
     },
-    { label: '삭제하기', onSelect: () => setIsDeleteModalOpen(true) },
+    { label: t('delete'), onSelect: () => setIsDeleteModalOpen(true) },
   ];
 
   return (
     <>
-      <KebabMenu ariaLabel="게시글 메뉴" items={menuItems} />
+      <KebabMenu ariaLabel={t('postMenu')} items={menuItems} />
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
-        title="게시글을 삭제하시겠어요?"
-        description="삭제된 게시글은 복구할 수 없어요."
-        confirmLabel="삭제"
+        title={t('deletePostConfirm')}
+        description={t('deletePostWarning')}
+        confirmLabel={t('confirmDelete')}
         onConfirm={handleDelete}
         isPending={isDeleting}
       />

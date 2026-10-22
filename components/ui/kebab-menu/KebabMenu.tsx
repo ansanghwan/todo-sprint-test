@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { DropdownMenu } from 'radix-ui';
 
 import { IconKebab, IconKebabWhite } from '@/components/icons';
@@ -23,17 +24,14 @@ interface KebabMenuProps {
  * 바깥 클릭·ESC 닫기, 화면 경계 충돌 시 위치 보정, 방향키 이동은
  * Radix DropdownMenu가 처리합니다.
  */
-const KebabMenu = ({
-  items,
-  isWhite = false,
-  ariaLabel = '더보기',
-}: KebabMenuProps) => {
+const KebabMenu = ({ items, isWhite = false, ariaLabel }: KebabMenuProps) => {
+  const t = useTranslations('Common');
   const KebabIcon = isWhite ? IconKebabWhite : IconKebab;
 
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
-        aria-label={ariaLabel}
+        aria-label={ariaLabel ?? t('more')}
         className="flex size-6 shrink-0 items-center justify-center rounded-sm leading-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
       >
         <KebabIcon className="block size-6 shrink-0" />

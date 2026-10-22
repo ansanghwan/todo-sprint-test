@@ -1,6 +1,7 @@
 'use client';
 
 import { catchError, type ErrorInfo } from 'next/error';
+import { useTranslations } from 'next-intl';
 import ClientSuspense from '@/components/boundaries/ClientSuspense';
 import { QueryErrorFallback } from '@/components/boundaries/QueryErrorBoundary';
 import useCommentCount from '@/hooks/post/useCommentCount';
@@ -12,15 +13,21 @@ import CommentListSkeleton from './CommentListSkeleton';
 
 const INITIAL_SKELETON_COUNT = 3;
 
+const CommentLoadError = ({ onReset }: { onReset: () => void }) => {
+  const t = useTranslations('Post');
+
+  return (
+    <QueryErrorFallback message={t('fetchCommentsError')} onReset={onReset} />
+  );
+};
+
 // 댓글 목록의 404가 상세의 404보다 먼저 오면, 영역을 숨기기 전까지 실패 안내 대신 비워 둡니다.
 const CommentErrorBoundary = catchError(
   (_props: object, { error, reset }: ErrorInfo) => {
     if (error instanceof ApiError && error.httpCategory === 'notFound') {
       return null;
     }
-    return (
-      <QueryErrorFallback message="댓글을 불러오지 못했어요." onReset={reset} />
-    );
+    return <CommentLoadError onReset={reset} />;
   },
 );
 
@@ -29,6 +36,7 @@ interface CommentSectionProps {
 }
 
 const CommentSection = ({ postId }: CommentSectionProps) => {
+  const t = useTranslations('Post');
   const commentCount = useCommentCount(postId);
   const isPostNotFound = usePostNotFound(postId);
 
@@ -38,10 +46,10 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
   }
 
   return (
-    <section aria-label="댓글" className="flex flex-col gap-6">
+    <section aria-label={t('comments')} className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
         <h3 className="flex gap-0.5 text-base font-semibold md:gap-1 md:text-lg">
-          <span className="text-heading">댓글</span>
+          <span className="text-heading">{t('comments')}</span>
           <span className="text-orange-600">{commentCount}</span>
         </h3>
         <CommentCreateForm postId={postId} />

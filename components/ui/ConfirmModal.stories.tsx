@@ -3,11 +3,19 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 
 import Button from './button/Button';
 import ConfirmModal from './ConfirmModal';
+import IntlTestProvider from '@/test/IntlTestProvider';
 
 const meta = {
   title: 'UI/ConfirmModal',
   component: ConfirmModal,
   parameters: { layout: 'centered' },
+  decorators: [
+    (Story) => (
+      <IntlTestProvider>
+        <Story />
+      </IntlTestProvider>
+    ),
+  ],
   args: {
     isOpen: false,
     title: '정말 삭제하시겠어요?',

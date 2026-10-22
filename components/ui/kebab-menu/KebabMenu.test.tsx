@@ -1,7 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { render as rtlRender, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactElement } from 'react';
+import IntlTestProvider from '@/test/IntlTestProvider';
 
 import KebabMenu from './KebabMenu';
+
+const render = (ui: ReactElement) =>
+  rtlRender(ui, { wrapper: IntlTestProvider });
 
 const renderKebabMenu = () => {
   const onEdit = vi.fn();

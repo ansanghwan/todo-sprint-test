@@ -13,7 +13,7 @@ interface PostEditFormProps {
 }
 
 export default function PostEditForm({ postId }: PostEditFormProps) {
-  const t = useTranslations('Todo');
+  const t = useTranslations('Post');
   const router = useRouter();
   const {
     data: post,
@@ -29,8 +29,8 @@ export default function PostEditForm({ postId }: PostEditFormProps) {
   );
 
   // ⚠️ 노트를 다 불러온 "뒤에" 폼을 그려야 에디터에 기존 내용이 들어갑니다.
-  if (isLoading) return <p>불러오는 중…</p>;
-  if (isError) return <p>게시글을 불러오지 못했어요.</p>;
+  if (isLoading) return <p>{t('loadingPost')}</p>;
+  if (isError) return <p>{t('fetchPostsError')}</p>;
 
   const handleSubmit = async ({ title, content, image }: PostFormValues) => {
     try {

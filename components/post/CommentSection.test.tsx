@@ -6,6 +6,7 @@ import { getComments } from '@/lib/api/comment';
 import { getPost } from '@/lib/api/post';
 import { commentKeys } from '@/queries/comment';
 import type { PostDto } from '@/types/api/post';
+import IntlTestProvider from '@/test/IntlTestProvider';
 import CommentSection from './CommentSection';
 
 vi.mock('@/lib/api/post', () => ({ getPost: vi.fn() }));
@@ -22,7 +23,9 @@ const renderSection = () => {
   client.setQueryDefaults(commentKeys.all, { retryDelay: 0 });
   return render(
     <QueryClientProvider client={client}>
-      <CommentSection postId={5} />
+      <IntlTestProvider>
+        <CommentSection postId={5} />
+      </IntlTestProvider>
     </QueryClientProvider>,
   );
 };

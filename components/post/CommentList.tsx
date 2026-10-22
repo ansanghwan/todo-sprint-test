@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import ErrorRetry from '@/components/common/ErrorRetry';
 import useCommentList from '@/hooks/post/useCommentList';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
@@ -13,6 +14,7 @@ interface CommentListProps {
 }
 
 const CommentList = ({ postId }: CommentListProps) => {
+  const t = useTranslations('Post');
   const { comments, hasMore, isLoadingMore, isLoadMoreError, loadMore } =
     useCommentList(postId);
   const sentinelRef = useInfiniteScroll<HTMLDivElement>({
@@ -37,7 +39,7 @@ const CommentList = ({ postId }: CommentListProps) => {
       )}
       {isLoadMoreError && (
         <ErrorRetry
-          message="다음 댓글을 불러오지 못했어요."
+          message={t('fetchMoreCommentsError')}
           onRetry={() => loadMore()}
         />
       )}

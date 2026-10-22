@@ -8,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from '@/components/ui/toast/Toaster';
 
 export default function PostWriteForm() {
-  const t = useTranslations('Todo');
+  const t = useTranslations('Post');
   const router = useRouter();
   const { mutateAsync: createPost, isPending } = useMutation(
     postMutations.create(),
