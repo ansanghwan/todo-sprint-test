@@ -73,7 +73,7 @@ export default function RecentTodosCard({
           </span>
         </Link>
       </div>
-      <div className="aspect-343/186 w-full rounded-[1.75rem] bg-orange-500 px-4.5 py-4 shadow-[0_0.625rem_2.5rem_0_var(--color-orange-alpha-30)] md:aspect-auto md:h-46.5 lg:h-64 lg:rounded-[2.5rem] lg:px-8 lg:py-7.5">
+      <div className="aspect-343/186 w-full rounded-[1.75rem] bg-primary-card-background px-4.5 py-4 shadow-[0_0.625rem_2.5rem_0_var(--primary-card-shadow-color)] md:aspect-auto md:h-46.5 lg:h-64 lg:rounded-[2.5rem] lg:px-8 lg:py-7.5">
         {isLoading ? (
           <DashboardLoading message={nextIntlTodo('loadingTodos')} />
         ) : error ? (

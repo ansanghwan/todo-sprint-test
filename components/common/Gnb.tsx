@@ -494,7 +494,7 @@ function SideMenuLink({
       href={href}
       data-active={active}
       aria-current={active ? 'page' : undefined}
-      className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg"
+      className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-orange-300"
     >
       <SideMenuIcon name={icon} active={active} />
       <span className="min-w-0 flex-1 truncate">{title}</span>
@@ -524,7 +524,7 @@ function SideMenuIcon({
     <span
       aria-hidden="true"
       data-active={active}
-      className="size-6 shrink-0 bg-grayscale-300 group-hover/menu-item:bg-orange-menu-active data-[active=true]:bg-orange-menu-active"
+      className="size-6 shrink-0 bg-grayscale-300 group-hover/menu-item:bg-orange-menu-active data-[active=true]:bg-orange-menu-active dark:data-[active=false]:group-hover/menu-item:bg-orange-300"
       style={{
         maskImage: `url(/icons/gnb/icon_${name}.svg)`,
         maskSize: 'contain',
@@ -593,7 +593,7 @@ function SideMenuAccordion({
           setIsExpanded(next);
           onExpand?.(next);
         }}
-        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg"
+        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-orange-300"
       >
         {icon && (
           <span className="flex shrink-0 items-center" aria-hidden="true">

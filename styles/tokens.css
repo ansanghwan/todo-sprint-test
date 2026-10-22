@@ -39,13 +39,8 @@
   --color-blue-300: #c78d20;
 
   /* B안에서 메인 팔레트와 독립적으로 사용하는 배경 역할입니다. */
-  --color-todo-background: #f6f4ef;
   --color-list-hover: var(--color-orange-200);
-  --color-secondary-card-background: color-mix(
-    in srgb,
-    var(--color-blue-200) 50%,
-    transparent
-  );
+  /* 배경 역할의 라이트·다크 값은 theme.css에서 관리합니다. */
 
   /* Badge(태그 칩) 의미 색: 피그마 Component colors/Utility의 단계만 옮겼습니다. */
   --color-success-50: #ecfdf3;
