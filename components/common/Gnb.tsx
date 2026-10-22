@@ -2,6 +2,7 @@
 
 import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
+import ThemedLogo from '@/components/common/ThemedLogo';
 import { useTranslations } from 'next-intl';
 import ActionButton from '@/components/ui/button/ActionButton';
 import NotificationButton from '@/components/common/NotificationButton';
@@ -149,16 +150,15 @@ export default function Gnb({
           className="hidden font-semibold whitespace-nowrap md:inline md:group-data-[open=false]/gnb:mx-auto md:group-data-[open=false]/gnb:block md:group-data-[open=false]/gnb:w-fit lg:group-data-[open=false]/gnb:mx-0 lg:group-data-[open=false]/gnb:block lg:group-data-[open=false]/gnb:w-auto lg:group-data-[open=true]/gnb:mx-auto lg:group-data-[open=true]/gnb:block lg:group-data-[open=true]/gnb:w-fit"
           aria-label={nextIntlTodo('dashboard')}
         >
-          <Image
-            src="/icons/gnb/logo.svg"
+          <ThemedLogo
             alt=""
             width={284}
             height={80}
             className="hidden h-auto w-74.5 max-w-none md:group-data-[open=true]/gnb:block lg:group-data-[open=false]/gnb:block lg:group-data-[open=true]/gnb:hidden"
           />
           {/* 원본 80px 중 본체 48px → 전체 10/3rem이면 본체는 2rem(32px) */}
-          <Image
-            src="/icons/gnb/symbol.svg"
+          <ThemedLogo
+            symbol
             alt=""
             width={80}
             height={80}
@@ -226,8 +226,7 @@ export default function Gnb({
           {/* 모바일에서 메뉴를 펼쳤을 때 표시하는 로고·닫기 버튼 */}
           <div className="shrink-0 pt-10 md:hidden">
             <Link href="/dashboard" className="block w-83.75 max-w-full">
-              <Image
-                src="/icons/gnb/logo.svg"
+              <ThemedLogo
                 alt={nextIntlGnb('dashboardLink')}
                 width={284}
                 height={80}
