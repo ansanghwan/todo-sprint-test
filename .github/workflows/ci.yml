@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# 같은 PR에 커밋을 연달아 올리면, 이전 검사는 취소하고 최신 것만 돌립니다.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # package.json의 packageManager(pnpm@10.34.5)를 읽어 같은 버전을 설치합니다.
+      - uses: pnpm/action-setup@v4
+
+      # .nvmrc(22)와 같은 Node 버전을 쓰고, pnpm 다운로드를 캐시합니다.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: 의존성 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: 린트
+        run: pnpm lint
+
+      - name: 타입 검사
+        run: pnpm typecheck
+
+      - name: 테스트
+        run: pnpm test:run
