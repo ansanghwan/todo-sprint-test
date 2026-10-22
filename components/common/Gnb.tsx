@@ -5,7 +5,6 @@ import Image from 'next/image';
 import ThemedLogo from '@/components/common/ThemedLogo';
 import { useTranslations } from 'next-intl';
 import ActionButton from '@/components/ui/button/ActionButton';
-import NotificationButton from '@/components/common/NotificationButton';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { getProfileImageProps } from '@/lib/user/profileImage';
 import SettingModal from '@/components/setting/SettingModal';
@@ -51,8 +50,6 @@ export default function Gnb({
   userName,
   userEmail = '',
   userImage,
-  hasNotification = false,
-  onOpenNotifications,
 }: GnbProps = {}) {
   // 기존 메뉴 번역은 Todo 묶음을 재사용하고,
   // GNB 전용 문구만 Gnb 묶음에 추가했습니다.
@@ -75,7 +72,6 @@ export default function Gnb({
   //   목록을 열 때 전체 읽음 처리할지, 개별 알림 선택 시 처리할지는 서비스 정책에 따릅니다.
   // 세 위치는 동일한 데이터와 열기 함수를 공유합니다. 위치별 상태/API/팝업을 만들지 마세요.
   // 현재는 UI 연결 구조만 마련된 상태로, 배지는 기본 false이며 조회·열기·읽음 기능은 미구현입니다.
-  const notificationProps = { hasNotification, onOpen: onOpenNotifications };
   const [isOpen, setIsOpen] = useState(false);
   const [closeImmediately, setCloseImmediately] = useState(false);
   // 설정 팝업 오픈 여부
@@ -210,9 +206,10 @@ export default function Gnb({
         </div> */}
         {/* 태블릿은 open=false, PC는 open=true일 때 접힌 상태입니다.
             펼친 상태의 알림은 아래 내 정보 링크 옆에서 표시합니다. */}
+        {/* 알림 기능 미구현으로 접힌 메뉴의 알림 버튼도 렌더링하지 않습니다.
         <div className="hidden justify-center md:max-lg:group-data-[open=false]/gnb:flex lg:group-data-[open=true]/gnb:flex">
           <NotificationButton {...notificationProps} compact />
-        </div>
+        </div> */}
       </header>
 
       {/* 모바일: 기존 헤더까지 덮으며 위에서 내려오는 메뉴 */}

@@ -113,18 +113,17 @@ it('대시보드에서는 해당 메뉴만 활성화하고 경로가 바뀌면 �
   await screen.findByText('상환님의 작업대');
   const nav = screen.getByRole('navigation', { name: '주 메뉴' });
   const dashboard = within(nav).getByRole('link', { name: '작업대' });
-  const goal = within(nav).getByRole('link', { name: '작업 기록' });
+  const calendar = within(nav).getByRole('link', { name: '빌드 캘린더' });
   expect(nav.querySelectorAll('a[data-active="true"]')).toHaveLength(1);
   expect(dashboard).toHaveAttribute('aria-current', 'page');
-  expect(dashboard).toHaveAttribute('aria-current', 'page');
-  expect(goal).not.toHaveAttribute('aria-current');
-  pathname = '/notes';
+  expect(calendar).not.toHaveAttribute('aria-current');
+  pathname = '/calendar';
   view.rerender(
     <TestProviders>
       <ConnectedGnb />
     </TestProviders>,
   );
-  expect(goal).toHaveAttribute('aria-current', 'page');
+  expect(calendar).toHaveAttribute('aria-current', 'page');
   expect(dashboard).not.toHaveAttribute('aria-current');
   pathname = '/dashboard';
   view.rerender(
@@ -133,7 +132,7 @@ it('대시보드에서는 해당 메뉴만 활성화하고 경로가 바뀌면 �
     </TestProviders>,
   );
   expect(dashboard).toHaveAttribute('aria-current', 'page');
-  expect(goal).not.toHaveAttribute('aria-current');
+  expect(calendar).not.toHaveAttribute('aria-current');
 });
 it('사용자 조회 실패 시 임시 이름 대신 기본 제목을 표시한다', async () => {
   vi.mocked(getMe).mockRejectedValue(new Error('Offline'));
@@ -172,11 +171,14 @@ it('시연 메뉴를 숨기고 실제 경로를 연결한다', async () => {
   const nav = within(screen.getByRole('navigation'));
   expect(nav.queryByRole('link', { name: '프로젝트' })).not.toBeInTheDocument();
   expect(screen.queryByRole('link', { name: '설정' })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: '설정' })).toBeInTheDocument();
+  expect(
+    nav.queryByRole('link', { name: '작업 기록' }),
+  ).not.toBeInTheDocument();
   for (const [name, href] of [
     ['작업대', '/dashboard'],
     ['빌드 캘린더', '/calendar'],
     ['소통 게시판', '/posts'],
-    ['작업 기록', '/notes'],
     ['대표 기록', '/favorites'],
   ]) {
     expect(nav.getByRole('link', { name })).toHaveAttribute('href', href);

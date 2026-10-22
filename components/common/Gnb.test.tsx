@@ -56,7 +56,7 @@ describe('주 메뉴 활성 상태', () => {
 
   it('링크 이동을 차단하지 않고 활성 표시는 전달받은 경로 상태를 따른다', () => {
     render(<Gnb activeMenu="dashboard" />, { wrapper });
-    for (const title of ['작업대', '빌드 캘린더', '소통 게시판', '작업 기록']) {
+    for (const title of ['작업대', '빌드 캘린더', '소통 게시판', '대표 기록']) {
       const link = menu().getByRole('link', { name: title, hidden: true });
       const event = new MouseEvent('click', {
         bubbles: true,
@@ -107,9 +107,9 @@ describe('주 메뉴 활성 상태', () => {
   });
 });
 
-it('남아 있는 알림 버튼에 전달된 알림 상태와 열기 함수를 사용한다', () => {
+it('미구현 알림 버튼은 메뉴를 열고 닫아도 렌더링하지 않는다', () => {
   const onOpenNotifications = vi.fn();
-  const view = render(
+  render(
     <Gnb
       pageTitle="내 정보 관리"
       hasNotification
@@ -118,20 +118,14 @@ it('남아 있는 알림 버튼에 전달된 알림 상태와 열기 함수를 �
     { wrapper },
   );
   expect(screen.getByText('내 정보 관리')).toBeInTheDocument();
-  // 미개발로 두 배치는 주석 처리돼 있어 현재 남아 있는 연결만 검증합니다.
-  const buttons = screen.getAllByRole('button', {
-    name: '알림 열기 (새 알림 있음)',
-  });
-  expect(buttons).toHaveLength(1);
-  buttons.forEach((button) => fireEvent.click(button));
-  expect(onOpenNotifications).toHaveBeenCalledTimes(1);
-  view.rerender(
-    <Gnb hasNotification={false} onOpenNotifications={onOpenNotifications} />,
-  );
   expect(
-    screen.queryByRole('button', { name: '알림 열기 (새 알림 있음)' }),
+    screen.queryByRole('button', { name: /알림 열기/, hidden: true }),
   ).not.toBeInTheDocument();
-  expect(screen.getAllByRole('button', { name: '알림 열기' })).toHaveLength(1);
+  fireEvent.click(screen.getByRole('button', { name: '메뉴 열기·닫기' }));
+  expect(
+    screen.queryByRole('button', { name: /알림 열기/, hidden: true }),
+  ).not.toBeInTheDocument();
+  expect(onOpenNotifications).not.toHaveBeenCalled();
 });
 
 it.each([false, true])(
