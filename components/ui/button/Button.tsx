@@ -12,7 +12,7 @@ const buttonVariants = cva(
         outline:
           'border-orange-500 bg-transparent text-orange-600 enabled:hover:border-orange-600 disabled:border-[#bbb] disabled:text-[#bbb] dark:enabled:border-orange-400 dark:enabled:text-orange-300 dark:enabled:hover:border-orange-300 dark:enabled:hover:text-orange-200',
         neutral:
-          'border-[#ccc] bg-transparent text-grayscale-500 enabled:hover:border-[#bbb] enabled:hover:text-grayscale-600 disabled:border-[#ccc] disabled:text-[#bbb]',
+          'border-[#ccc] bg-transparent text-muted enabled:hover:border-[#bbb] enabled:hover:text-grayscale-600 disabled:border-[#ccc] disabled:text-[#bbb]',
       },
       size: {
         // 아래 px 수치는 루트 글자 크기 16px 기준입니다.

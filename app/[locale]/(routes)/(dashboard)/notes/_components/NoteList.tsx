@@ -40,7 +40,7 @@ export default function NoteList(params: NoteListProps) {
         <button
           type="button"
           onClick={() => refetch()}
-          className={'rounded-xl bg-white px-4 py-2 text-sm'}
+          className={'rounded-xl bg-white-section px-4 py-2 text-sm'}
         >
           다시 시도
         </button>
@@ -95,7 +95,7 @@ export default function NoteList(params: NoteListProps) {
             type="button"
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
-            className={'rounded-xl bg-white px-4 py-2 text-sm'}
+            className={'rounded-xl bg-white-section px-4 py-2 text-sm'}
           >
             {isFetchingNextPage ? '불러오는 중…' : '더 보기'}
           </button>

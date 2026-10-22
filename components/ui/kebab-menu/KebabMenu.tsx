@@ -42,7 +42,7 @@ const KebabMenu = ({ items, isWhite = false, ariaLabel }: KebabMenuProps) => {
           align="end"
           sideOffset={4}
           collisionPadding={16}
-          className="z-50 w-25.5 overflow-hidden rounded-xl bg-white shadow-[0_0.25rem_0.5rem_rgba(0,0,0,0.1)]"
+          className="z-50 w-25.5 overflow-hidden rounded-xl bg-white-section shadow-[0_0.25rem_0.5rem_rgba(0,0,0,0.1)]"
         >
           {items.map(({ label, onSelect }) => (
             <DropdownMenu.Item
@@ -50,7 +50,7 @@ const KebabMenu = ({ items, isWhite = false, ariaLabel }: KebabMenuProps) => {
               onSelect={onSelect}
               className="group cursor-pointer p-1.25 outline-none"
             >
-              <span className="block rounded-lg px-1.5 py-0.75 text-sm/5 font-medium tracking-[-0.03em] text-grayscale-700 group-data-highlighted:bg-orange-alpha-20">
+              <span className="block rounded-lg px-1.5 py-0.75 text-sm/5 font-medium tracking-[-0.03em] text-foreground group-data-highlighted:bg-orange-alpha-20">
                 {label}
               </span>
             </DropdownMenu.Item>

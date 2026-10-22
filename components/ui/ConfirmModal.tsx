@@ -55,7 +55,7 @@ const ConfirmModal = ({
           {/* 스크린리더에는 Modal의 숨김 제목(srTitle)으로 읽히므로 중복을 막습니다. */}
           <p
             aria-hidden="true"
-            className="text-sm/5 font-semibold tracking-[-0.03em] text-grayscale-800 md:text-xl/7.5"
+            className="text-sm/5 font-semibold tracking-[-0.03em] text-foreground md:text-xl/7.5"
           >
             {title}
           </p>

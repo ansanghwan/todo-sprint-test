@@ -61,7 +61,7 @@ const LINKED_CONTENT = {
 export const InEditor: Story = {
   name: '에디터에서 링크 넣기',
   render: () => (
-    <div className="mx-auto max-w-200 bg-white p-6">
+    <div className="mx-auto max-w-200 bg-white-section p-6">
       <NoteEditor
         value={LINKED_CONTENT}
         placeholder="이 곳을 통해 노트 작성을 시작해주세요"

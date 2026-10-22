@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
  */
 const modalVariants = cva(
   [
-    'fixed z-50 flex flex-col bg-white',
+    'fixed z-50 flex flex-col bg-white-section text-foreground',
     'focus:outline-none',
     // 시안에 없는 부분: 내용이 화면보다 길어질 때를 위한 스크롤 처리
     'max-h-dvh overflow-y-auto md:max-h-[calc(100dvh-4rem)]',

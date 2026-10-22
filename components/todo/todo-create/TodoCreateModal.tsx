@@ -139,7 +139,7 @@ const TodoCreateDialog = ({
         className="overflow-hidden"
       >
         {/* 스크롤을 패딩 안쪽에 두어 둥근 모서리 밖으로 나오지 않게 합니다. */}
-        <div className="-m-1 min-h-0 scrollbar-thin overflow-y-auto overscroll-contain p-1 pr-2">
+        <div className="-m-1 min-h-0 scrollbar-thin overflow-y-auto overscroll-contain p-1 pr-2 text-foreground">
           <form
             noValidate
             // 제출 시점에 handleSubmit을 호출해 onSubmit 내부의 ref 변경과 렌더를 분리합니다.

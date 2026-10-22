@@ -20,7 +20,7 @@ const TodosHeader = ({ params }: TodosHeaderProps) => {
 
   return (
     <h1 className="sr-only text-xl/7.5 font-semibold tracking-[-0.03em] md:not-sr-only md:flex md:gap-2 md:px-2 lg:text-2xl/8">
-      <span className="text-black">{t('allTodos')}</span>{' '}
+      <span className="text-foreground">{t('allTodos')}</span>{' '}
       {totalCount !== undefined && (
         <span className="text-orange-600">{totalCount}</span>
       )}

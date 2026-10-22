@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import ButtonIcon from './ButtonIcon';
 
 const styles = cva(
-  'relative inline-flex shrink-0 items-center justify-center rounded-full border border-solid bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed',
+  'relative inline-flex shrink-0 items-center justify-center rounded-full border border-solid bg-white-section focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed',
   {
     variants: {
       icon: {

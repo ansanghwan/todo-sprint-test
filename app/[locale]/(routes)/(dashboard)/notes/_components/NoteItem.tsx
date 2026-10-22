@@ -26,7 +26,7 @@ export default function NoteItem({
   return (
     <div
       className={
-        'relative mt-4 box-border flex flex-col overflow-hidden rounded-3xl bg-white px-9.5 pt-7 pb-8'
+        'relative mt-4 box-border flex flex-col overflow-hidden rounded-3xl bg-white-section px-9.5 pt-7 pb-8'
       }
     >
       <div className={'flex flex-row items-center justify-between'}>

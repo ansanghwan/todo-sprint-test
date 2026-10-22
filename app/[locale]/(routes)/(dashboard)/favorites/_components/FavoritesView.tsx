@@ -31,7 +31,7 @@ const FavoritesView = () => {
         </div>
         <Tabs.Content
           value={status}
-          className="flex min-h-160 flex-col gap-4 rounded-3xl bg-white p-4 focus-visible:outline-2 focus-visible:outline-orange-600 md:gap-5 md:rounded-4xl md:p-8"
+          className="flex min-h-160 flex-col gap-4 rounded-3xl bg-white-section p-4 focus-visible:outline-2 focus-visible:outline-orange-600 md:gap-5 md:rounded-4xl md:p-8"
         >
           <FavoriteGoalFilter value={goalId} onChange={setGoalId} />
           <FavoriteTodoList status={status} goalId={goalId} />

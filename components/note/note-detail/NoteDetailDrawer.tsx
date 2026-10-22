@@ -74,7 +74,7 @@ const NoteDetailDialog = ({
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60" />
         <Dialog.Content
           aria-describedby={undefined}
-          className="fixed inset-0 z-50 flex scrollbar-thin flex-col gap-6 overflow-y-auto overscroll-contain bg-white px-5 py-6 focus:outline-none md:p-10 lg:left-auto lg:w-200 lg:px-10 lg:py-12"
+          className="fixed inset-0 z-50 flex scrollbar-thin flex-col gap-6 overflow-y-auto overscroll-contain bg-white-section px-5 py-6 focus:outline-none md:p-10 lg:left-auto lg:w-200 lg:px-10 lg:py-12"
         >
           <ModalHeader className="items-start gap-2">
             {note ? (
@@ -137,9 +137,7 @@ const NoteDetailDialog = ({
 
           {!note && isError && (
             <div className="flex flex-col items-center gap-4 py-10">
-              <p className="text-sm text-grayscale-500">
-                {t('fetchNoteError')}
-              </p>
+              <p className="text-sm text-muted">{t('fetchNoteError')}</p>
               <Button
                 variant="neutral"
                 size="sm"

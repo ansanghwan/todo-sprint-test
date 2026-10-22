@@ -27,13 +27,13 @@ const TodoDetailNote = ({ noteId, onOpen }: TodoDetailNoteProps) => {
 
   return (
     <section className="flex flex-col gap-2">
-      <h3 className="text-sm/5 font-semibold tracking-[-0.03em] text-grayscale-700 md:text-base/6">
+      <h3 className="text-sm/5 font-semibold tracking-[-0.03em] text-foreground md:text-base/6">
         {t('writtenNotes')}
       </h3>
       <button
         type="button"
         onClick={() => onOpen(noteId)}
-        className="flex items-center gap-2 rounded-2xl border border-grayscale-200 bg-white p-4 text-left focus-visible:outline-2 focus-visible:outline-orange-600"
+        className="flex items-center gap-2 rounded-2xl border border-subtle bg-white-section p-4 text-left focus-visible:outline-2 focus-visible:outline-orange-600"
       >
         <Image
           src="/icons/img_note.svg"
@@ -42,7 +42,7 @@ const TodoDetailNote = ({ noteId, onOpen }: TodoDetailNoteProps) => {
           height={32}
           className="size-8 shrink-0"
         />
-        <span className="min-w-0 flex-1 truncate text-base/6 font-medium text-grayscale-700">
+        <span className="min-w-0 flex-1 truncate text-base/6 font-medium text-foreground">
           {note?.title ?? t('viewNote')}
         </span>
         <span

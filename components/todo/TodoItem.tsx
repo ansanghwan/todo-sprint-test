@@ -45,7 +45,7 @@ const itemVariants = cva('flex w-full items-center', {
     // 대시보드 목표별 할 일·목표 상세에 이미 쓰는 배경 강조를 따릅니다.
     // 흰색 스타일은 주황 카드 위에 놓여 Figma에 hover 상태가 없으므로 적용하지 않습니다.
     style: {
-      todo: 'rounded-lg transition-colors focus-within:bg-list-hover hover:bg-list-hover',
+      todo: 'rounded-lg transition-colors focus-within:bg-list-hover hover:bg-list-hover focus-within:[&>button:nth-of-type(2)]:text-orange-600 hover:[&>button:nth-of-type(2)]:text-orange-600',
       white: '',
     },
   },
@@ -61,8 +61,8 @@ const titleVariants = cva(
         small: 'text-sm lg:text-base',
       },
       done: {
-        true: 'text-grayscale-500',
-        false: 'text-grayscale-800',
+        true: 'text-muted',
+        false: 'text-foreground',
       },
       style: {
         todo: '',

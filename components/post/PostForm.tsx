@@ -74,7 +74,7 @@ export default function PostForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className={'mx-auto my-0 max-w-3xl items-center bg-grayscale-100'}>
+      <div className={'mx-auto my-0 max-w-3xl items-center'}>
         <div
           className={'mb-[1.4rem] flex flex-row items-center justify-between'}
         >
@@ -87,7 +87,7 @@ export default function PostForm({
             {submitLabel}
           </Button>
         </div>
-        <div className={'gap-2.5 rounded-4xl bg-white px-8.5 py-8'}>
+        <div className={'gap-2.5 rounded-4xl bg-white-section px-8.5 py-8'}>
           <Controller
             control={control}
             name="content"

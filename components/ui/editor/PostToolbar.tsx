@@ -26,13 +26,13 @@ export default function PostToolbar({
   });
 
   return (
-    <div className="flex items-center gap-3 rounded-full bg-gray-50 px-4 py-2 align-middle">
+    <div className="flex items-center gap-3 rounded-full bg-muted-section px-4 py-2 align-middle">
       <div className="flex flex-row flex-nowrap items-center gap-1.5">
         <button
           type="button"
           data-active={s.bold}
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_bold
@@ -42,7 +42,7 @@ export default function PostToolbar({
           type="button"
           data-active={s.italic}
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_italic
@@ -52,7 +52,7 @@ export default function PostToolbar({
           type="button"
           data-active={s.underline}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_underlined
@@ -65,7 +65,7 @@ export default function PostToolbar({
           type="button"
           data-active={s.left}
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_align_left
@@ -75,7 +75,7 @@ export default function PostToolbar({
           type="button"
           data-active={s.center}
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_align_center
@@ -85,7 +85,7 @@ export default function PostToolbar({
           type="button"
           data-active={s.right}
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_align_right
@@ -95,7 +95,7 @@ export default function PostToolbar({
           type="button"
           data-active={s.list}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_list_bulleted
@@ -107,7 +107,7 @@ export default function PostToolbar({
         type="button"
         aria-label="이미지 첨부"
         onClick={onImageClick}
-        className={'flex items-center align-middle text-grayscale-500'}
+        className={'flex items-center align-middle text-muted'}
       >
         <span className="material-symbols-outlined font-light!">image</span>
       </button>

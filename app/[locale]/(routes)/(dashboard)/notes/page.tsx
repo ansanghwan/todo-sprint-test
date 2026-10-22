@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 
 export default function Page() {
   return (
-    <div className={'bg-grayscale-100'}>
+    <div>
       <Suspense fallback={null}>
         <NotesView />
       </Suspense>

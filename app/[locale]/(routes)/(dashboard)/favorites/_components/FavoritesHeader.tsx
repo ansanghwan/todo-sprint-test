@@ -15,7 +15,7 @@ const FavoritesHeader = () => {
 
   return (
     <h1 className="sr-only text-xl/7.5 font-semibold tracking-[-0.03em] md:not-sr-only md:flex md:gap-2 md:px-2 lg:text-2xl/8">
-      <span className="text-black">{t('favoriteTodos')}</span>{' '}
+      <span className="text-foreground">{t('favoriteTodos')}</span>{' '}
       {data && <span className="text-orange-600">{data.totalCount}</span>}
     </h1>
   );

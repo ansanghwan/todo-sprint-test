@@ -27,7 +27,7 @@ const InfoRow = ({ icon, label, children }: InfoRowProps) => (
       {icon}
       {label}
     </dt>
-    <dd className="min-w-0 flex-1 text-sm/5 tracking-[-0.03em] wrap-break-word text-grayscale-700">
+    <dd className="min-w-0 flex-1 text-sm/5 tracking-[-0.03em] wrap-break-word text-foreground">
       {children}
     </dd>
   </div>
@@ -36,7 +36,7 @@ const InfoRow = ({ icon, label, children }: InfoRowProps) => (
 const MaterialIcon = ({ name }: { name: string }) => (
   <span
     aria-hidden="true"
-    className="material-symbols-outlined w-4.5 text-center text-[1.125rem]"
+    className="material-symbols-outlined mr-2 w-4.5 text-center text-[1.125rem]"
   >
     {name}
   </span>
@@ -97,7 +97,7 @@ const TodoDetailContent = ({ todo }: TodoDetailContentProps) => {
 
       {hasAttachments && (
         <section className="flex flex-col gap-2">
-          <h3 className="text-sm/5 font-semibold tracking-[-0.03em] text-grayscale-700 md:text-base/6">
+          <h3 className="text-sm/5 font-semibold tracking-[-0.03em] text-foreground md:text-base/6">
             {t('attachments')}
           </h3>
           <div className="flex flex-col gap-3">
@@ -106,7 +106,7 @@ const TodoDetailContent = ({ todo }: TodoDetailContentProps) => {
                 href={todo.linkUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-1 text-base/6 tracking-[-0.02em] break-all text-grayscale-700 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-orange-600"
+                className="flex items-start gap-1 text-base/6 tracking-[-0.02em] break-all text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-orange-600"
               >
                 <span
                   aria-hidden="true"

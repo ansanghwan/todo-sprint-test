@@ -123,7 +123,7 @@ const GoalSelectField = ({
           <Select.Content
             position="popper"
             sideOffset={4}
-            className="z-50 max-h-65 w-(--radix-select-trigger-width) overflow-hidden rounded-2xl bg-white shadow-md"
+            className="z-50 max-h-65 w-(--radix-select-trigger-width) overflow-hidden rounded-2xl bg-white-section shadow-md"
           >
             <Select.Viewport>
               {options.map((goal) => (
@@ -132,7 +132,7 @@ const GoalSelectField = ({
                   value={String(goal.id)}
                   className="group cursor-pointer p-1.5 outline-none"
                 >
-                  <span className="block truncate rounded-xl p-2 text-base/6 font-medium text-grayscale-700 group-data-highlighted:bg-orange-200">
+                  <span className="block truncate rounded-xl p-2 text-base/6 font-medium group-data-highlighted:bg-orange-200 dark:group-data-highlighted:bg-orange-alpha-20">
                     <Select.ItemText>{goal.title}</Select.ItemText>
                   </span>
                 </Select.Item>

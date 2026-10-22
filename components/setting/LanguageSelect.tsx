@@ -56,7 +56,7 @@ export default function LanguageSelect({
                 value={locale}
                 className="group cursor-pointer p-1.5 outline-none"
               >
-                <span className="block rounded-xl p-2 text-sm/5 font-medium text-foreground group-data-highlighted:bg-orange-200">
+                <span className="block rounded-xl p-2 text-sm/5 font-medium text-foreground group-data-highlighted:bg-orange-200 group-data-highlighted:text-orange-600">
                   <Select.ItemText>{LANGUAGE_LABELS[locale]}</Select.ItemText>
                 </span>
               </Select.Item>

@@ -16,7 +16,7 @@ const FormLabel = ({
 }: FormLabelProps) => (
   <label
     className={cn(
-      'text-sm/5 font-semibold text-grayscale-700 md:text-base/6',
+      'text-sm/5 font-semibold text-foreground md:text-base/6',
       className,
     )}
     {...props}
