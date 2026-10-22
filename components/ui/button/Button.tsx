@@ -10,7 +10,7 @@ const buttonVariants = cva(
         primary:
           'border-transparent bg-orange-500 text-white enabled:hover:bg-orange-600 disabled:bg-[#bbb]',
         outline:
-          'border-orange-500 bg-transparent text-orange-600 enabled:hover:border-orange-600 disabled:border-[#bbb] disabled:text-[#bbb]',
+          'border-orange-500 bg-transparent text-orange-600 enabled:hover:border-orange-600 disabled:border-[#bbb] disabled:text-[#bbb] dark:enabled:border-orange-400 dark:enabled:text-orange-300 dark:enabled:hover:border-orange-300 dark:enabled:hover:text-orange-200',
         neutral:
           'border-[#ccc] bg-transparent text-grayscale-500 enabled:hover:border-[#bbb] enabled:hover:text-grayscale-600 disabled:border-[#ccc] disabled:text-[#bbb]',
       },
