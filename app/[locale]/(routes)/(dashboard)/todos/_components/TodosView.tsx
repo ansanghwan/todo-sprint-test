@@ -50,7 +50,7 @@ const TodosView = ({ noteActions }: TodosViewProps) => {
         </div>
         <Tabs.Content
           value={status}
-          className="flex min-h-160 flex-col rounded-3xl bg-white p-4 focus-visible:outline-2 focus-visible:outline-orange-600 md:rounded-4xl md:p-8"
+          className="flex min-h-160 flex-col rounded-3xl bg-white-section p-4 focus-visible:outline-2 focus-visible:outline-orange-600 md:rounded-4xl md:p-8"
         >
           <TodoList params={params} noteActions={noteActions} />
         </Tabs.Content>

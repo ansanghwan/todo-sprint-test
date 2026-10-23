@@ -1,9 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { AxiosAdapter, InternalAxiosRequestConfig } from 'axios';
 import { Suspense } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import Toaster, { toast } from '@/components/ui/toast/Toaster';
 import { api } from '@/lib/api/client-fetcher';
 import { uploadImage } from '@/lib/api/images';
 import TestProviders from '@/test/TestProviders';
@@ -14,6 +15,9 @@ vi.mock('@/lib/api/images', () => ({ uploadImage: vi.fn() }));
 const originalAdapter = api.defaults.adapter;
 afterEach(() => {
   api.defaults.adapter = originalAdapter;
+  act(() => {
+    toast.dismiss();
+  });
 });
 
 const me = {
@@ -48,9 +52,12 @@ const replyToUserRequests = ({
 
 const renderForm = () =>
   render(
-    <Suspense fallback={null}>
-      <ProfileForm />
-    </Suspense>,
+    <>
+      <Suspense fallback={null}>
+        <ProfileForm />
+      </Suspense>
+      <Toaster />
+    </>,
     { wrapper: TestProviders },
   );
 
@@ -96,6 +103,7 @@ describe('ProfileForm', () => {
     });
     expect(patch.url).toBe('/users/me');
     expect(JSON.parse(patch.data)).toEqual({ name: '새이름' });
+    expect(await screen.findByText('저장되었습니다.')).toBeInTheDocument();
   });
 
   it('이미지를 고르면 저장할 때 올리고, 받은 URL만 보낸다', async () => {

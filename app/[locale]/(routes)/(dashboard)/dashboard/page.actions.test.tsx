@@ -27,6 +27,11 @@ import { toast } from '@/components/ui/toast/Toaster';
 import type { TodoCreateModalProps } from '@/components/todo/todo-create/TodoCreateModal';
 import Dashboard from './page';
 
+// 노트 작성(FN-TD-12)이 라우터로 이동하므로 useRouter만 대신하고 Link는 그대로 씁니다.
+vi.mock('@/i18n/navigation', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/i18n/navigation')>()),
+  useRouter: () => ({ push: vi.fn() }),
+}));
 vi.mock('@/lib/api/user', () => ({
   getMe: vi.fn().mockResolvedValue({ name: '상환', email: 'test@example.com' }),
 }));
@@ -235,11 +240,11 @@ describe('대시보드 공용 기능 연결', () => {
   });
   it('찜 버튼은 서버에 저장하고 중복 표시된 항목도 갱신한다', async () => {
     const user = await setup();
-    await user.click(screen.getAllByRole('button', { name: /찜/ })[0]);
+    await user.click(screen.getAllByRole('button', { name: /대표 기록/ })[0]);
     await waitFor(() => expect(addTodoFavorite).toHaveBeenCalledWith(1));
     await waitFor(() =>
       screen
-        .getAllByRole('button', { name: /찜/ })
+        .getAllByRole('button', { name: /대표 기록/ })
         .forEach((button) =>
           expect(button).toHaveAttribute('aria-pressed', 'true'),
         ),
@@ -265,7 +270,7 @@ it('실제 사용자명을 PC 제목과 진행률 카드에 표시한다', async
     </TestProviders>,
   );
   expect(
-    await screen.findByRole('heading', { name: '상환님의 대시보드' }),
+    await screen.findByRole('heading', { name: '상환님의 작업대' }),
   ).toBeInTheDocument();
   expect(await screen.findByText('상환님의 진행도는')).toBeInTheDocument();
 });

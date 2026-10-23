@@ -79,7 +79,7 @@ const DueDateField = ({
             align="start"
             sideOffset={4}
             collisionPadding={16}
-            className="z-50 w-82 max-w-(--radix-popover-content-available-width) rounded-2xl bg-white p-6 shadow-md outline-none"
+            className="z-50 w-82 max-w-(--radix-popover-content-available-width) rounded-2xl bg-white-section p-6 shadow-md outline-none"
           >
             <DueDatePicker
               value={value}

@@ -11,6 +11,9 @@ import TestProviders from '@/test/TestProviders';
 import { mockTodosApi } from '@/test/todoMocks';
 import TodosView from './TodosView';
 
+// 할 일 목록의 노트 작성(FN-TD-12)이 라우터로 이동하므로 테스트에서는 라우터를 대신합니다.
+vi.mock('@/i18n/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 /**
  * 통합 검증: API 모듈을 가짜로 바꾸지 않고, Storybook과 같은 mock 서버(mockTodosApi)에
  * 실제 화면(TodosView + 생성 모달)을 붙여 목록 → 생성 → 목록 갱신 흐름을 확인합니다.
@@ -59,7 +62,7 @@ const setup = (options: Partial<Parameters<typeof mockTodosApi>[0]> = {}) => {
 };
 
 const heading = (count: number) =>
-  screen.findByRole('heading', { name: `모든 할 일 ${count}` });
+  screen.findByRole('heading', { name: `브릭 로그 ${count}` });
 const modal = () => screen.getByRole('dialog', { name: '할 일 생성' });
 const firstTodoTitle = () =>
   within(screen.getAllByRole('list')[0]).getAllByRole('listitem')[0];
@@ -72,7 +75,7 @@ const openModal = async (user: UserEvent) => {
 const fillRequired = async (user: UserEvent, title: string) => {
   await user.click(within(modal()).getByRole('textbox', { name: '제목' }));
   await user.paste(title);
-  await user.click(within(modal()).getByRole('combobox', { name: '목표' }));
+  await user.click(within(modal()).getByRole('combobox', { name: '프로젝트' }));
   await user.click((await screen.findAllByRole('option'))[1]);
   await user.click(within(modal()).getByRole('button', { name: /^마감기한/ }));
   const grid = await screen.findByRole('grid');
@@ -165,7 +168,9 @@ describe(
       await heading(12);
       await openModal(user);
 
-      await user.click(within(modal()).getByRole('combobox', { name: '목표' }));
+      await user.click(
+        within(modal()).getByRole('combobox', { name: '프로젝트' }),
+      );
       expect(await screen.findAllByRole('option')).toHaveLength(10);
 
       await act(async () => triggerIntersect());
@@ -200,7 +205,7 @@ describe(
         within(modal()).getByRole('textbox', { name: '제목' }),
       ).toHaveValue('실패할 할 일');
       expect(
-        screen.getByRole('heading', { name: '모든 할 일 12', hidden: true }),
+        screen.getByRole('heading', { name: '브릭 로그 12', hidden: true }),
       ).toBeInTheDocument();
     });
 

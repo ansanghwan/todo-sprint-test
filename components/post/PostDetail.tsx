@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import usePostDetail from '@/hooks/post/usePostDetail';
 import { formatUtcDateToYmd } from '@/lib/formatter';
 import PostActions from './PostActions';
@@ -12,6 +13,7 @@ interface PostDetailProps {
 }
 
 const PostDetail = ({ postId }: PostDetailProps) => {
+  const t = useTranslations('Post');
   const { id, title, content, image, writer, createdAt, viewCount } =
     usePostDetail(postId);
 
@@ -39,7 +41,7 @@ const PostDetail = ({ postId }: PostDetailProps) => {
           <div className="relative size-37.5 overflow-hidden rounded-[1.25rem] border border-subtle md:size-58 md:rounded-3xl">
             <Image
               src={image}
-              alt={`${title} 첨부 이미지`}
+              alt={t('imageAlt', { title })}
               fill
               sizes="(min-width: 46.5rem) 232px, 150px"
               className="object-cover"
@@ -50,7 +52,7 @@ const PostDetail = ({ postId }: PostDetailProps) => {
       <p className="flex items-center gap-0.5 text-xs text-subtle md:gap-1 md:text-sm">
         <time dateTime={createdAt}>{formatUtcDateToYmd(createdAt)}</time>
         <span>·</span>
-        <span>조회 {viewCount}</span>
+        <span>{t('views', { count: viewCount })}</span>
       </p>
     </article>
   );

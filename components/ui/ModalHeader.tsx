@@ -33,7 +33,7 @@ const ModalHeader = ({ children, className, actions }: ModalHeaderProps) => {
 
   return (
     <div className={cn('flex w-full items-center justify-between', className)}>
-      <Dialog.Title className="flex items-center gap-2 text-xl/7.5 font-semibold tracking-[-0.03em] text-grayscale-800">
+      <Dialog.Title className="flex items-center gap-2 text-xl/7.5 font-semibold tracking-[-0.03em]">
         {children}
       </Dialog.Title>
       {actions ? (

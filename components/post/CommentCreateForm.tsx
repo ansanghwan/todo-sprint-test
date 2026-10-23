@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState, type SubmitEvent } from 'react';
 import Button from '@/components/ui/button/Button';
 import { toast } from '@/components/ui/toast/Toaster';
@@ -11,6 +12,7 @@ interface CommentCreateFormProps {
 }
 
 const CommentCreateForm = ({ postId }: CommentCreateFormProps) => {
+  const t = useTranslations('Post');
   const [content, setContent] = useState('');
   const { createComment, isCreating } = useCreateComment(postId);
   const trimmedContent = content.trim();
@@ -19,7 +21,7 @@ const CommentCreateForm = ({ postId }: CommentCreateFormProps) => {
     event.preventDefault();
     createComment(trimmedContent, {
       onSuccess: () => setContent(''),
-      onError: () => toast.error('댓글을 등록하지 못했어요.'),
+      onError: () => toast.error(t('createCommentError')),
     });
   };
 
@@ -28,8 +30,8 @@ const CommentCreateForm = ({ postId }: CommentCreateFormProps) => {
       <CommentInput
         value={content}
         onChange={(event) => setContent(event.target.value)}
-        aria-label="댓글 입력"
-        placeholder="댓글을 입력해주세요."
+        aria-label={t('commentInput')}
+        placeholder={t('commentPlaceholder')}
         className="flex-1"
       />
       <Button
@@ -37,7 +39,7 @@ const CommentCreateForm = ({ postId }: CommentCreateFormProps) => {
         disabled={!trimmedContent || isCreating}
         className="w-16 px-0 md:w-20"
       >
-        등록
+        {t('submit')}
       </Button>
     </form>
   );

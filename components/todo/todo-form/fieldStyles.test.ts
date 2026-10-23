@@ -26,8 +26,8 @@ describe('fieldBoxVariants', () => {
   it('기본 상태는 회색 테두리이고 포커스·열림 상태에서 주황 테두리가 된다', () => {
     expect(classesOf()).toEqual(
       expect.arrayContaining([
-        'bg-white',
-        'border-grayscale-300',
+        'bg-input',
+        'border-input-border',
         'focus:border-orange-500',
         'focus-within:border-orange-500',
         'data-[state=open]:border-orange-500',

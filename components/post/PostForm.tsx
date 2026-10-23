@@ -44,7 +44,7 @@ export default function PostForm({
   isPending,
   onSubmit,
 }: PostFormProps) {
-  const t = useTranslations('Todo');
+  const t = useTranslations('Post');
   const {
     register,
     control,
@@ -66,7 +66,7 @@ export default function PostForm({
     event.target.value = ''; // 같은 파일을 다시 골라도 change가 나도록
     if (!file) return;
     if (!hasImageExtension(file.name)) {
-      toast.error('jpg, png, gif, webp, svg 이미지만 첨부할 수 있어요');
+      toast.error(t('imageExtensionInvalid'));
       return;
     }
     setValue('image', file, { shouldDirty: true });
@@ -74,7 +74,7 @@ export default function PostForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className={'mx-auto my-0 max-w-3xl items-center bg-grayscale-100'}>
+      <div className={'mx-auto my-0 max-w-3xl items-center'}>
         <div
           className={'mb-[1.4rem] flex flex-row items-center justify-between'}
         >
@@ -87,7 +87,7 @@ export default function PostForm({
             {submitLabel}
           </Button>
         </div>
-        <div className={'gap-2.5 rounded-4xl bg-white px-8.5 py-8'}>
+        <div className={'gap-2.5 rounded-4xl bg-white-section px-8.5 py-8'}>
           <Controller
             control={control}
             name="content"
@@ -133,20 +133,20 @@ export default function PostForm({
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
                         ref={previewRef}
-                        alt="첨부 이미지 미리보기"
+                        alt={t('imagePreview')}
                         className="rounded-xl"
                       />
                     ) : (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
                         src={image}
-                        alt="첨부 이미지"
+                        alt={t('attachedImage')}
                         className="rounded-xl"
                       />
                     )}
                     <button
                       type="button"
-                      aria-label="첨부 이미지 삭제"
+                      aria-label={t('removeImage')}
                       onClick={() =>
                         setValue('image', null, { shouldDirty: true })
                       }

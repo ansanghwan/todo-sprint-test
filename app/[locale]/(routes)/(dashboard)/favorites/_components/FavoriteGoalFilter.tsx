@@ -11,10 +11,10 @@ import { goalQueries } from '@/queries/goal';
 import type { FavoriteGoalFilterValue } from './filterFavoriteTodos';
 
 const ALL_VALUE = 'all';
-const STATUS_ROW_CLASS = 'px-3.5 py-3.5 text-sm/5 text-grayscale-500';
-const ITEM_CLASS = 'group cursor-pointer p-1.5 outline-none';
+const STATUS_ROW_CLASS = 'px-3.5 py-3.5 text-sm/5 text-muted';
+const ITEM_CLASS = 'group cursor-pointer p-1.5 outline-none ';
 const ITEM_TEXT_CLASS =
-  'block truncate rounded-xl p-2 text-base/6 font-medium text-grayscale-700 group-data-highlighted:bg-orange-200';
+  'block truncate rounded-xl p-2 text-base/6 font-medium text-foreground group-data-highlighted:bg-orange-200 dark:group-data-highlighted:bg-orange-alpha-20';
 
 interface FavoriteGoalFilterProps {
   value: FavoriteGoalFilterValue;
@@ -82,7 +82,7 @@ const FavoriteGoalFilter = ({ value, onChange }: FavoriteGoalFilterProps) => {
         </span>
         <Select.Icon
           aria-hidden="true"
-          className="material-symbols-outlined text-[1.5rem] text-grayscale-500"
+          className="material-symbols-outlined text-[1.5rem] text-muted"
         >
           keyboard_arrow_down
         </Select.Icon>
@@ -92,7 +92,7 @@ const FavoriteGoalFilter = ({ value, onChange }: FavoriteGoalFilterProps) => {
         <Select.Content
           position="popper"
           sideOffset={4}
-          className="z-50 max-h-65 w-(--radix-select-trigger-width) overflow-hidden rounded-2xl bg-white shadow-md"
+          className="z-50 max-h-65 w-(--radix-select-trigger-width) overflow-hidden rounded-2xl bg-white-section shadow-md"
         >
           <Select.Viewport>
             <Select.Item value={ALL_VALUE} className={ITEM_CLASS}>

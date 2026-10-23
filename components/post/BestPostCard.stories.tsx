@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import BestPostCard from './BestPostCard';
 import { createMockPosts } from '@/lib/test/fixtures/post';
+import IntlTestProvider from '@/test/IntlTestProvider';
 
 const [withImage, , withoutImage, , longTitle] = createMockPosts(5);
 
@@ -8,6 +9,13 @@ const meta = {
   title: 'Posts/BestPostCard',
   component: BestPostCard,
   parameters: { layout: 'centered' },
+  decorators: [
+    (Story) => (
+      <IntlTestProvider>
+        <Story />
+      </IntlTestProvider>
+    ),
+  ],
   args: { post: withImage },
 } satisfies Meta<typeof BestPostCard>;
 

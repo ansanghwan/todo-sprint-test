@@ -18,7 +18,8 @@ const withTodosPage: Decorator = (Story) => (
 const meta = {
   title: 'Todos/TodosView',
   component: TodosView,
-  parameters: { layout: 'fullscreen' },
+  // 노트 작성(FN-TD-12)이 라우터로 이동하므로 App Router 환경으로 렌더링합니다.
+  parameters: { layout: 'fullscreen', nextjs: { appDirectory: true } },
   decorators: [withTodosPage],
 } satisfies Meta<typeof TodosView>;
 

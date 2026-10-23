@@ -4,12 +4,16 @@ import userEvent from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import messages from '@/messages/ko.json';
-import { deleteNote, getNotes } from '@/lib/api/notes';
+import { deleteNote, getNote, getNotes } from '@/lib/api/notes';
 import { toast } from '@/components/ui/toast/Toaster';
 import type { Note, NoteList as NoteListResponse } from '@/types/api/note';
 import NoteList from '@/app/[locale]/(routes)/(dashboard)/notes/_components/NoteList';
 
-vi.mock('@/lib/api/notes', () => ({ getNotes: vi.fn(), deleteNote: vi.fn() }));
+vi.mock('@/lib/api/notes', () => ({
+  getNotes: vi.fn(),
+  getNote: vi.fn(),
+  deleteNote: vi.fn(),
+}));
 vi.mock('@/components/ui/toast/Toaster', () => ({ toast: { error: vi.fn() } }));
 
 const push = vi.fn();
@@ -97,7 +101,7 @@ describe('NoteList', () => {
     renderNoteList();
 
     expect(
-      await screen.findByText('아직 등록된 노트가 없어요'),
+      await screen.findByText('아직 남긴 작업 기록이 없어요'),
     ).toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
@@ -110,7 +114,7 @@ describe('NoteList', () => {
     renderNoteList();
 
     expect(
-      await screen.findByText('노트를 불러오지 못했어요.'),
+      await screen.findByText('작업 기록을 불러오지 못했어요.'),
     ).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '다시 시도' }));
@@ -182,7 +186,7 @@ describe('NoteList', () => {
       await user.click(screen.getByRole('menuitem', { name: '삭제하기' }));
 
       expect(
-        screen.getByRole('dialog', { name: '노트를 삭제하시겠어요?' }),
+        screen.getByRole('dialog', { name: '작업 기록을 삭제하시겠어요?' }),
       ).toBeInTheDocument();
       expect(mockedDeleteNote).not.toHaveBeenCalled();
     });
@@ -208,7 +212,9 @@ describe('NoteList', () => {
       await user.click(screen.getByRole('button', { name: '확인' }));
 
       await waitFor(() =>
-        expect(toast.error).toHaveBeenCalledWith('노트를 삭제하지 못했어요'),
+        expect(toast.error).toHaveBeenCalledWith(
+          '작업 기록을 삭제하지 못했어요',
+        ),
       );
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
@@ -240,7 +246,7 @@ describe('NoteList', () => {
       await user.click(screen.getByRole('menuitem', { name: '삭제하기' }));
 
       expect(
-        screen.getByRole('dialog', { name: '노트를 삭제하시겠어요?' }),
+        screen.getByRole('dialog', { name: '작업 기록을 삭제하시겠어요?' }),
       ).toBeInTheDocument();
       expect(mockedDeleteNote).not.toHaveBeenCalled();
     });
@@ -266,9 +272,46 @@ describe('NoteList', () => {
       await user.click(screen.getByRole('button', { name: '확인' }));
 
       await waitFor(() =>
-        expect(toast.error).toHaveBeenCalledWith('노트를 삭제하지 못했어요'),
+        expect(toast.error).toHaveBeenCalledWith(
+          '작업 기록을 삭제하지 못했어요',
+        ),
       );
       expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
+  });
+
+  describe('노트 상세 열기 (FN-NT-04)', () => {
+    const setup = async () => {
+      const user = userEvent.setup({ pointerEventsCheck: 0 });
+      const note = makeNote(7, 'API 설계 메모');
+      mockedGetNotes.mockResolvedValue(page([note], null));
+      vi.mocked(getNote).mockResolvedValue(note);
+      renderNoteList();
+      await screen.findByRole('button', { name: 'API 설계 메모' });
+      return user;
+    };
+
+    it('노트를 누르면 그 노트의 상세를 연다', async () => {
+      const user = await setup();
+
+      await user.click(screen.getByRole('button', { name: 'API 설계 메모' }));
+
+      expect(
+        await screen.findByRole('dialog', { name: /API 설계 메모/ }),
+      ).toBeInTheDocument();
+      expect(getNote).toHaveBeenCalledWith(7, expect.anything());
+    });
+
+    it('케밥은 상세를 열지 않고 메뉴만 연다', async () => {
+      const user = await setup();
+
+      await user.click(screen.getByRole('button', { name: '더보기' }));
+
+      expect(
+        screen.getByRole('menuitem', { name: '수정하기' }),
+      ).toBeInTheDocument();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(getNote).not.toHaveBeenCalled();
     });
   });
 });

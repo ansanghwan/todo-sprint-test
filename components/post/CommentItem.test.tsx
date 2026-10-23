@@ -6,6 +6,7 @@ import { toast } from '@/components/ui/toast/Toaster';
 import { deleteComment, updateComment } from '@/lib/api/comment';
 import { ApiError } from '@/lib/api/errors';
 import { userKeys } from '@/queries/user';
+import IntlTestProvider from '@/test/IntlTestProvider';
 import type { UserDto } from '@/types/api/user';
 import CommentItem from './CommentItem';
 
@@ -31,17 +32,19 @@ const renderComment = (writerId: number) => {
   });
   client.setQueryData(userKeys.me(), { id: MY_ID } as UserDto);
   render(
-    <QueryClientProvider client={client}>
-      <CommentItem
-        postId={5}
-        comment={{
-          id: 10,
-          content: CONTENT,
-          createdAt: '2026-02-16T10:00:00.000Z',
-          writer: { id: writerId, name: '고양이', image: null },
-        }}
-      />
-    </QueryClientProvider>,
+    <IntlTestProvider>
+      <QueryClientProvider client={client}>
+        <CommentItem
+          postId={5}
+          comment={{
+            id: 10,
+            content: CONTENT,
+            createdAt: '2026-02-16T10:00:00.000Z',
+            writer: { id: writerId, name: '고양이', image: null },
+          }}
+        />
+      </QueryClientProvider>
+    </IntlTestProvider>,
   );
 };
 

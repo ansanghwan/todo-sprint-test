@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { locale as rootLocale } from 'next/root-params';
 import { routing } from '@/i18n/routing';
+import ThemeProvider from '@/providers/ThemeProvider';
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Todo Sprint',
-  description: '할 일을 관리하는 Todo Sprint',
+  title: 'BrickByBrick',
+  description: '오늘 쌓은 하나의 할 일, 내일의 단단한 포트폴리오.',
 };
 
 export function generateStaticParams() {
@@ -29,7 +30,11 @@ export default async function RootLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
 
   return (
-    <html lang={locale} className={`${geistMono.variable} h-full antialiased`}>
+    <html
+      lang={locale}
+      className={`${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
       <head>
         <link
           rel="preconnect"
@@ -44,10 +49,12 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        <NextIntlClientProvider>
-          <QueryProvider>{children}</QueryProvider>
-          <Toaster />
-        </NextIntlClientProvider>
+        <ThemeProvider>
+          <NextIntlClientProvider>
+            <QueryProvider>{children}</QueryProvider>
+            <Toaster />
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

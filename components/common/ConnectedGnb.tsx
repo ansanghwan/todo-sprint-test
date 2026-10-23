@@ -87,7 +87,9 @@ export default function ConnectedGnb() {
       ? nextIntlTodo('myGoals', { name: userName })
       : nextIntlTodo('goal'),
     todos: nextIntlTodo('allTodos'),
-    calendar: nextIntlTodo('calendar'),
+    calendar: userName
+      ? nextIntlTodo('calendarTitle', { name: userName })
+      : nextIntlTodo('calendar'),
     posts: nextIntlTodo('community'),
     notes: nextIntlTodo('notes'),
     favorites: nextIntlTodo('favoriteTodos'),

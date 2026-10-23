@@ -1,6 +1,7 @@
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import type { PostDto } from '@/types/api/post';
-import { formatDateToRelativeTime } from '@/lib/formatter';
+import { getElapsedTime } from '@/lib/formatter';
 import CommentCount from './CommentCount';
 import WriterAvatar from './WriterAvatar';
 import { htmlToText } from '@/lib/htmlToText';
@@ -21,6 +22,7 @@ interface PostListItemProps {
 }
 
 const PostListItem = ({ post }: PostListItemProps) => {
+  const t = useTranslations('Post');
   const { title, content, image, writer, createdAt, viewCount, commentCount } =
     post;
 
@@ -41,10 +43,10 @@ const PostListItem = ({ post }: PostListItemProps) => {
             <span className="truncate">{writer.name}</span>
             <span>·</span>
             <time dateTime={createdAt} className="shrink-0">
-              {formatDateToRelativeTime(createdAt)}
+              {t('elapsedTime', getElapsedTime(createdAt))}
             </time>
             <span>·</span>
-            <span className="shrink-0">조회 {viewCount}</span>
+            <span className="shrink-0">{t('views', { count: viewCount })}</span>
             <span>·</span>
             <CommentCount count={commentCount} />
           </p>
@@ -54,7 +56,7 @@ const PostListItem = ({ post }: PostListItemProps) => {
         <div className="relative size-18 shrink-0 overflow-hidden rounded-xl border border-subtle md:size-30 md:rounded-2xl">
           <Image
             src={image}
-            alt={`${title} 첨부 이미지`}
+            alt={t('imageAlt', { title })}
             fill
             sizes="(min-width: 46.5rem) 120px, 72px"
             className="object-cover"

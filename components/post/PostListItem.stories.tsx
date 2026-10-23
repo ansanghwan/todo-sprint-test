@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { createMockPosts } from '@/lib/test/fixtures/post';
+import IntlTestProvider from '@/test/IntlTestProvider';
 import PostListItem from './PostListItem';
 
 const [, , withoutImage, longContent, longTitle] = createMockPosts(5);
@@ -8,6 +9,13 @@ const meta = {
   title: 'Posts/PostListItem',
   component: PostListItem,
   parameters: { layout: 'padded' },
+  decorators: [
+    (Story) => (
+      <IntlTestProvider>
+        <Story />
+      </IntlTestProvider>
+    ),
+  ],
   args: { post: longContent },
 } satisfies Meta<typeof PostListItem>;
 

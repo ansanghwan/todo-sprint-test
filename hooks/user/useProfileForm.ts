@@ -3,7 +3,6 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
-import { toast } from '@/components/ui/toast/Toaster';
 import useValidateOnIdle from '@/hooks/auth/useValidateOnIdle';
 import {
   profileFormSchema,
@@ -18,7 +17,16 @@ interface NameCheck {
   isAvailable: boolean;
 }
 
-const useProfileForm = (user: UserDto) => {
+interface ProfileFormEvents {
+  onSaved: () => void;
+  onSaveFailed: () => void;
+  onNameCheckFailed: () => void;
+}
+
+const useProfileForm = (
+  user: UserDto,
+  { onSaved, onSaveFailed, onNameCheckFailed }: ProfileFormEvents,
+) => {
   const t = useTranslations('MyInfo');
   const { updateProfile, isUpdating } = useUpdateProfile();
   const { checkNickname, isChecking } = useCheckNickname();
@@ -52,7 +60,7 @@ const useProfileForm = (user: UserDto) => {
     checkNickname(name, {
       onSuccess: ({ available }) =>
         setLastNameCheck({ name, isAvailable: available }),
-      onError: () => toast.error(t('nameCheckFailed')),
+      onError: onNameCheckFailed,
     });
 
   const submit = (values: ProfileFormValues) => {
@@ -66,9 +74,9 @@ const useProfileForm = (user: UserDto) => {
           reset({ name: updatedUser.name });
           setImage(null);
           setLastNameCheck(undefined);
-          toast.success(t('saved'));
+          onSaved();
         },
-        onError: () => toast.error(t('saveFailed')),
+        onError: onSaveFailed,
       },
     );
   };

@@ -13,20 +13,24 @@ interface PostEditFormProps {
 }
 
 export default function PostEditForm({ postId }: PostEditFormProps) {
-  const t = useTranslations('Todo');
+  const t = useTranslations('Post');
   const router = useRouter();
   const {
     data: post,
     isPending: isLoading,
     isError,
-  } = useQuery(postQueries.detail(postId));
+  } = useQuery({
+    ...postQueries.detail(postId),
+    // 상세 조회마다 조회수가 오르므로, 상세 화면에서 받아 둔 캐시가 있으면 다시 받지 않습니다.
+    refetchOnMount: false,
+  });
   const { mutateAsync: updatePost, isPending } = useMutation(
     postMutations.update(postId),
   );
 
   // ⚠️ 노트를 다 불러온 "뒤에" 폼을 그려야 에디터에 기존 내용이 들어갑니다.
-  if (isLoading) return <p>불러오는 중…</p>;
-  if (isError) return <p>게시글을 불러오지 못했어요.</p>;
+  if (isLoading) return <p>{t('loadingPost')}</p>;
+  if (isError) return <p>{t('fetchPostsError')}</p>;
 
   const handleSubmit = async ({ title, content, image }: PostFormValues) => {
     try {

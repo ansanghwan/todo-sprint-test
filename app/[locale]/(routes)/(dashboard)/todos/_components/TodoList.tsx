@@ -4,6 +4,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
+import NoteDetailDrawer from '@/components/note/note-detail/NoteDetailDrawer';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
 import TodoDetailModal from '@/components/todo/todo-detail/TodoDetailModal';
 import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
@@ -16,15 +17,13 @@ import Button from '@/components/ui/button/Button';
 import { toast } from '@/components/ui/toast/Toaster';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import useMediaQuery from '@/hooks/useMediaQuery';
+import { useRouter } from '@/i18n/navigation';
 import { todoQueries, type TodoListParams } from '@/queries/todo';
 import type { TodoDto } from '@/types/api/todo';
 import TodoListEmpty from './TodoListEmpty';
 
 // globals.css의 --breakpoint-md(744px)와 같은 값입니다.
 const TABLET_QUERY = '(min-width: 46.5rem)';
-
-// 노트 보기·작성(FN-TD-11, 12)은 노트 담당과 연결 방식을 확정한 뒤 noteActions로 받습니다.
-const noteNotConnected = () => {};
 
 interface TodoListProps {
   params: TodoListParams;
@@ -64,6 +63,13 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
   > | null>(null);
   const [editTodoId, setEditTodoId] = useState<number | null>(null);
   const [detailTodoId, setDetailTodoId] = useState<number | null>(null);
+  const [noteId, setNoteId] = useState<number | null>(null);
+  const router = useRouter();
+  // FN-TD-11: 노트 상세 Drawer, FN-TD-12: 할 일 ID를 넘겨 노트 작성 화면
+  const handleViewNote = noteActions?.onViewNote ?? setNoteId;
+  const handleCreateNote =
+    noteActions?.onCreateNote ??
+    ((todoId: number) => router.push(`/notes/write?todoId=${todoId}`));
 
   useEffect(() => {
     if (isError) {
@@ -116,8 +122,8 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
             className="transition-[opacity,translate] duration-300 ease-out motion-reduce:transition-none starting:translate-y-2 starting:opacity-0"
             {...actions}
             onOpenDetail={setDetailTodoId}
-            onViewNote={noteActions?.onViewNote ?? noteNotConnected}
-            onCreateNote={noteActions?.onCreateNote ?? noteNotConnected}
+            onViewNote={handleViewNote}
+            onCreateNote={handleCreateNote}
             kebabSlot={
               <TodoItemKebab
                 onEdit={() => setEditTodoId(todo.id)}
@@ -167,7 +173,13 @@ const TodoList = ({ params, noteActions }: TodoListProps) => {
           setDetailTodoId(null);
           setDeleteTarget(todo);
         }}
+        // FN-TD-43: 상세를 닫고 노트 상세를 엽니다.
+        onOpenNote={(id) => {
+          setDetailTodoId(null);
+          handleViewNote(id);
+        }}
       />
+      <NoteDetailDrawer noteId={noteId} onClose={() => setNoteId(null)} />
     </>
   );
 };

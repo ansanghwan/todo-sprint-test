@@ -8,20 +8,23 @@ const DEFAULT_STROKE_WIDTH = 12.1716;
 type ProgressChartProps = {
   progress: number;
   className?: string;
-  /** 카드 색에 맞는 원의 바탕색. 기본값은 대시보드 청록색입니다. */
+  /** 카드 색에 맞는 원의 바탕색. 기본값은 보조 Yellow 팔레트입니다. */
   trackColor?: string;
+  /** 진행선 색상. 생략하면 기존 흰색을 유지합니다. */
+  progressColor?: string;
   /** 92px viewBox 기준 선 두께. 바깥 지름은 유지합니다. */
   strokeWidth?: number;
 };
 
 /**
- * 진행률 값에 따라 흰색 원호를 애니메이션합니다.
+ * 진행률 값에 따라 진행 원호를 애니메이션합니다.
  * 실제 데이터 연동 시 progress에 0~100 사이의 숫자를 전달합니다.
  */
 export default function ProgressChart({
   progress,
   className,
-  trackColor = '#009D97',
+  trackColor = 'var(--color-blue-300)',
+  progressColor = 'white',
   strokeWidth = DEFAULT_STROKE_WIDTH,
 }: ProgressChartProps) {
   const radius = (92 - strokeWidth) / 2;
@@ -59,7 +62,7 @@ export default function ProgressChart({
           cx="46"
           cy="46"
           r={radius}
-          stroke="white"
+          stroke={progressColor}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={circumference}

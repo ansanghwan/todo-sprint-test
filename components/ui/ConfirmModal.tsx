@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/button/Button';
 import IcReport from '@/components/ui/icons/IcReport';
@@ -28,11 +29,12 @@ const ConfirmModal = ({
   onOpenChange,
   title,
   description,
-  cancelLabel = '취소',
-  confirmLabel = '확인',
+  cancelLabel,
+  confirmLabel,
   onConfirm,
   isPending = false,
 }: ConfirmModalProps) => {
+  const t = useTranslations('Common');
   const handleOpenChange = (nextIsOpen: boolean) => {
     if (isPending) {
       return;
@@ -53,7 +55,7 @@ const ConfirmModal = ({
           {/* 스크린리더에는 Modal의 숨김 제목(srTitle)으로 읽히므로 중복을 막습니다. */}
           <p
             aria-hidden="true"
-            className="text-sm/5 font-semibold tracking-[-0.03em] text-grayscale-800 md:text-xl/7.5"
+            className="text-sm/5 font-semibold tracking-[-0.03em] text-foreground md:text-xl/7.5"
           >
             {title}
           </p>
@@ -73,7 +75,7 @@ const ConfirmModal = ({
             disabled={isPending}
             onClick={() => handleOpenChange(false)}
           >
-            {cancelLabel}
+            {cancelLabel ?? t('cancel')}
           </Button>
           <Button
             variant="primary"
@@ -82,7 +84,7 @@ const ConfirmModal = ({
             disabled={isPending}
             onClick={onConfirm}
           >
-            {confirmLabel}
+            {confirmLabel ?? t('confirm')}
           </Button>
         </div>
       </div>

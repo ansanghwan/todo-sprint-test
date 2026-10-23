@@ -8,6 +8,7 @@ import type { GetNotesParams, Note } from '@/types/api/note';
 import { useRouter } from '@/i18n/navigation';
 import { useState } from 'react';
 import DeleteNoteModal from '@/app/[locale]/(routes)/(dashboard)/notes/_components/DeleteNoteModal';
+import NoteDetailDrawer from '@/components/note/note-detail/NoteDetailDrawer';
 
 type NoteListProps = Omit<GetNotesParams, 'cursor'>;
 
@@ -15,6 +16,7 @@ export default function NoteList(params: NoteListProps) {
   const t = useTranslations('Todo');
   const router = useRouter();
   const [deletingNote, setDeletingNote] = useState<Note | null>(null);
+  const [openNoteId, setOpenNoteId] = useState<number | null>(null);
   const {
     data,
     isPending,
@@ -34,11 +36,11 @@ export default function NoteList(params: NoteListProps) {
   if (isError) {
     return (
       <div className={'flex flex-col items-center gap-3 py-10'}>
-        <p>노트를 불러오지 못했어요.</p>
+        <p>작업 기록을 불러오지 못했어요.</p>
         <button
           type="button"
           onClick={() => refetch()}
-          className={'rounded-xl bg-white px-4 py-2 text-sm'}
+          className={'rounded-xl bg-white-section px-4 py-2 text-sm'}
         >
           다시 시도
         </button>
@@ -60,7 +62,7 @@ export default function NoteList(params: NoteListProps) {
           src="/images/no_note.svg"
           width={130}
           height={140}
-          alt="노트 아이콘"
+          alt="작업 기록 아이콘"
         />
         <p className={'mt-5'}>
           {params.search ? t('noSearchResults') : t('noNotes')}
@@ -80,6 +82,7 @@ export default function NoteList(params: NoteListProps) {
           <li key={`note-${note.id}`}>
             <NoteItem
               noteProps={note}
+              onOpen={() => setOpenNoteId(note.id)}
               onEdit={() => router.push(`/notes/edit?noteId=${note.id}`)}
               onDelete={() => setDeletingNote(note)}
             />
@@ -92,7 +95,7 @@ export default function NoteList(params: NoteListProps) {
             type="button"
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
-            className={'rounded-xl bg-white px-4 py-2 text-sm'}
+            className={'rounded-xl bg-white-section px-4 py-2 text-sm'}
           >
             {isFetchingNextPage ? '불러오는 중…' : '더 보기'}
           </button>
@@ -101,6 +104,10 @@ export default function NoteList(params: NoteListProps) {
       <DeleteNoteModal
         note={deletingNote}
         onClose={() => setDeletingNote(null)}
+      />
+      <NoteDetailDrawer
+        noteId={openNoteId}
+        onClose={() => setOpenNoteId(null)}
       />
     </>
   );

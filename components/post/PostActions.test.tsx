@@ -6,6 +6,7 @@ import { toast } from '@/components/ui/toast/Toaster';
 import { ApiError } from '@/lib/api/errors';
 import { deletePost } from '@/lib/api/post';
 import { userKeys } from '@/queries/user';
+import IntlTestProvider from '@/test/IntlTestProvider';
 import type { UserDto } from '@/types/api/user';
 import PostActions from './PostActions';
 
@@ -27,9 +28,11 @@ afterEach(() => {
 
 const renderActions = (writerId: number) =>
   render(
-    <QueryClientProvider client={new QueryClient()}>
-      <PostActions postId={5} writerId={writerId} />
-    </QueryClientProvider>,
+    <IntlTestProvider>
+      <QueryClientProvider client={new QueryClient()}>
+        <PostActions postId={5} writerId={writerId} />
+      </QueryClientProvider>
+    </IntlTestProvider>,
   );
 
 const confirmDelete = async () => {
@@ -44,12 +47,26 @@ describe('게시글 케밥 메뉴', () => {
     const client = new QueryClient();
     client.setQueryData(userKeys.me(), { id: 1 } as UserDto);
     render(
-      <QueryClientProvider client={client}>
-        <PostActions postId={5} writerId={2} />
-      </QueryClientProvider>,
+      <IntlTestProvider>
+        <QueryClientProvider client={client}>
+          <PostActions postId={5} writerId={2} />
+        </QueryClientProvider>
+      </IntlTestProvider>,
     );
 
     expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('수정하기를 고르면 수정 페이지로 이동한다', async () => {
+    renderActions(1);
+    const user = userEvent.setup();
+
+    await user.click(
+      await screen.findByRole('button', { name: '게시글 메뉴' }),
+    );
+    await user.click(screen.getByRole('menuitem', { name: '수정하기' }));
+
+    expect(router.push).toHaveBeenCalledWith('/posts/edit?postId=5');
   });
 
   it('삭제를 확인하면 DELETE 요청 후 목록으로 이동한다', async () => {

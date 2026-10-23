@@ -170,7 +170,7 @@ describe('TodoEditModal', { timeout: 20_000 }, () => {
       expect(statusRadio('TO DO')).toBeChecked();
       expect(statusRadio('DONE')).not.toBeChecked();
       expect(
-        within(modal()).getByRole('combobox', { name: '목표' }),
+        within(modal()).getByRole('combobox', { name: '프로젝트' }),
       ).toHaveTextContent('목표 1');
       expect(dueDateTrigger()).toHaveTextContent('2026. 10. 10');
       expect(within(modal()).getByText('공부')).toBeInTheDocument();
@@ -271,7 +271,7 @@ describe('TodoEditModal', { timeout: 20_000 }, () => {
         await within(modal()).findByText('제목은 30자 이내로 입력해주세요'),
       ).toBeInTheDocument();
       expect(
-        within(modal()).getByText('목표를 선택해주세요', { selector: 'p' }),
+        within(modal()).getByText('프로젝트를 선택해주세요', { selector: 'p' }),
       ).toBeInTheDocument();
       expect(
         within(modal()).getByText('마감기한을 선택해주세요', {

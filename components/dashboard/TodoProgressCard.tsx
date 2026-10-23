@@ -30,15 +30,19 @@ export default function TodoProgressCard({
         </h2>{' '}
       </div>
 
-      <div className="relative isolate aspect-[343/186] w-full overflow-hidden rounded-[1.75rem] bg-blue-200 shadow-[0_0.625rem_2.5rem_0_#00D4BE3D] before:pointer-events-none before:absolute before:top-[55%] before:right-0 before:z-0 before:block before:aspect-[218/154] before:w-[44%] before:bg-[url('/images/dashboard/bg-chart.svg')] before:bg-cover before:opacity-45 before:content-[''] md:aspect-auto md:h-[11.625rem] md:before:top-[41%] md:before:right-[0] lg:h-64 lg:rounded-[2.5rem] lg:before:top-[6.2rem] lg:before:w-[13.875rem]">
+      <div className="relative isolate aspect-[343/186] w-full overflow-hidden rounded-[1.75rem] bg-secondary-card-background shadow-[0_0.625rem_2.5rem_0_var(--secondary-card-shadow-color)] before:pointer-events-none before:absolute before:top-[43%] before:right-0 before:z-0 before:block before:aspect-[218/154] before:w-[44%] before:bg-[url('/images/dashboard/bg-chart.svg')] before:bg-cover before:opacity-45 before:content-[''] md:aspect-auto md:h-[11.625rem] md:before:top-[41%] md:before:right-[0] lg:h-64 lg:rounded-[2.5rem] lg:before:top-[6.2rem] lg:before:w-[13.875rem]">
         {/* 장식용 문어 일러스트는 ::before 배경 레이어로 처리합니다. */}
 
         {isLoading ? (
-          <DashboardLoading message={nextIntlDashboard('loadingProgress')} />
+          <DashboardLoading
+            message={nextIntlDashboard('loadingProgress')}
+            color="foreground"
+            className="text-secondary-card-foreground"
+          />
         ) : error ? (
           <div
             role="alert"
-            className="relative z-10 flex h-full items-center justify-center text-base font-semibold text-white"
+            className="relative z-10 flex h-full items-center justify-center text-base font-semibold text-secondary-card-foreground"
           >
             <p>{nextIntlDashboard('fetchProgressError')}</p>
           </div>
@@ -46,10 +50,11 @@ export default function TodoProgressCard({
           <div className="absolute top-1/2 left-0 z-10 flex w-full -translate-y-1/2 items-center gap-5 px-6 lg:gap-8 lg:px-10">
             <ProgressChart
               progress={progress}
+              progressColor="var(--secondary-card-foreground)"
               className="aspect-square w-[31.2%] shrink-0 lg:size-40 lg:w-40"
             />
 
-            <div className="min-w-0 text-white">
+            <div className="min-w-0 text-secondary-card-foreground">
               <p className="text-sm font-semibold lg:text-xl">
                 {userName
                   ? nextIntlDashboard('userProgress', { name: userName })

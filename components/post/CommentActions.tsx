@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import KebabMenu, {
@@ -9,10 +10,12 @@ import { toast } from '@/components/ui/toast/Toaster';
 import useDeleteComment from '@/hooks/post/useDeleteComment';
 import type { ApiHttpCategory } from '@/lib/api/errors';
 
-const DELETE_ERROR_MESSAGES: Record<ApiHttpCategory, string> = {
-  forbidden: '댓글을 삭제할 권한이 없어요.',
-  notFound: '이미 삭제된 댓글이에요.',
-  other: '댓글을 삭제하지 못했어요.',
+const DELETE_ERROR_KEYS: Record<ApiHttpCategory, string> = {
+  unauthorized: 'deleteCommentError',
+  forbidden: 'deleteCommentForbidden',
+  notFound: 'commentAlreadyDeleted',
+  conflict: 'deleteCommentError',
+  other: 'deleteCommentError',
 };
 
 interface CommentActionsProps {
@@ -22,6 +25,7 @@ interface CommentActionsProps {
 }
 
 const CommentActions = ({ postId, commentId, onEdit }: CommentActionsProps) => {
+  const t = useTranslations('Post');
   const { deleteComment, isDeleting } = useDeleteComment(postId);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -30,25 +34,25 @@ const CommentActions = ({ postId, commentId, onEdit }: CommentActionsProps) => {
       onSuccess: () => setIsDeleteModalOpen(false),
       onError: ({ httpCategory }) => {
         setIsDeleteModalOpen(false);
-        toast.error(DELETE_ERROR_MESSAGES[httpCategory]);
+        toast.error(t(DELETE_ERROR_KEYS[httpCategory]));
       },
     });
   };
 
   const menuItems: KebabMenuItem[] = [
-    { label: '수정하기', onSelect: onEdit },
-    { label: '삭제하기', onSelect: () => setIsDeleteModalOpen(true) },
+    { label: t('edit'), onSelect: onEdit },
+    { label: t('delete'), onSelect: () => setIsDeleteModalOpen(true) },
   ];
 
   return (
     <>
-      <KebabMenu ariaLabel="댓글 메뉴" items={menuItems} />
+      <KebabMenu ariaLabel={t('commentMenu')} items={menuItems} />
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
-        title="댓글을 삭제하시겠어요?"
-        description="삭제된 댓글은 복구할 수 없어요."
-        confirmLabel="삭제"
+        title={t('deleteCommentConfirm')}
+        description={t('deleteCommentWarning')}
+        confirmLabel={t('confirmDelete')}
         onConfirm={handleDelete}
         isPending={isDeleting}
       />

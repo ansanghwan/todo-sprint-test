@@ -3,7 +3,6 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { toast } from '@/components/ui/toast/Toaster';
 import useValidateOnIdle from '@/hooks/auth/useValidateOnIdle';
 import {
   passwordFormSchema,
@@ -11,7 +10,13 @@ import {
 } from '@/lib/user/myInfoFormSchema';
 import useChangePassword from './useChangePassword';
 
-const usePasswordForm = () => {
+interface PasswordFormEvents {
+  onChanged: () => void;
+  /** 현재 비밀번호 불일치 밖의 이유로 바꾸지 못했을 때 */
+  onChangeFailed: () => void;
+}
+
+const usePasswordForm = ({ onChanged, onChangeFailed }: PasswordFormEvents) => {
   const t = useTranslations('MyInfo');
   const { changePassword, isChanging } = useChangePassword();
   const [wrongPassword, setWrongPassword] = useState<string>();
@@ -55,7 +60,7 @@ const usePasswordForm = () => {
       {
         onSuccess: () => {
           reset();
-          toast.success(t('saved'));
+          onChanged();
         },
         onFailure: (reason) => {
           if (reason === 'wrongCurrentPassword') {
@@ -63,7 +68,7 @@ const usePasswordForm = () => {
             setError('currentPassword', { message: 'currentPasswordWrong' });
             return;
           }
-          toast.error(t('passwordChangeFailed'));
+          onChangeFailed();
         },
       },
     );

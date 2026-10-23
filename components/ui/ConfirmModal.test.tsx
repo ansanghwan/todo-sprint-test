@@ -1,7 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { render as rtlRender, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactElement } from 'react';
+import IntlTestProvider from '@/test/IntlTestProvider';
 
 import ConfirmModal from './ConfirmModal';
+
+const render = (ui: ReactElement) =>
+  rtlRender(ui, { wrapper: IntlTestProvider });
 
 const renderConfirmModal = (
   props: Partial<Parameters<typeof ConfirmModal>[0]> = {},
@@ -49,13 +54,15 @@ describe('ConfirmModal', () => {
       />,
     );
     expect(
-      screen.queryByText('삭제된 목표는 복구할 수 없습니다.'),
+      screen.queryByText('삭제된 프로젝트는 복구할 수 없습니다.'),
     ).not.toBeInTheDocument();
     unmount();
 
-    renderConfirmModal({ description: '삭제된 목표는 복구할 수 없습니다.' });
+    renderConfirmModal({
+      description: '삭제된 프로젝트는 복구할 수 없습니다.',
+    });
     expect(
-      screen.getByText('삭제된 목표는 복구할 수 없습니다.'),
+      screen.getByText('삭제된 프로젝트는 복구할 수 없습니다.'),
     ).toBeInTheDocument();
   });
 

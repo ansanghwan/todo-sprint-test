@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { toast } from '@/components/ui/toast/Toaster';
 import { getGoals } from '@/lib/api/goals';
+import { getNote } from '@/lib/api/notes';
 import {
   addTodoFavorite,
   deleteTodo,
@@ -16,7 +17,7 @@ import {
 import { installRadixDomMocks } from '@/test/domMocks';
 import IntlTestProvider from '@/test/IntlTestProvider';
 import TestProviders from '@/test/TestProviders';
-import { makeGoal, makeTodo } from '@/test/todoMocks';
+import { makeGoal, makeNote, makeTodo } from '@/test/todoMocks';
 import type { TodoDto } from '@/types/api/todo';
 import TodosView from '../../todos/_components/TodosView';
 import FavoritesView from './FavoritesView';
@@ -35,6 +36,7 @@ vi.mock('@/lib/api/todos', () => ({
   removeTodoFavorite: vi.fn(),
 }));
 vi.mock('@/lib/api/goals', () => ({ getGoals: vi.fn() }));
+vi.mock('@/lib/api/notes', () => ({ getNote: vi.fn() }));
 vi.mock('@/components/ui/toast/Toaster', () => ({
   toast: { error: vi.fn(), success: vi.fn() },
 }));
@@ -140,7 +142,7 @@ const itemOf = (title: string) =>
 
 const expectHeading = (count: number) =>
   expect(
-    screen.getByRole('heading', { name: `찜한 할 일 ${count}` }),
+    screen.getByRole('heading', { name: `대표 기록 ${count}` }),
   ).toBeInTheDocument();
 
 // 실패 뒤 재조회가 끝나지 않게 막아, 화면이 되돌아오는 것이 즉시 되돌리기 덕분인지 확인합니다.
@@ -148,16 +150,34 @@ const holdRefetch = () =>
   vi.mocked(getFavoriteTodos).mockImplementation(() => new Promise(() => {}));
 
 const chooseGoal = async (user: UserEvent, title: string) => {
-  await user.click(screen.getByRole('combobox', { name: '목표 필터' }));
+  await user.click(screen.getByRole('combobox', { name: '프로젝트 필터' }));
   await user.click(await screen.findByRole('option', { name: title }));
 };
 
 describe('찜한 할 일 화면', () => {
+  it('노트 보기는 그 할 일의 노트 상세를 연다 (FN-TD-11)', async () => {
+    serverFavorites[0] = favorite(1, { noteIds: [11] });
+    vi.mocked(getNote).mockResolvedValue(
+      makeNote(serverFavorites[0], { id: 11, title: '찜 1 노트' }),
+    );
+    const user = renderFavorites();
+    await screen.findByText('찜 1');
+
+    await user.click(
+      within(itemOf('찜 1')).getByRole('button', { name: '작업 기록 보기' }),
+    );
+
+    expect(
+      await screen.findByRole('dialog', { name: /찜 1 노트/ }),
+    ).toBeInTheDocument();
+    expect(getNote).toHaveBeenCalledWith(11, expect.anything());
+  });
+
   it('연필 버튼은 해당 할 일 ID로 노트 작성 화면을 연다', async () => {
     const user = renderFavorites();
     await screen.findByText('찜 1');
     await user.click(
-      within(itemOf('찜 1')).getByRole('button', { name: '노트 작성하기' }),
+      within(itemOf('찜 1')).getByRole('button', { name: '작업 기록 작성' }),
     );
     expect(push).toHaveBeenCalledWith('/notes/write?todoId=1');
   });
@@ -192,7 +212,7 @@ describe('찜한 할 일 화면', () => {
 
       expect(toast.error).toHaveBeenCalledWith('할 일을 불러오지 못했어요');
       expect(
-        screen.queryByText('아직 찜한 할 일이 없어요'),
+        screen.queryByText('아직 선택한 대표 기록이 없어요'),
       ).not.toBeInTheDocument();
       expect(await screen.findByText('찜 150')).toBeInTheDocument();
     });
@@ -202,7 +222,7 @@ describe('찜한 할 일 화면', () => {
       renderFavorites();
 
       expect(
-        await screen.findByText('아직 찜한 할 일이 없어요'),
+        await screen.findByText('아직 선택한 대표 기록이 없어요'),
       ).toBeInTheDocument();
       expectHeading(0);
     });
@@ -231,7 +251,7 @@ describe('찜한 할 일 화면', () => {
       await user.click(screen.getByRole('tab', { name: 'DONE' }));
       expect(visibleTitles()).toEqual(['찜 2']);
 
-      await chooseGoal(user, '전체 목표');
+      await chooseGoal(user, '전체 프로젝트');
       expect(visibleTitles()).toEqual(['찜 2']);
     });
 
@@ -241,7 +261,9 @@ describe('찜한 할 일 화면', () => {
 
       await chooseGoal(user, '찜 없는 목표');
 
-      expect(screen.getByText('아직 찜한 할 일이 없어요')).toBeInTheDocument();
+      expect(
+        screen.getByText('아직 선택한 대표 기록이 없어요'),
+      ).toBeInTheDocument();
     });
   });
 
@@ -263,7 +285,7 @@ describe('찜한 할 일 화면', () => {
       await screen.findByText('찜 1');
 
       await user.click(
-        within(itemOf('찜 1')).getByRole('button', { name: '찜' }),
+        within(itemOf('찜 1')).getByRole('button', { name: '대표 기록' }),
       );
 
       // 응답을 보내기 전입니다.
@@ -288,11 +310,13 @@ describe('찜한 할 일 화면', () => {
       holdRefetch();
 
       await user.click(
-        within(itemOf('찜 1')).getByRole('button', { name: '찜' }),
+        within(itemOf('찜 1')).getByRole('button', { name: '대표 기록' }),
       );
 
       await waitFor(() =>
-        expect(toast.error).toHaveBeenCalledWith('찜 상태를 바꾸지 못했어요'),
+        expect(toast.error).toHaveBeenCalledWith(
+          '대표 기록 상태를 바꾸지 못했어요',
+        ),
       );
       expect(visibleTitles()).toEqual(['찜 1', '찜 2', '찜 3', '찜 4']);
       expectHeading(4);
@@ -387,7 +411,7 @@ describe('찜한 할 일 화면', () => {
       rerender(renderScreen('todos'));
       await user.click(
         within(await screen.findByRole('listitem')).getByRole('button', {
-          name: '찜',
+          name: '대표 기록',
         }),
       );
       await waitFor(() => expect(addTodoFavorite).toHaveBeenCalledWith(9));

@@ -5,6 +5,7 @@ import { useId } from 'react';
 
 import Button from '@/components/ui/button/Button';
 import TextField from '@/components/ui/textfield/TextField';
+import { toast } from '@/components/ui/toast/Toaster';
 import useMyInfo from '@/hooks/user/useMyInfo';
 import useProfileForm from '@/hooks/user/useProfileForm';
 import { NAME_MAX_LENGTH } from '@/lib/auth/authFormSchema';
@@ -24,7 +25,11 @@ const ProfileForm = () => {
     selectImage,
     canSave,
     isSaving,
-  } = useProfileForm(user);
+  } = useProfileForm(user, {
+    onSaved: () => toast.success(t('saved')),
+    onSaveFailed: () => toast.error(t('saveFailed')),
+    onNameCheckFailed: () => toast.error(t('nameCheckFailed')),
+  });
   const nameMessageId = useId();
 
   return (

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { NextIntlClientProvider } from 'next-intl';
+import IntlTestProvider from '@/test/IntlTestProvider';
 import ClientSuspense from '@/components/boundaries/ClientSuspense';
 import { ApiError } from '@/lib/api/errors';
 import { createMockPosts } from '@/lib/test/fixtures/post';
@@ -73,7 +73,7 @@ const PostDetailPreview = ({
   isMine,
   isLoading = false,
 }: PostDetailPreviewProps) => (
-  <NextIntlClientProvider locale="ko" messages={{}}>
+  <IntlTestProvider>
     <QueryClientProvider client={createSeededClient(isMine)}>
       <div className="min-h-dvh bg-background p-4 md:p-6">
         <div className="mx-auto w-full max-w-3xl rounded-3xl bg-white-section px-5 py-6 md:rounded-4xl md:p-10 lg:p-14">
@@ -89,7 +89,7 @@ const PostDetailPreview = ({
         </div>
       </div>
     </QueryClientProvider>
-  </NextIntlClientProvider>
+  </IntlTestProvider>
 );
 
 const meta = {

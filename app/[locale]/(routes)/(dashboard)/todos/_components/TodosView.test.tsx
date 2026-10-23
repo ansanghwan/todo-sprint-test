@@ -7,6 +7,9 @@ import TestProviders from '@/test/TestProviders';
 import { makeTodo } from '@/test/todoMocks';
 import TodosView from './TodosView';
 
+// 할 일 목록의 노트 작성(FN-TD-12)이 라우터로 이동하므로 테스트에서는 라우터를 대신합니다.
+vi.mock('@/i18n/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 vi.mock('@/lib/api/todos', () => ({ getTodos: vi.fn(), createTodo: vi.fn() }));
 vi.mock('@/lib/api/goals', () => ({
   getGoals: vi.fn(() =>
@@ -119,7 +122,7 @@ describe('TodosView', () => {
         expect.any(AbortSignal),
       );
       expect(
-        screen.getByRole('heading', { name: '모든 할 일 1' }),
+        screen.getByRole('heading', { name: '브릭 로그 1' }),
       ).toBeInTheDocument();
     },
   );
@@ -209,7 +212,7 @@ describe('TodosView', () => {
       await screen.findByText('아직 등록한 할 일이 없어요'),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: '모든 할 일 0' }),
+      screen.getByRole('heading', { name: '브릭 로그 0' }),
     ).toBeInTheDocument();
   });
 
@@ -236,8 +239,8 @@ describe('TodosView', () => {
 
     const modal = await screen.findByRole('dialog', { name: '할 일 생성' });
     expect(
-      within(modal).getByRole('combobox', { name: '목표' }),
-    ).toHaveTextContent('목표를 선택해주세요');
+      within(modal).getByRole('combobox', { name: '프로젝트' }),
+    ).toHaveTextContent('프로젝트를 선택해주세요');
   });
 
   it('작성하지 않은 생성 모달은 취소를 누르면 바로 닫힌다', async () => {

@@ -11,6 +11,8 @@ import MetaRow from '@/components/note/MetaRow';
 import { formatUtcDateToYmd } from '@/lib/formatter';
 import { todoQueries } from '@/queries/todo';
 import { useQuery } from '@tanstack/react-query';
+import TagChip from '@/components/todo/todo-form/fields/TagChip';
+import { getTagColor } from '@/components/todo/todo-form/tagColors';
 
 interface NoteWriteFormProps {
   /** 노트를 연결할 할 일 ID (page.tsx에서 검사를 마친 값) */
@@ -27,7 +29,7 @@ export default function NoteWriteForm({ todoId }: NoteWriteFormProps) {
       { todoId, ...values },
       {
         onSuccess: () => {
-          toast.success('노트가 등록되었어요');
+          toast.success('작업 기록이 등록되었어요');
           router.push('/notes');
         },
         onError: (error) => toast.error(getCreateNoteErrorMessage(error)),
@@ -55,7 +57,19 @@ export default function NoteWriteForm({ todoId }: NoteWriteFormProps) {
             <TodoStatusChip isTodo={todo?.done} className="ml-1 shrink-0" />
           </MetaRow>
           <MetaRow icon="tag" label={t('tag')}>
-            태그들
+            {todo?.tags && todo.tags.length > 0 ? (
+              <ul className="flex flex-wrap gap-1">
+                {todo.tags.map((tag, index) => (
+                  <TagChip
+                    key={tag.id}
+                    label={tag.name}
+                    color={getTagColor(index)}
+                  />
+                ))}
+              </ul>
+            ) : (
+              '-'
+            )}
           </MetaRow>
         </>
       }
@@ -65,8 +79,9 @@ export default function NoteWriteForm({ todoId }: NoteWriteFormProps) {
 
 function getCreateNoteErrorMessage(error: Error) {
   if (error instanceof ApiError) {
-    if (error.status === 403) return '본인의 할 일에만 노트를 작성할 수 있어요';
+    if (error.status === 403)
+      return '본인의 할 일에만 작업 기록을 작성할 수 있어요';
     if (error.status === 404) return '할 일을 찾을 수 없어요';
   }
-  return '노트를 등록하지 못했어요. 잠시 후 다시 시도해주세요';
+  return '작업 기록을 등록하지 못했어요. 잠시 후 다시 시도해주세요';
 }

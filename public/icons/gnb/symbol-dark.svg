@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none" role="img" aria-labelledby="symbol-title">
+  <title id="symbol-title">BrickByBrick</title>
+  <g transform="translate(4.16 -0.96) scale(1.12)">
+  <path d="M32 7V29" stroke="#F2F2F2" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M33 7.5L45 13.5L33 19.5Z" fill="#F2F2F2"/>
+  <!-- Left foundation brick -->
+  <path d="M12 44L22 39L32 44L22 49Z" fill="#31557A"/>
+  <path d="M12 44L22 49V59L12 54Z" fill="#142A44"/>
+  <path d="M22 49L32 44V54L22 59Z" fill="#244361"/>
+  <!-- Upper brick -->
+  <path d="M22 31L32 26L42 31L32 36Z" fill="#FFD777"/>
+  <path d="M22 31L32 36V46L22 41Z" fill="#FFC857"/>
+  <path d="M32 36L42 31V41L32 46Z" fill="#F2AD30"/>
+  <!-- Right foundation brick -->
+  <path d="M32 44L42 39L52 44L42 49Z" fill="#FFA15D"/>
+  <path d="M32 44L42 49V59L32 54Z" fill="#FF8749"/>
+  <path d="M42 49L52 44V54L42 59Z" fill="#FF6B4A"/>
+  </g>
+</svg>

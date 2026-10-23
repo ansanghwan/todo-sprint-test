@@ -14,6 +14,9 @@ import { makeTodo } from '@/test/todoMocks';
 import type { TodoDto } from '@/types/api/todo';
 import TodosView from './TodosView';
 
+// 할 일 목록의 노트 작성(FN-TD-12)이 라우터로 이동하므로 테스트에서는 라우터를 대신합니다.
+vi.mock('@/i18n/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 vi.mock('@/lib/api/todos', () => ({
   getTodos: vi.fn(),
   updateTodo: vi.fn(),
@@ -83,7 +86,7 @@ const itemOf = (title: string) =>
 const doneCheckbox = (title: string) =>
   within(itemOf(title)).getByRole('checkbox', { name: '완료' });
 const favoriteButton = (title: string) =>
-  within(itemOf(title)).getByRole('button', { name: '찜' });
+  within(itemOf(title)).getByRole('button', { name: '대표 기록' });
 
 // 실패 뒤 재조회가 끝나지 않게 막아, 화면이 되돌아오는 것이 즉시 되돌리기 덕분인지 확인합니다.
 const holdRefetch = () =>
@@ -151,7 +154,9 @@ describe('할 일 아이템 상호작용', () => {
         'false',
       ),
     );
-    expect(toast.error).toHaveBeenCalledWith('찜 상태를 바꾸지 못했어요');
+    expect(toast.error).toHaveBeenCalledWith(
+      '대표 기록 상태를 바꾸지 못했어요',
+    );
   });
 
   it('링크 복사는 linkUrl을 클립보드에 넣고 완료 토스트를 띄운다', async () => {
@@ -187,7 +192,7 @@ describe('할 일 아이템 상호작용', () => {
       });
       await renderTodos();
       expect(
-        screen.getByRole('heading', { name: '모든 할 일 2' }),
+        screen.getByRole('heading', { name: '브릭 로그 2' }),
       ).toBeInTheDocument();
 
       const dialog = await openDeleteModal(user);
@@ -199,7 +204,7 @@ describe('할 일 아이템 상호작용', () => {
       expect(deleteTodo).toHaveBeenCalledWith(1);
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       expect(
-        screen.getByRole('heading', { name: '모든 할 일 1' }),
+        screen.getByRole('heading', { name: '브릭 로그 1' }),
       ).toBeInTheDocument();
     });
 

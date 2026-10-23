@@ -1,4 +1,4 @@
-import { infiniteQueryOptions } from '@tanstack/react-query';
+import { infiniteQueryOptions, useQueryClient } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -17,6 +17,15 @@ const PAGES: Page[] = [
 
 const getPage = (cursor?: number) =>
   Promise.resolve(cursor ? PAGES[1] : PAGES[0]);
+
+const renderAllPages = (fetchPage: (cursor?: number) => Promise<Page>) =>
+  renderHook(
+    () => ({
+      ...useAllPages(listOptions(fetchPage)),
+      client: useQueryClient(),
+    }),
+    { wrapper: QueryTestProvider },
+  );
 
 const listOptions = (fetchPage: (cursor?: number) => Promise<Page>) =>
   infiniteQueryOptions({
@@ -69,5 +78,47 @@ describe('useAllPages', () => {
 
     await waitFor(() => expect(result.current.pages).toEqual(PAGES));
     expect(result.current.isError).toBe(false);
+  });
+  it('이어 받는 중에 무효화돼 재조회가 겹쳐도 끝까지 받는다', async () => {
+    // 첫 2페이지 요청은 응답하지 않아, 무효화가 이어 받기 도중에 일어나게 합니다.
+    let isFirstNextPageRequest = true;
+    const fetchPage = vi.fn((cursor?: number) => {
+      if (cursor && isFirstNextPageRequest) {
+        isFirstNextPageRequest = false;
+        return new Promise<Page>(() => {});
+      }
+      return getPage(cursor);
+    });
+    const { result } = renderAllPages(fetchPage);
+    await waitFor(() => expect(fetchPage).toHaveBeenLastCalledWith(3));
+
+    // 생성·완료 토글처럼 이어 받는 도중에 목록 query가 무효화되는 경우입니다.
+    await act(() =>
+      result.current.client.invalidateQueries({ queryKey: ['items'] }),
+    );
+
+    await waitFor(() => expect(result.current.pages).toEqual(PAGES));
+    expect(result.current.isError).toBe(false);
+  });
+
+  it('다 받은 뒤 무효화되면 이전 pages를 유지한 채 전체를 다시 받는다', async () => {
+    const fetchPage = vi.fn(getPage);
+    const { result } = renderAllPages(fetchPage);
+    await waitFor(() => expect(result.current.pages).toEqual(PAGES));
+
+    const updatedPages: Page[] = [
+      { items: [1, 2], nextCursor: 3 },
+      { items: [3, 4], nextCursor: null },
+    ];
+    fetchPage.mockImplementation((cursor?: number) =>
+      Promise.resolve(cursor ? updatedPages[1] : updatedPages[0]),
+    );
+    act(() => {
+      void result.current.client.invalidateQueries({ queryKey: ['items'] });
+    });
+
+    // 재조회 중에도 달력이 비지 않도록 이전 pages를 그대로 둡니다.
+    expect(result.current.pages).toEqual(PAGES);
+    await waitFor(() => expect(result.current.pages).toEqual(updatedPages));
   });
 });

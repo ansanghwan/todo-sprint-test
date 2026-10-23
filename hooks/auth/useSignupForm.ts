@@ -3,8 +3,6 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-// TODO: [2026.10.02] hooks → components 방향 import. toast 함수를 lib/로 옮기기로 팀이 정하면 경로 교체
-import { toast } from '@/components/ui/toast/Toaster';
 import { useRouter } from '@/i18n/navigation';
 import {
   signupFormSchema,
@@ -13,7 +11,12 @@ import {
 import useSignup from './useSignup';
 import useValidateOnIdle from './useValidateOnIdle';
 
-const useSignupForm = () => {
+interface SignupFormEvents {
+  /** 이메일 중복(409) 밖의 이유로 가입하지 못했을 때 */
+  onSignupFailed: () => void;
+}
+
+const useSignupForm = ({ onSignupFailed }: SignupFormEvents) => {
   const t = useTranslations('Auth');
   const router = useRouter();
   const { signup, isSigningUp } = useSignup();
@@ -58,7 +61,7 @@ const useSignupForm = () => {
             setError('email', { message: 'emailTaken' });
             return;
           }
-          toast.error(t('signupFailed'));
+          onSignupFailed();
         },
       },
     );

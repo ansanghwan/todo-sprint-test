@@ -1,5 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
+import IntlTestProvider from '@/test/IntlTestProvider';
 import BestPostCard, { type BestPostCardData } from './BestPostCard';
 
 afterEach(cleanup);
@@ -16,13 +17,19 @@ const thumbnail = () => screen.queryByAltText(`${post.title} 첨부 이미지`);
 
 describe('BestPostCard', () => {
   it('이미지가 없으면 썸네일 영역을 표시하지 않는다', () => {
-    render(<BestPostCard post={post} />);
+    render(
+      <IntlTestProvider>
+        <BestPostCard post={post} />
+      </IntlTestProvider>,
+    );
     expect(thumbnail()).toBeNull();
   });
 
   it('이미지가 있으면 썸네일 1장을 표시한다', () => {
     render(
-      <BestPostCard post={{ ...post, image: 'https://cdn.test/a.png' }} />,
+      <IntlTestProvider>
+        <BestPostCard post={{ ...post, image: 'https://cdn.test/a.png' }} />
+      </IntlTestProvider>,
     );
     expect(thumbnail()).toBeInTheDocument();
   });

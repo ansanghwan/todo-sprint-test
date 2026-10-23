@@ -3,8 +3,6 @@ import { useTranslations } from 'next-intl';
 import type { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 
-// TODO: [2026.10.02] hooks → components 방향 import. toast 함수를 lib/로 옮기기로 팀이 정하면 경로 교체
-import { toast } from '@/components/ui/toast/Toaster';
 import { useRouter } from '@/i18n/navigation';
 import {
   loginFormSchema,
@@ -13,7 +11,12 @@ import {
 import useLogin from './useLogin';
 import useValidateOnIdle from './useValidateOnIdle';
 
-const useLoginForm = () => {
+interface LoginFormEvents {
+  /** 인증 실패(401) 밖의 이유로 로그인하지 못했을 때 */
+  onLoginFailed: () => void;
+}
+
+const useLoginForm = ({ onLoginFailed }: LoginFormEvents) => {
   const t = useTranslations('Auth');
   const router = useRouter();
   const { login, isLoggingIn } = useLogin();
@@ -42,7 +45,7 @@ const useLoginForm = () => {
           setError('root', { message: 'invalidCredentials' });
           return;
         }
-        toast.error(t('loginFailed'));
+        onLoginFailed();
       },
     });
   };

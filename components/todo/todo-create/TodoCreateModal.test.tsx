@@ -131,7 +131,7 @@ const tagInput = () =>
     hidden: true,
   });
 const goalTrigger = () =>
-  within(modal()).getByRole('combobox', { name: '목표' });
+  within(modal()).getByRole('combobox', { name: '프로젝트' });
 const dueDateTrigger = () =>
   within(modal()).getByRole('button', { name: /^마감기한/ });
 
@@ -414,7 +414,7 @@ describe('TodoCreateModal', { timeout: 20_000 }, () => {
 
       await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false));
       await waitFor(() => expect(titleInput()).toHaveValue(''));
-      expect(goalTrigger()).toHaveTextContent('목표를 선택해주세요');
+      expect(goalTrigger()).toHaveTextContent('프로젝트를 선택해주세요');
       expect(dueDateTrigger()).toHaveTextContent('날짜를 선택해주세요');
       expect(submitButton()).toBeDisabled();
     });

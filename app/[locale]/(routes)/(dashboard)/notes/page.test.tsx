@@ -69,7 +69,7 @@ describe('NotesPage', () => {
     renderPage();
 
     expect(
-      screen.getByRole('heading', { level: 2, name: '노트 모아보기' }),
+      screen.getByRole('heading', { level: 2, name: '작업 기록' }),
     ).toBeInTheDocument();
     await screen.findByRole('list');
     expect(screen.queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
@@ -126,7 +126,7 @@ describe('NotesPage', () => {
     expect(
       await screen.findByRole('heading', {
         level: 3,
-        name: '목표를 찾을 수 없어요',
+        name: '프로젝트를 찾을 수 없어요',
       }),
     ).toBeInTheDocument();
   });
@@ -134,10 +134,9 @@ describe('NotesPage', () => {
   it('노트 검색 입력창을 렌더링한다', () => {
     renderPage();
 
-    expect(screen.getByPlaceholderText('노트를 검색해주세요')).toHaveAttribute(
-      'type',
-      'search',
-    );
+    expect(
+      screen.getByPlaceholderText('작업 기록을 검색해주세요'),
+    ).toHaveAttribute('type', 'search');
   });
 
   it('API로 조회한 노트를 렌더링한다', async () => {
@@ -161,7 +160,7 @@ describe('NotesPage', () => {
     renderPage();
 
     expect(
-      await screen.findByText('아직 등록된 노트가 없어요'),
+      await screen.findByText('아직 남긴 작업 기록이 없어요'),
     ).toBeInTheDocument();
   });
 
@@ -184,7 +183,7 @@ describe('NotesPage', () => {
       expect.any(AbortSignal),
     );
     // 새로고침해도 검색창에 검색어가 채워져 있는지
-    expect(screen.getByPlaceholderText('노트를 검색해주세요')).toHaveValue(
+    expect(screen.getByPlaceholderText('작업 기록을 검색해주세요')).toHaveValue(
       'API',
     );
   });
@@ -205,7 +204,7 @@ describe('NotesPage', () => {
     renderPage();
 
     await user.type(
-      screen.getByPlaceholderText('노트를 검색해주세요'),
+      screen.getByPlaceholderText('작업 기록을 검색해주세요'),
       'API{Enter}',
     );
 

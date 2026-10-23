@@ -1,10 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import useBestPosts from '@/hooks/post/useBestPosts';
 import { Link } from '@/i18n/navigation';
 import BestPostCard from './BestPostCard';
 
 const BestPostList = () => {
+  const t = useTranslations('Post');
   const { posts, isEmpty } = useBestPosts();
 
   if (isEmpty) {
@@ -12,7 +14,7 @@ const BestPostList = () => {
   }
 
   return (
-    <section aria-label="인기 게시글">
+    <section aria-label={t('bestPosts')}>
       <ul className="flex gap-4 overflow-x-auto p-2 md:gap-6 lg:grid lg:grid-cols-3">
         {posts.map((post) => (
           <li key={post.id} className="flex">

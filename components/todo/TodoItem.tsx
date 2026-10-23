@@ -41,8 +41,15 @@ const itemVariants = cva('flex w-full items-center', {
       large: 'gap-2 px-2 py-2.5',
       small: 'gap-1.5 px-1 py-1.5',
     },
+    // FN-TD-08 hover 강조. 명세의 그림자 대신 공통 리스트 hover 배경과
+    // 대시보드 목표별 할 일·목표 상세에 이미 쓰는 배경 강조를 따릅니다.
+    // 흰색 스타일은 주황 카드 위에 놓여 Figma에 hover 상태가 없으므로 적용하지 않습니다.
+    style: {
+      todo: 'rounded-lg transition-colors focus-within:bg-list-hover hover:bg-list-hover focus-within:[&>button:nth-of-type(2)]:text-orange-600 hover:[&>button:nth-of-type(2)]:text-orange-600',
+      white: '',
+    },
   },
-  defaultVariants: { size: 'large' },
+  defaultVariants: { size: 'large', style: 'todo' },
 });
 
 const titleVariants = cva(
@@ -54,8 +61,8 @@ const titleVariants = cva(
         small: 'text-sm lg:text-base',
       },
       done: {
-        true: 'text-grayscale-500',
-        false: 'text-grayscale-800',
+        true: 'text-muted',
+        false: 'text-foreground',
       },
       style: {
         todo: '',
@@ -161,7 +168,7 @@ export default function TodoItem({
       : IconStarOutline;
 
   return (
-    <li className={cn(itemVariants({ size }), className)}>
+    <li className={cn(itemVariants({ size, style }), className)}>
       <button
         type="button"
         role="checkbox"

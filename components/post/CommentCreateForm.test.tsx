@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { toast } from '@/components/ui/toast/Toaster';
 import { ApiError } from '@/lib/api/errors';
 import { createComment } from '@/lib/api/comment';
+import IntlTestProvider from '@/test/IntlTestProvider';
 import CommentCreateForm from './CommentCreateForm';
 
 vi.mock('@/lib/api/comment', () => ({
@@ -22,7 +23,9 @@ afterEach(() => {
 const renderForm = () =>
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <CommentCreateForm postId={5} />
+      <IntlTestProvider>
+        <CommentCreateForm postId={5} />
+      </IntlTestProvider>
     </QueryClientProvider>,
   );
 

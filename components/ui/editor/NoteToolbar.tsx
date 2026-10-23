@@ -1,5 +1,15 @@
 import type { Editor } from '@tiptap/react';
 import { useEditorState } from '@tiptap/react';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+
+import {
+  applyEditorLink,
+  getEditorLinkTarget,
+  removeEditorLink,
+  type EditorLinkTarget,
+} from './editorLink';
+import LinkUploadModal from './LinkUploadModal';
 
 export default function NoteToolbar({ editor }: { editor: Editor }) {
   const s = useEditorState({
@@ -16,21 +26,34 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
     }),
   });
 
-  const setLink = () => {
-    const url = window.prompt('링크 주소');
-    if (url === null) return;
-    if (url === '') return editor.chain().focus().unsetLink().run();
-    editor.chain().focus().setLink({ href: url }).run();
+  const t = useTranslations('Todo');
+  // 팝업을 연 순간의 적용 위치. null이면 팝업이 닫힌 상태입니다.
+  const [linkTarget, setLinkTarget] = useState<EditorLinkTarget | null>(null);
+
+  const openLinkModal = () => setLinkTarget(getEditorLinkTarget(editor));
+
+  const handleLinkSubmit = (url: string) => {
+    if (linkTarget) {
+      applyEditorLink(editor, linkTarget, url);
+    }
+    setLinkTarget(null);
+  };
+
+  const handleLinkRemove = () => {
+    if (linkTarget) {
+      removeEditorLink(editor, linkTarget);
+    }
+    setLinkTarget(null);
   };
 
   return (
-    <div className="flex items-center gap-3 rounded-full bg-gray-50 px-4 py-2 align-middle">
+    <div className="flex items-center gap-3 rounded-full bg-muted-section px-4 py-2 align-middle">
       <div className="flex flex-row flex-nowrap items-center gap-1.5">
         <button
           type="button"
           data-active={s.bold}
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_bold
@@ -40,7 +63,7 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
           type="button"
           data-active={s.italic}
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_italic
@@ -50,7 +73,7 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
           type="button"
           data-active={s.underline}
           onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_underlined
@@ -63,7 +86,7 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
           type="button"
           data-active={s.left}
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_align_left
@@ -73,7 +96,7 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
           type="button"
           data-active={s.center}
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_align_center
@@ -83,7 +106,7 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
           type="button"
           data-active={s.right}
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_align_right
@@ -93,7 +116,7 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
           type="button"
           data-active={s.list}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={'flex items-center align-middle text-grayscale-500'}
+          className={'flex items-center align-middle text-muted'}
         >
           <span className="material-symbols-rounded font-light!">
             format_list_bulleted
@@ -104,11 +127,24 @@ export default function NoteToolbar({ editor }: { editor: Editor }) {
       <button
         type="button"
         data-active={s.link}
-        onClick={setLink}
-        className={'flex items-center align-middle text-grayscale-500'}
+        aria-label={t('link')}
+        onClick={openLinkModal}
+        className={'flex items-center align-middle text-muted'}
       >
         <span className="material-symbols-outlined font-light!">link_2</span>
       </button>
+
+      <LinkUploadModal
+        isOpen={linkTarget !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setLinkTarget(null);
+          }
+        }}
+        initialUrl={linkTarget?.href}
+        onSubmit={handleLinkSubmit}
+        onRemove={handleLinkRemove}
+      />
 
       {/*<button*/}
       {/*  type="button"*/}

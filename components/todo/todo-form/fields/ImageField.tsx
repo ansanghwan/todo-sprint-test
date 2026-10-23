@@ -101,7 +101,7 @@ const ImageField = ({ value, onChange, error }: ImageFieldProps) => {
               type="button"
               aria-label={t('form.removeImage')}
               onClick={handleRemove}
-              className="absolute top-3 right-3 flex rounded-full bg-white text-grayscale-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+              className="absolute top-3 right-3 flex rounded-full bg-white-section text-grayscale-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
             >
               <span
                 aria-hidden="true"
@@ -117,7 +117,7 @@ const ImageField = ({ value, onChange, error }: ImageFieldProps) => {
             onClick={() => inputRef.current?.click()}
             aria-describedby={cn(helpId, shownError && errorId)}
             className={cn(
-              'flex h-25.25 w-full flex-col items-center justify-center gap-0.5 rounded-2xl border bg-grayscale-50 p-3 text-base/6 font-medium text-grayscale-500 outline-none focus-visible:border-orange-500',
+              'flex h-25.25 w-full flex-col items-center justify-center gap-0.5 rounded-2xl border bg-white-section p-3 text-base/6 font-medium text-muted outline-none focus-visible:border-orange-500',
               shownError ? 'border-danger' : 'border-grayscale-300',
             )}
           >

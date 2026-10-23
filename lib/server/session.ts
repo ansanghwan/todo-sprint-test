@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import type { SessionCookies } from './auth-schemas';
 
 const ACCESS_TOKEN_COOKIE = 'access_token';
-const REFRESH_TOKEN_COOKIE = 'refresh_token';
+export const REFRESH_TOKEN_COOKIE = 'refresh_token';
 
 const ACCESS_TOKEN_MAX_AGE = 30 * 60; // 30 분
 const REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7 일

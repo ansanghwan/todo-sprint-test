@@ -8,6 +8,7 @@ import TestProviders from '@/test/TestProviders';
 import { makeTodo } from '@/test/todoMocks';
 import type { GoalPageDto } from '@/types/api/goal';
 import type { TodoDto, TodoPageDto } from '@/types/api/todo';
+import type { UserDto } from '@/types/api/user';
 import { toKstDateKey, type DateKey } from '../_lib/calendarDates';
 import MonthCalendar from './MonthCalendar';
 
@@ -38,6 +39,16 @@ const GOAL_PAGE: GoalPageDto = {
   goals: GOALS,
   nextCursor: null,
   totalCount: GOALS.length,
+};
+
+const ME: UserDto = {
+  id: 1,
+  teamId: 'team',
+  email: 'cheese@example.com',
+  name: '체다치즈',
+  image: null,
+  createdAt: '2025-01-01T00:00:00.000Z',
+  updatedAt: '2025-01-01T00:00:00.000Z',
 };
 
 // Figma 2025년 1월 시안과 같은 배치: [마감일, 제목, 완료]
@@ -107,6 +118,10 @@ const mockCalendarTodosApi = ({
       const response = { status: 200, statusText: '', headers: {}, config };
       return { ...response, data: GOAL_PAGE };
     }
+    if (config.url === '/users/me') {
+      const response = { status: 200, statusText: '', headers: {}, config };
+      return { ...response, data: ME };
+    }
 
     const requestIndex = requestCount;
     requestCount += 1;
@@ -154,8 +169,6 @@ const meta = {
     today: '2025-01-10',
     selectedGoalId: null,
     onSelectGoal: fn(),
-    onAddTodo: fn(),
-    onOpenTodo: fn(),
   },
   // 목표 필터를 고르면 반영되도록 선택한 목표를 스토리에서 들고 있습니다.
   render: function Render(args) {

@@ -4,14 +4,16 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { toast } from '@/components/ui/toast/Toaster';
+import { getNote } from '@/lib/api/notes';
 import { getTodo } from '@/lib/api/todos';
 import { installRadixDomMocks } from '@/test/domMocks';
 import IntlTestProvider from '@/test/IntlTestProvider';
-import { makeTodo } from '@/test/todoMocks';
+import { makeNote, makeTodo } from '@/test/todoMocks';
 import type { TodoDto } from '@/types/api/todo';
 import TodoDetailModal, { type TodoDetailModalProps } from './TodoDetailModal';
 
 vi.mock('@/lib/api/todos', () => ({ getTodo: vi.fn() }));
+vi.mock('@/lib/api/notes', () => ({ getNote: vi.fn() }));
 vi.mock('@/components/ui/toast/Toaster', () => ({
   toast: { error: vi.fn() },
 }));
@@ -82,7 +84,7 @@ describe('TodoDetailModal', () => {
 
       expect(mockedGetTodo).toHaveBeenCalledWith(TODO_ID, expect.anything());
       expect(within(dialog).getByText('TO DO')).toBeInTheDocument();
-      expect(infoValue(dialog, '목표')).toHaveTextContent('목표 1');
+      expect(infoValue(dialog, '프로젝트')).toHaveTextContent('목표 1');
       expect(infoValue(dialog, '마감기한')).toHaveTextContent('2026. 10. 10');
       const tags = within(infoValue(dialog, '태그') as HTMLElement);
       expect(
@@ -102,7 +104,7 @@ describe('TodoDetailModal', () => {
       renderWith({ goalId: null, goal: null, dueDate: null, tags: [] });
       const dialog = await findDetail();
 
-      expect(infoValue(dialog, '목표')).toHaveTextContent('-');
+      expect(infoValue(dialog, '프로젝트')).toHaveTextContent('-');
       expect(infoValue(dialog, '마감기한')).toHaveTextContent('-');
       expect(infoValue(dialog, '태그')).toHaveTextContent('-');
     });
@@ -211,6 +213,38 @@ describe('TodoDetailModal', () => {
       await user.click(within(dialog).getByRole('button', { name: '닫기' }));
 
       await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
+    });
+  });
+
+  describe('작성된 노트 (FN-TD-43)', () => {
+    const WITH_NOTE = { ...TODO, noteIds: [21] };
+
+    it('노트 제목을 보여 주고, 누르면 노트 id로 onOpenNote를 호출한다', async () => {
+      vi.mocked(getNote).mockResolvedValue(
+        makeNote(WITH_NOTE, { id: 21, title: '보고서 메모' }),
+      );
+      mockedGetTodo.mockResolvedValue(WITH_NOTE);
+      const onOpenNote = vi.fn();
+      const { user } = setup({ onOpenNote });
+      const dialog = await findDetail();
+
+      expect(within(dialog).getByText('작성된 작업 기록')).toBeInTheDocument();
+      await user.click(
+        await within(dialog).findByRole('button', { name: '보고서 메모' }),
+      );
+
+      expect(onOpenNote).toHaveBeenCalledWith(21);
+    });
+
+    it('onOpenNote를 넘기지 않으면 작성된 노트를 보여 주지 않는다', async () => {
+      mockedGetTodo.mockResolvedValue(WITH_NOTE);
+      setup();
+      const dialog = await findDetail();
+
+      expect(
+        within(dialog).queryByText('작성된 작업 기록'),
+      ).not.toBeInTheDocument();
+      expect(getNote).not.toHaveBeenCalled();
     });
   });
 });

@@ -3,13 +3,14 @@
 import useCurrentUser from '@/hooks/useCurrentUser';
 import useDashboardLoadMeasurement from '@/hooks/useDashboardLoadMeasurement';
 
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import TodoCreateModal from '@/components/todo/todo-create/TodoCreateModal';
 import DeleteTodoModal from '@/components/todo/DeleteTodoModal';
 import TodoEditModal from '@/components/todo/todo-edit/TodoEditModal';
 import TodoDetailModal from '@/components/todo/todo-detail/TodoDetailModal';
+import NoteDetailDrawer from '@/components/note/note-detail/NoteDetailDrawer';
 import TodoItemKebab from '@/components/todo/TodoItemKebab';
 import { toast } from '@/components/ui/toast/Toaster';
 import {
@@ -26,6 +27,8 @@ import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
 import TodoItem, { type TodoItemData } from '@/components/todo/TodoItem';
 import useTodoItemLabels from '@/hooks/todo/useTodoItemLabels';
 import SearchInput from '@/components/ui/SearchInput';
+import Button from '@/components/ui/button/Button';
+import IcPlus from '@/components/ui/icons/IcPlus';
 import type { GoalDto as Goal } from '@/types/api/goal';
 import { getGoalTodos, getRecentTodos, getTodoProgress } from '@/lib/api/todos';
 import { getGoals } from '@/lib/api/goals';
@@ -35,7 +38,7 @@ const goalTodoScrollClass =
   'mt-3 max-h-69 overflow-y-auto scrollbar-thin md:max-h-62 lg:max-h-81';
 // 대시보드 목표 카드에만 hover를 적용합니다. 키보드로 버튼에 접근할 때도 강조합니다.
 const goalTodoItemClass =
-  'group/dashboard-todo rounded-lg transition-colors hover:bg-orange-alpha-20 focus-within:bg-orange-alpha-20 md:px-2 lg:h-11 lg:gap-2 lg:py-0 hover:[&>button:nth-of-type(2)]:text-orange-600 focus-within:[&>button:nth-of-type(2)]:text-orange-600';
+  'group/dashboard-todo rounded-lg transition-colors hover:bg-list-hover focus-within:bg-list-hover md:px-2 lg:h-11 lg:gap-2 lg:py-0 hover:[&>button:nth-of-type(2)]:text-orange-600 focus-within:[&>button:nth-of-type(2)]:text-orange-600';
 
 // 작은 주황색 점의 공용 아이콘을 사용합니다. SVG의 흰 원 대신 행 hover·포커스 배경으로 표시합니다.
 const goalTodoKebabClass =
@@ -65,6 +68,11 @@ export default function Dashboard() {
     'id' | 'title'
   > | null>(null);
   const [detailTodoId, setDetailTodoId] = useState<number | null>(null);
+  const [noteId, setNoteId] = useState<number | null>(null);
+  const router = useRouter();
+  // FN-TD-12: 할 일 ID를 넘겨 노트 작성 화면을 엽니다.
+  const handleCreateNote = (todoId: number) =>
+    router.push(`/notes/write?todoId=${todoId}`);
   const [editTodoId, setEditTodoId] = useState<number | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Pick<
     TodoItemData,
@@ -547,6 +555,8 @@ export default function Dashboard() {
         {/* 최근 등록한일 */}
         <RecentTodosCard
           onOpenDetail={setDetailTodoId}
+          onViewNote={setNoteId}
+          onCreateNote={handleCreateNote}
           labels={todoLabels}
           todos={recentTodos}
           isLoading={isLoadingRecentTodos}
@@ -657,8 +667,9 @@ export default function Dashboard() {
                               placeholder={nextIntlTodo('searchTodos')}
                               className="md:w-52.5 xl:w-60"
                             />
-                            <button
-                              type="button"
+                            <Button
+                              variant="outline"
+                              size="sm"
                               aria-label={nextIntlTodo('addTodo')}
                               onClick={() =>
                                 setCreateGoal({
@@ -666,23 +677,13 @@ export default function Dashboard() {
                                   title: goal.title,
                                 })
                               }
-                              className="absolute top-0 right-0 inline-flex size-10 shrink-0 items-center justify-center gap-1 rounded-full border border-solid border-orange-500 bg-transparent text-sm leading-none font-semibold text-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 md:static md:w-auto md:px-4"
+                              className="absolute top-0 right-0 size-10 gap-1 p-0 text-sm md:static md:w-auto md:px-4"
                             >
-                              <span
-                                aria-hidden="true"
-                                className="inline-flex size-5 shrink-0 items-center justify-center"
-                              >
-                                <Image
-                                  src="/icons/icon_plus_orange.svg"
-                                  width={20}
-                                  height={20}
-                                  alt=""
-                                />
-                              </span>
+                              <IcPlus className="size-5 shrink-0" />
                               <span className="hidden md:inline">
                                 {nextIntlTodo('addTodo')}
                               </span>
-                            </button>
+                            </Button>
                           </div>
                         </div>
                         {/* E: 목표 아이템 헤더 */}
@@ -712,8 +713,8 @@ export default function Dashboard() {
                           </div>
                         ) : (
                           <div className="mt-2.5 grid gap-4 lg:mt-6 lg:grid-cols-2 lg:gap-8">
-                            <div className="relative min-h-34 rounded-2xl bg-[#fff6df] p-4 lg:min-h-48 lg:p-6">
-                              <p className="text-sm font-semibold tracking-[-0.03em] text-orange-600 lg:text-base">
+                            <div className="relative min-h-34 rounded-2xl bg-todo-background p-4 lg:min-h-48 lg:p-6 dark:[&_li>button:nth-of-type(2)]:text-foreground">
+                              <p className="text-sm font-semibold tracking-[-0.03em] text-orange-600 lg:text-base dark:text-orange-400">
                                 TO DO
                               </p>
                               {pendingState.error ? (
@@ -747,14 +748,12 @@ export default function Dashboard() {
                                             />
                                           </span>
                                         }
-                                        showCreateNote={false}
-                                        // 노트 보기는 별도 연결 단계에서 처리합니다.
                                         onToggleDone={onToggleDone}
                                         onToggleFavorite={onToggleFavorite}
                                         onOpenDetail={setDetailTodoId}
                                         onCopyLink={onCopyLink}
-                                        onViewNote={() => undefined}
-                                        onCreateNote={() => undefined}
+                                        onViewNote={setNoteId}
+                                        onCreateNote={handleCreateNote}
                                       />
                                     ))}
                                   </ul>
@@ -848,14 +847,12 @@ export default function Dashboard() {
                                             />
                                           </span>
                                         }
-                                        showCreateNote={false}
-                                        // 노트 보기는 별도 연결 단계에서 처리합니다.
                                         onToggleDone={onToggleDone}
                                         onToggleFavorite={onToggleFavorite}
                                         onOpenDetail={setDetailTodoId}
                                         onCopyLink={onCopyLink}
-                                        onViewNote={() => undefined}
-                                        onCreateNote={() => undefined}
+                                        onViewNote={setNoteId}
+                                        onCreateNote={handleCreateNote}
                                       />
                                     ))}
                                   </ul>
@@ -969,7 +966,13 @@ export default function Dashboard() {
           setDetailTodoId(null);
           setDeleteTarget(todo);
         }}
+        // FN-TD-43: 상세를 닫고 노트 상세를 엽니다. 노트 상세를 닫아도 할 일 상세는 다시 열지 않습니다.
+        onOpenNote={(id) => {
+          setDetailTodoId(null);
+          setNoteId(id);
+        }}
       />
+      <NoteDetailDrawer noteId={noteId} onClose={() => setNoteId(null)} />
       <TodoEditModal
         todoId={editTodoId}
         onClose={() => setEditTodoId(null)}

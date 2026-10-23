@@ -13,6 +13,7 @@ import {
   updateNote,
 } from '@/lib/api/notes';
 import type { GetNotesParams, UpdateNoteBody } from '@/types/api/note';
+import { todoKeys } from './todo';
 
 // 캐시 키를 한곳에서 관리합니다. 노트 생성·수정·삭제 후
 // queryClient.invalidateQueries({ queryKey: noteKeys.lists() })로 목록을 새로고침할 수 있습니다.
@@ -46,12 +47,25 @@ export function useNoteQuery(noteId: number) {
   });
 }
 
+/**
+ * 노트를 만들거나 지우면 할 일의 noteIds가 바뀝니다.
+ * 할 일 목록·찜 목록이 노트 아이콘을 다시 그리도록 표시만 하고, 재조회를 기다리지는 않습니다.
+ * (할 일 상세는 열 때마다 다시 조회합니다.)
+ */
+const invalidateTodoNoteIds = (
+  queryClient: ReturnType<typeof useQueryClient>,
+) => {
+  void queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
+  void queryClient.invalidateQueries({ queryKey: todoKeys.favorites() });
+};
+
 export function useCreateNoteMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createNote,
     onSuccess: () => {
+      invalidateTodoNoteIds(queryClient);
       // 노트 목록 캐시를 "오래됨"으로 표시 → 목록 화면에 가면 새로 불러옴
       return queryClient.invalidateQueries({ queryKey: noteKeys.lists() });
     },
@@ -84,6 +98,7 @@ export function useDeleteNoteMutation() {
     // 재조회를 기다리지 않아야 mutate에 넘긴 onSuccess·onError가 바로 실행됩니다.
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: noteKeys.lists() });
+      invalidateTodoNoteIds(queryClient);
     },
   });
 }

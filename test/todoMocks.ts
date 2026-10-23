@@ -5,6 +5,7 @@ import axios, {
 
 import { api } from '@/lib/api/client-fetcher';
 import type { GoalDto, GoalPageDto } from '@/types/api/goal';
+import type { CreateNoteBody, Note } from '@/types/api/note';
 import type {
   CreateTodoRequestDto,
   FavoriteTodoPageDto,
@@ -63,6 +64,59 @@ export const makeGoal = (
   ...overrides,
 });
 
+/** 할 일에 연결된 노트. 본문에 일반 링크가 들어 있습니다. */
+export const makeNote = (
+  todo: TodoDto,
+  overrides: Partial<Note> = {},
+): Note => ({
+  id: todo.noteIds[0] ?? todo.id,
+  teamId: todo.teamId,
+  userId: todo.userId,
+  todoId: todo.id,
+  title: `${todo.title} 정리`,
+  content: {
+    type: 'doc',
+    content: [
+      {
+        type: 'paragraph',
+        content: [
+          { type: 'text', text: '참고 자료: ' },
+          {
+            type: 'text',
+            text: '강의 노트',
+            marks: [{ type: 'link', attrs: { href: 'https://example.com' } }],
+          },
+        ],
+      },
+      {
+        type: 'bulletList',
+        content: [
+          {
+            type: 'listItem',
+            content: [
+              {
+                type: 'paragraph',
+                content: [{ type: 'text', text: '핵심 개념 정리하기' }],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  linkUrl: null,
+  createdAt: '2026-10-01T09:00:00.000Z',
+  updatedAt: '2026-10-01T09:00:00.000Z',
+  todo: {
+    id: todo.id,
+    title: todo.title,
+    done: todo.done,
+    goal: todo.goal,
+    tags: todo.tags,
+  },
+  ...overrides,
+});
+
 /** mock 업로드 주소. 이 주소로 가는 PUT만 가로챕니다. */
 const MOCK_UPLOAD_ORIGIN = 'https://mock-upload.invalid';
 
@@ -95,6 +149,8 @@ interface MockTodosApiOptions {
   withGoals?: boolean;
   /** 몇 번째 GET /todos/favorites 요청(0부터)을 실패시킬지 */
   failFavoritesAt?: number;
+  /** GET /notes/{id}를 실패시킵니다. */
+  failNote?: boolean;
 }
 
 /** 배열을 cursor(다음에 줄 항목의 1부터 센 위치)로 잘라 줍니다. */
@@ -119,6 +175,8 @@ const wait = (delay: number) =>
  * - GET /todos: done으로 거르고 최신순(만든 순서의 반대)으로 돌려줍니다.
  * - GET /todos/favorites: 찜한 할 일만 favorites[].todo로 감싸 돌려줍니다.
  * - GET /goals: 10개씩 돌려줍니다.
+ * - GET /notes/{id}: 그 노트가 연결된 할 일로 노트를 만들어 돌려줍니다.
+ * - POST /notes, DELETE /notes/{id}: 할 일의 noteIds를 바꿉니다.
  * - POST /images, 업로드 PUT, POST /todos: 생성한 할 일을 목록 맨 앞에 넣습니다.
  * - PATCH·DELETE /todos/{id}, POST·DELETE /todos/{id}/favorites: 메모리의 할 일을 바꿉니다.
  * 브라우저 Network 탭에는 잡히지 않으므로 요청마다 콘솔에 [mock ...]으로 남깁니다.
@@ -140,6 +198,7 @@ export const mockTodosApi = ({
   isDetailPending = false,
   withGoals = false,
   failFavoritesAt,
+  failNote = false,
 }: MockTodosApiOptions) => {
   const originalAdapter = api.defaults.adapter;
   const originalUploadAdapter = axios.defaults.adapter;
@@ -220,7 +279,8 @@ export const mockTodosApi = ({
       config.params?.limit ?? 40,
     );
     const data: TodoPageDto = {
-      todos: page,
+      // 실제 서버처럼 응답마다 새 객체를 돌려줘, 캐시가 서버 배열을 함께 바라보지 않게 합니다.
+      todos: page.map((todo) => structuredClone(todo)),
       nextCursor,
       totalCount: filtered.length,
     };
@@ -352,6 +412,46 @@ export const mockTodosApi = ({
     return ok('', config, 204);
   };
 
+  // GET /notes/{id}: noteIds에 그 id가 있는 할 일의 노트를 돌려줍니다.
+  const getNoteResponse = async (config: InternalAxiosRequestConfig) => {
+    const label = `[mock GET ${config.url}]`;
+    await wait(delay);
+    const noteId = Number(config.url?.split('/')[2]);
+    const todo = todos.find(({ noteIds }) => noteIds.includes(noteId));
+    if (failNote || !todo) {
+      console.info(`${label} → 실패`);
+      throw new Error('mock network error');
+    }
+    console.info(`${label} → 성공`);
+    return ok(makeNote(todo, { id: noteId }), config);
+  };
+
+  // POST /notes: 할 일에 새 노트를 연결합니다. DELETE /notes/{id}: 연결을 끊습니다.
+  let nextNoteId = 1000;
+  const createNoteResponse = async (config: InternalAxiosRequestConfig) => {
+    const body = JSON.parse(config.data) as CreateNoteBody;
+    await wait(delay);
+    const todo = todos.find(({ id }) => id === body.todoId);
+    if (!todo) {
+      throw new Error('mock network error');
+    }
+    const note = makeNote(todo, { id: nextNoteId, title: body.title });
+    todo.noteIds = [nextNoteId];
+    nextNoteId += 1;
+    console.info(`[mock POST /notes] → id=${note.id}`, body);
+    return ok(note, config, 201);
+  };
+
+  const deleteNoteResponse = async (config: InternalAxiosRequestConfig) => {
+    await wait(delay);
+    const noteId = Number(config.url?.split('/')[2]);
+    todos.forEach((todo) => {
+      todo.noteIds = todo.noteIds.filter((id) => id !== noteId);
+    });
+    console.info(`[mock DELETE ${config.url}] → 성공`);
+    return ok('', config, 204);
+  };
+
   const adapter: AxiosAdapter = (config) => {
     const method = config.method?.toUpperCase() ?? 'GET';
 
@@ -372,6 +472,15 @@ export const mockTodosApi = ({
     }
     if (/^\/todos\/\d+$/.test(config.url ?? '') && method === 'GET') {
       return getTodoResponse(config);
+    }
+    if (/^\/notes\/\d+$/.test(config.url ?? '') && method === 'GET') {
+      return getNoteResponse(config);
+    }
+    if (config.url === '/notes' && method === 'POST') {
+      return createNoteResponse(config);
+    }
+    if (/^\/notes\/\d+$/.test(config.url ?? '') && method === 'DELETE') {
+      return deleteNoteResponse(config);
     }
     if (config.url?.startsWith('/todos/')) {
       return mutateTodoResponse(config, method);

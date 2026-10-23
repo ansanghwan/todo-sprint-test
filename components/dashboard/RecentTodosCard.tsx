@@ -18,6 +18,10 @@ type RecentTodosCardProps = {
   onCopyLink: TodoItemProps['onCopyLink'];
   onDelete: (todo: TodoItemData) => void;
   onOpenDetail: TodoItemProps['onOpenDetail'];
+  /** 노트 보기 (FN-TD-11) */
+  onViewNote: TodoItemProps['onViewNote'];
+  /** 노트 작성 (FN-TD-12) */
+  onCreateNote: TodoItemProps['onCreateNote'];
 };
 
 /** 최근 할 일의 표시만 담당합니다. 조회와 상태 변경은 페이지에서 전달합니다. */
@@ -31,6 +35,8 @@ export default function RecentTodosCard({
   onCopyLink,
   onDelete,
   onOpenDetail,
+  onViewNote,
+  onCreateNote,
 }: RecentTodosCardProps) {
   const nextIntlTodo = useTranslations('Todo');
   const nextIntlDashboard = useTranslations('Dashboard');
@@ -38,19 +44,19 @@ export default function RecentTodosCard({
     <div className="min-w-0 md:flex-1 lg:flex-[1_1_28rem]">
       <div className="mb-2.5 flex flex-wrap px-2">
         <h2 className="mr-auto inline-flex items-center text-base font-medium text-heading md:text-lg">
-          <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-[#ffd0aa]">
+          <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-orange-300">
             <Image src="/icons/icon_memo.svg" width={16} height={21} alt="" />
           </span>
           {nextIntlTodo('recentTodos')}
         </h2>
         <Link
           href="/todos"
-          className="ml-auto flex items-center text-sm font-semibold text-orange-600"
+          className="ml-auto flex items-center text-sm font-semibold text-orange-600 dark:text-orange-300"
         >
           {nextIntlTodo('viewAll')}
           <span>
             <svg
-              className="size-5"
+              className="size-5 text-orange-500 dark:text-orange-300"
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +64,7 @@ export default function RecentTodosCard({
             >
               <path
                 d="M7.5 15L12.5 10L7.5 5"
-                stroke="#FF8442"
+                stroke="currentColor"
                 strokeWidth="1.67"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -67,19 +73,22 @@ export default function RecentTodosCard({
           </span>
         </Link>
       </div>
-      <div className="aspect-343/186 w-full rounded-[1.75rem] bg-orange-500 px-4.5 py-4 shadow-[0_0.625rem_2.5rem_0_#FF9E594D] md:aspect-auto md:h-46.5 lg:h-64 lg:rounded-[2.5rem] lg:px-8 lg:py-7.5">
+      <div className="aspect-343/186 w-full rounded-[1.75rem] bg-primary-card-background px-4.5 py-4 shadow-[0_0.625rem_2.5rem_0_var(--primary-card-shadow-color)] md:aspect-auto md:h-46.5 lg:h-64 lg:rounded-[2.5rem] lg:px-8 lg:py-7.5">
         {isLoading ? (
-          <DashboardLoading message={nextIntlTodo('loadingTodos')} />
+          <DashboardLoading
+            message={nextIntlTodo('loadingTodos')}
+            color="primaryCard"
+          />
         ) : error ? (
           <div
             role="alert"
-            className="flex h-full items-center justify-center text-base font-semibold text-white"
+            className="flex h-full items-center justify-center text-base font-semibold text-primary-card-foreground"
           >
             <p>{nextIntlTodo('fetchTodosError')}</p>
           </div>
         ) : todos.length > 0 ? (
           <div className="size-full max-md:flex max-md:flex-col max-md:justify-center">
-            <ul className="flex h-full flex-col justify-between max-md:max-h-56">
+            <ul className="grid h-full grid-rows-4 max-md:max-h-70">
               {todos.map((todo) => (
                 <TodoItem
                   key={todo.id}
@@ -90,20 +99,18 @@ export default function RecentTodosCard({
                   kebabSlot={
                     <TodoItemKebab isWhite onDelete={() => onDelete(todo)} />
                   }
-                  showCreateNote={false}
                   onToggleDone={onToggleDone}
                   onToggleFavorite={onToggleFavorite}
-                  // 노트 보기는 별도 연결 단계에서 처리합니다.
                   onOpenDetail={onOpenDetail}
                   onCopyLink={onCopyLink}
-                  onViewNote={() => undefined}
-                  onCreateNote={() => undefined}
+                  onViewNote={onViewNote}
+                  onCreateNote={onCreateNote}
                 />
               ))}
             </ul>
           </div>
         ) : (
-          <div className="flex h-full items-center justify-center text-base font-semibold text-white">
+          <div className="flex h-full items-center justify-center text-base font-semibold text-primary-card-foreground">
             <p>{nextIntlDashboard('noRecentTodos')}</p>
           </div>
         )}

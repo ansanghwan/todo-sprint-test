@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import ErrorRetry from '@/components/common/ErrorRetry';
 import usePostList from '@/hooks/post/usePostList';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
@@ -16,6 +17,7 @@ interface PostListProps {
 }
 
 const PostList = ({ params }: PostListProps) => {
+  const t = useTranslations('Post');
   const { posts, isEmpty, hasMore, isLoadingMore, isLoadMoreError, loadMore } =
     usePostList(params);
   const sentinelRef = useInfiniteScroll<HTMLDivElement>({
@@ -34,14 +36,14 @@ const PostList = ({ params }: PostListProps) => {
           className="w-20 md:w-32.5"
         />
         <p className="text-sm font-medium text-muted md:text-base">
-          아직 등록된 게시물이 없어요.
+          {t('noPosts')}
         </p>
       </div>
     );
   }
 
   return (
-    <section aria-label="게시글 목록">
+    <section aria-label={t('postList')}>
       <ul>
         {posts.map((post) => (
           <li key={post.id}>
@@ -58,7 +60,7 @@ const PostList = ({ params }: PostListProps) => {
       {isLoadingMore && <PostListSkeleton count={NEXT_PAGE_SKELETON_COUNT} />}
       {isLoadMoreError && (
         <ErrorRetry
-          message="다음 게시글을 불러오지 못했어요."
+          message={t('fetchMorePostsError')}
           onRetry={() => loadMore()}
         />
       )}

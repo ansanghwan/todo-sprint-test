@@ -62,7 +62,7 @@ const AuthTextField = ({
           {...rest}
           className={cn(
             // 높이 모바일 44 · PC 56 (테두리 포함)
-            'w-full rounded-xl border bg-white px-3 py-2.75 text-sm tracking-[-0.03em] text-grayscale-700 outline-none placeholder:text-grayscale-500 md:rounded-2xl md:px-4 md:py-3.75 md:text-base md:tracking-[-0.02em]',
+            'w-full rounded-xl border bg-input px-3 py-2.75 text-sm tracking-[-0.03em] text-foreground outline-none placeholder:text-grayscale-500 md:rounded-2xl md:px-4 md:py-3.75 md:text-base md:tracking-[-0.02em]',
             // FN-AU-14: 포커스 시 테두리 색이 바뀌는 애니메이션 (오류 상태에서는 테두리 바깥에 붉은 띠)
             'transition-[border-color,box-shadow] duration-200 motion-reduce:transition-none',
             hasError

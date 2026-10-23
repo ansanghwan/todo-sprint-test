@@ -9,6 +9,8 @@ import NoteForm, { type NoteFormValues } from '@/components/note/NoteForm';
 import TodoStatusChip from '@/components/todo/TodoStatusChip';
 import { formatUtcDateToYmd } from '@/lib/formatter';
 import MetaRow from '@/components/note/MetaRow';
+import TagChip from '@/components/todo/todo-form/fields/TagChip';
+import { getTagColor } from '@/components/todo/todo-form/tagColors';
 
 interface NoteEditFormProps {
   noteId: number;
@@ -22,15 +24,15 @@ export default function NoteEditForm({ noteId }: NoteEditFormProps) {
 
   // ⚠️ 노트를 다 불러온 "뒤에" 폼을 그려야 에디터에 기존 내용이 들어가요
   if (isLoading) return <p>불러오는 중…</p>;
-  if (isError) return <p>노트를 불러오지 못했어요.</p>;
+  if (isError) return <p>작업 기록을 불러오지 못했어요.</p>;
 
   const handleSubmit = (values: NoteFormValues) => {
     updateNote(values, {
       onSuccess: () => {
-        toast.success('노트가 수정되었어요');
+        toast.success('작업 기록이 수정되었어요');
         router.push('/notes');
       },
-      onError: () => toast.error('노트를 수정하지 못했어요'),
+      onError: () => toast.error('작업 기록을 수정하지 못했어요'),
     });
   };
 
@@ -57,7 +59,19 @@ export default function NoteEditForm({ noteId }: NoteEditFormProps) {
             <TodoStatusChip isTodo={note.todo.done} className="ml-1 shrink-0" />
           </MetaRow>
           <MetaRow icon="tag" label={t('tag')}>
-            {note.todo.tags?.map((tag) => tag.name).join(', ') || '-'}
+            {note.todo.tags && note.todo.tags.length > 0 ? (
+              <ul className="flex flex-wrap gap-1">
+                {note.todo.tags.map((tag, index) => (
+                  <TagChip
+                    key={tag.id}
+                    label={tag.name}
+                    color={getTagColor(index)}
+                  />
+                ))}
+              </ul>
+            ) : (
+              '-'
+            )}
           </MetaRow>
         </>
       }

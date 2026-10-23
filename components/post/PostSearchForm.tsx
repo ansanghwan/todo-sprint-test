@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState, type SubmitEvent } from 'react';
 
 const SEARCH_MAX_LENGTH = 200;
@@ -9,6 +10,7 @@ interface PostSearchFormProps {
 }
 
 const PostSearchForm = ({ onSearch }: PostSearchFormProps) => {
+  const t = useTranslations('Post');
   const [keyword, setKeyword] = useState('');
   const [appliedKeyword, setAppliedKeyword] = useState('');
   const trimmedKeyword = keyword.trim();
@@ -30,13 +32,13 @@ const PostSearchForm = ({ onSearch }: PostSearchFormProps) => {
         value={keyword}
         onChange={(event) => setKeyword(event.target.value)}
         maxLength={SEARCH_MAX_LENGTH}
-        aria-label="게시글 검색"
-        placeholder="궁금한 내용을 검색해주세요"
+        aria-label={t('searchPostsLabel')}
+        placeholder={t('searchPosts')}
         className="min-w-0 flex-1 text-base text-foreground outline-none placeholder:text-muted"
       />
       <button
         type="submit"
-        aria-label="검색"
+        aria-label={t('search')}
         disabled={trimmedKeyword === appliedKeyword}
         className="cursor-pointer text-muted transition-colors enabled:hover:text-foreground disabled:cursor-default disabled:opacity-40"
       >
