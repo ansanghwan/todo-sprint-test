@@ -13,7 +13,7 @@ export default function NoteGoalBanner({ goalId }: NoteGoalBannerProps) {
   const { data: goal, isError } = useQuery(goalQueries.detail(goalId));
 
   return (
-    <div className="mb-2.5 flex w-full flex-row flex-nowrap items-center rounded-[1.75rem] bg-orange-100 p-10">
+    <div className="mb-2.5 flex w-full flex-row flex-nowrap items-center rounded-[1.75rem] bg-orange-100 p-10 text-foreground dark:bg-white-section">
       <Image
         src="/icons/img_goal.svg"
         width={40}
