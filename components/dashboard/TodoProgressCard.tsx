@@ -30,7 +30,7 @@ export default function TodoProgressCard({
         </h2>{' '}
       </div>
 
-      <div className="relative isolate aspect-[343/186] w-full overflow-hidden rounded-[1.75rem] bg-secondary-card-background shadow-[0_0.625rem_2.5rem_0_var(--secondary-card-shadow-color)] before:pointer-events-none before:absolute before:top-[43%] before:right-0 before:z-0 before:block before:aspect-[218/154] before:w-[44%] before:bg-[url('/images/dashboard/bg-chart.svg')] before:bg-cover before:opacity-45 before:content-[''] md:aspect-auto md:h-[11.625rem] md:before:top-[41%] md:before:right-[0] lg:h-64 lg:rounded-[2.5rem] lg:before:top-[6.2rem] lg:before:w-[13.875rem]">
+      <div className="relative isolate aspect-343/186 w-full overflow-hidden rounded-[1.75rem] bg-secondary-card-background shadow-[0_0.625rem_2.5rem_0_var(--secondary-card-shadow-color)] before:pointer-events-none before:absolute before:top-[43%] before:right-0 before:z-0 before:block before:aspect-218/154 before:w-[44%] before:bg-[url('/images/dashboard/bg-chart.svg')] before:bg-cover before:opacity-45 before:content-[''] md:aspect-auto md:h-46.5 md:before:top-[41%] md:before:right-0 lg:h-64 lg:rounded-[2.5rem] lg:before:top-[6.2rem] lg:before:w-55.5">
         {/* 장식용 문어 일러스트는 ::before 배경 레이어로 처리합니다. */}
 
         {isLoading ? (
