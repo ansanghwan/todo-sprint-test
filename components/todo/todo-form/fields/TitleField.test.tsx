@@ -56,7 +56,10 @@ describe('TitleField', () => {
   it('공용 TextField의 파란 포커스 테두리와 링을 쓰지 않는다', () => {
     renderField();
 
-    expect(titleInput()).toHaveClass('focus:border-orange-500', 'focus:ring-0');
+    expect(titleInput()).toHaveClass(
+      'focus:border-primary-500',
+      'focus:ring-0',
+    );
     expect(titleInput()).not.toHaveClass('focus:border-blue-500');
   });
 

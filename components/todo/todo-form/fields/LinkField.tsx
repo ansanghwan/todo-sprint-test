@@ -58,7 +58,7 @@ const LinkField = ({ value, onChange, onBlur, error }: LinkFieldProps) => {
             type="button"
             aria-label={t('form.removeLink')}
             onClick={() => onChange('')}
-            className="flex rounded-full text-grayscale-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            className="flex rounded-full text-grayscale-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
           >
             <span
               aria-hidden="true"

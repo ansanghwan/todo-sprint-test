@@ -49,7 +49,7 @@ const PostList = ({ params }: PostListProps) => {
           <li key={post.id}>
             <Link
               href={`/posts/${post.id}`}
-              className="block focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-orange-600"
+              className="block focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-600"
             >
               <PostListItem post={post} />
             </Link>

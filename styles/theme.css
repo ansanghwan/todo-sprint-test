@@ -25,18 +25,18 @@
   --white-section: #ffffff;
   /* 넓은 메인 컬러 카드만 분리해 버튼의 브랜드 색상은 유지합니다. */
   --todo-background: #f6f4ef;
-  --primary-card-background: var(--color-orange-500);
+  --primary-card-background: var(--color-primary-500);
   --primary-card-foreground: #1b1b1b;
-  --primary-card-shadow-color: var(--color-orange-alpha-30);
+  --primary-card-shadow-color: var(--color-primary-alpha-30);
   --secondary-card-background: color-mix(
     in srgb,
-    var(--color-blue-200) 50%,
+    var(--color-secondary-200) 50%,
     transparent
   );
   --secondary-card-foreground: #6b491a;
   --secondary-card-shadow-color: color-mix(
     in srgb,
-    var(--color-blue-200) 24%,
+    var(--color-secondary-200) 24%,
     transparent
   );
   --muted-section: var(--color-grayscale-50); /* #FAFAFA */
@@ -57,7 +57,7 @@
   /* 글자·아이콘의 불투명도는 유지하고 카드 배경만 차분한 Blue로 조정합니다. */
   --primary-card-background: color-mix(
     in srgb,
-    var(--color-orange-600) 65%,
+    var(--color-primary-600) 65%,
     var(--color-grayscale-900)
   );
   --todo-background: #1c2229;
@@ -66,7 +66,7 @@
   /* Yellow는 어두운 표면과 혼합하고 광택처럼 번지는 그림자는 제거합니다. */
   --secondary-card-background: color-mix(
     in srgb,
-    var(--color-blue-200) 35%,
+    var(--color-secondary-200) 35%,
     var(--color-grayscale-900)
   );
   --secondary-card-shadow-color: transparent;

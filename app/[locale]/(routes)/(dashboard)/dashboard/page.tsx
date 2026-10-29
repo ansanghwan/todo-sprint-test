@@ -38,7 +38,7 @@ const goalTodoScrollClass =
   'mt-3 max-h-69 overflow-y-auto scrollbar-thin md:max-h-62 lg:max-h-81';
 // 대시보드 목표 카드에만 hover를 적용합니다. 키보드로 버튼에 접근할 때도 강조합니다.
 const goalTodoItemClass =
-  'group/dashboard-todo rounded-lg transition-colors hover:bg-list-hover focus-within:bg-list-hover md:px-2 lg:h-11 lg:gap-2 lg:py-0 hover:[&>button:nth-of-type(2)]:text-orange-600 focus-within:[&>button:nth-of-type(2)]:text-orange-600';
+  'group/dashboard-todo rounded-lg transition-colors hover:bg-list-hover focus-within:bg-list-hover md:px-2 lg:h-11 lg:gap-2 lg:py-0 hover:[&>button:nth-of-type(2)]:text-primary-600 focus-within:[&>button:nth-of-type(2)]:text-primary-600';
 
 // 작은 주황색 점의 공용 아이콘을 사용합니다. SVG의 흰 원 대신 행 hover·포커스 배경으로 표시합니다.
 const goalTodoKebabClass =
@@ -631,7 +631,7 @@ export default function Dashboard() {
                             <h3 className="text-base font-semibold text-foreground lg:min-w-0 lg:basis-2/5">
                               <Link
                                 href={`/goals/${goal.id}`}
-                                className="rounded-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+                                className="rounded-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
                               >
                                 {goal.title}
                               </Link>
@@ -643,7 +643,7 @@ export default function Dashboard() {
                                 <GoalProgressBar progress={goalProgress} />
                               </div>
                               <span
-                                className={`w-[4ch] shrink-0 text-left text-sm font-bold whitespace-nowrap tabular-nums lg:text-base ${goalProgress === 0 ? 'text-grayscale-400' : 'text-orange-600'}`}
+                                className={`w-[4ch] shrink-0 text-left text-sm font-bold whitespace-nowrap tabular-nums lg:text-base ${goalProgress === 0 ? 'text-grayscale-400' : 'text-primary-600'}`}
                               >
                                 {goalProgress}%
                               </span>
@@ -714,7 +714,7 @@ export default function Dashboard() {
                         ) : (
                           <div className="mt-2.5 grid gap-4 lg:mt-6 lg:grid-cols-2 lg:gap-8">
                             <div className="relative min-h-34 rounded-2xl bg-todo-background p-4 lg:min-h-48 lg:p-6 dark:[&_li>button:nth-of-type(2)]:text-foreground">
-                              <p className="text-sm font-semibold tracking-[-0.03em] text-orange-600 lg:text-base dark:text-orange-400">
+                              <p className="text-sm font-semibold tracking-[-0.03em] text-primary-600 lg:text-base dark:text-primary-400">
                                 TO DO
                               </p>
                               {pendingState.error ? (
@@ -790,7 +790,7 @@ export default function Dashboard() {
                                         { title: goal.title, status: 'TO DO' },
                                       )}
                                       aria-busy={pendingState.isLoadingMore}
-                                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
+                                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-wait disabled:opacity-60"
                                     >
                                       {pendingState.isLoadingMore
                                         ? nextIntlDashboard('loading')
@@ -889,7 +889,7 @@ export default function Dashboard() {
                                         { title: goal.title, status: 'DONE' },
                                       )}
                                       aria-busy={completedState.isLoadingMore}
-                                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
+                                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-wait disabled:opacity-60"
                                     >
                                       {completedState.isLoadingMore
                                         ? nextIntlDashboard('loading')
@@ -936,7 +936,7 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={loadMoreGoals}
-                      className="mt-2 rounded-lg px-4 py-2 text-sm font-medium text-orange-600 focus-visible:outline-2 focus-visible:outline-orange-600"
+                      className="mt-2 rounded-lg px-4 py-2 text-sm font-medium text-primary-600 focus-visible:outline-2 focus-visible:outline-primary-600"
                     >
                       {nextIntlTodo('retry')}
                     </button>

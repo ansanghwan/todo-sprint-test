@@ -23,7 +23,7 @@ type ProgressChartProps = {
 export default function ProgressChart({
   progress,
   className,
-  trackColor = 'var(--color-blue-300)',
+  trackColor = 'var(--color-secondary-300)',
   progressColor = 'white',
   strokeWidth = DEFAULT_STROKE_WIDTH,
 }: ProgressChartProps) {

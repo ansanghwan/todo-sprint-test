@@ -67,7 +67,7 @@ const AuthTextField = ({
             'transition-[border-color,box-shadow] duration-200 motion-reduce:transition-none',
             hasError
               ? 'border-danger focus:ring-2 focus:ring-danger/25'
-              : 'border-grayscale-300 focus:border-orange-500',
+              : 'border-grayscale-300 focus:border-primary-500',
             isPassword && 'pr-10 md:pr-12',
             className,
           )}
@@ -83,7 +83,7 @@ const AuthTextField = ({
                 : (showPasswordLabel ?? t('showPassword'))
             }
             aria-controls={inputId}
-            className="absolute top-1/2 right-3 flex -translate-y-1/2 cursor-pointer items-center rounded-sm text-grayscale-500 hover:text-grayscale-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 md:right-4"
+            className="absolute top-1/2 right-3 flex -translate-y-1/2 cursor-pointer items-center rounded-sm text-grayscale-500 hover:text-grayscale-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 md:right-4"
           >
             <ToggleIcon className="size-5 md:size-6" />
           </button>

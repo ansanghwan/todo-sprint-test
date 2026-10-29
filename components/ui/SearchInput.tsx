@@ -24,7 +24,7 @@ const searchInputVariants = cva(
 );
 
 const searchButtonVariants = cva(
-  'absolute top-1/2 flex size-8 -translate-y-1/2 items-center justify-end text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-default',
+  'absolute top-1/2 flex size-8 -translate-y-1/2 items-center justify-end text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-default',
   {
     variants: {
       size: {

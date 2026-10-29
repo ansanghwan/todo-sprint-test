@@ -28,9 +28,9 @@ describe('fieldBoxVariants', () => {
       expect.arrayContaining([
         'bg-input',
         'border-input-border',
-        'focus:border-orange-500',
-        'focus-within:border-orange-500',
-        'data-[state=open]:border-orange-500',
+        'focus:border-primary-500',
+        'focus-within:border-primary-500',
+        'data-[state=open]:border-primary-500',
       ]),
     );
   });
@@ -40,7 +40,7 @@ describe('fieldBoxVariants', () => {
 
     expect(classes).toContain('border-danger');
     expect(classes).not.toContain('border-grayscale-300');
-    expect(classes).not.toContain('focus:border-orange-500');
+    expect(classes).not.toContain('focus:border-primary-500');
   });
 
   it('upload 톤은 회색 배경에 점선 테두리다', () => {

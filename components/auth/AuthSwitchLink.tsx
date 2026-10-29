@@ -13,7 +13,7 @@ const AuthSwitchLink = ({ prompt, linkLabel, href }: AuthSwitchLinkProps) => {
       <span className="font-medium text-grayscale-700">{prompt}</span>
       <Link
         href={href}
-        className="rounded-sm font-semibold text-orange-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        className="rounded-sm font-semibold text-primary-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
       >
         {linkLabel}
       </Link>

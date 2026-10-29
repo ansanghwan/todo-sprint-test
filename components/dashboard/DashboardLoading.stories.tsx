@@ -29,7 +29,7 @@ const meta = {
         <div
           className={
             context.args.color === 'white'
-              ? 'h-40 rounded-xl bg-orange-500 p-4'
+              ? 'h-40 rounded-xl bg-primary-500 p-4'
               : 'h-40 p-4'
           }
         >

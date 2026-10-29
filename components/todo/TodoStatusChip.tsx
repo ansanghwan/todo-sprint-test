@@ -8,7 +8,7 @@ const chipVariants = cva(
   {
     variants: {
       isTodo: {
-        false: 'bg-orange-200 text-orange-600',
+        false: 'bg-primary-200 text-primary-600',
         true: 'bg-[#BBBBBB] text-white',
       },
     },

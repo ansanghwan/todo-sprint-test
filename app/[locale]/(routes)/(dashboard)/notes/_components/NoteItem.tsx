@@ -43,7 +43,7 @@ export default function NoteItem({
             type="button"
             onClick={onOpen}
             className={
-              'truncate text-left text-xl font-semibold after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-orange-600'
+              'truncate text-left text-xl font-semibold after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-primary-600'
             }
           >
             {title}

@@ -47,7 +47,7 @@ const DayTodosModal = ({
     >
       <ModalHeader>
         {formatDateKey(dateKey)}
-        <span className="text-orange-600">{todos.length}</span>
+        <span className="text-primary-600">{todos.length}</span>
       </ModalHeader>
       <ul className="flex min-h-0 flex-1 scrollbar-thin flex-col gap-1 overflow-y-auto overscroll-contain">
         {todos.map((todo) => (

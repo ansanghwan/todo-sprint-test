@@ -54,7 +54,7 @@ const StatusField = ({ value, onChange }: StatusFieldProps) => {
                 onChange={() => onChange(option.done)}
                 className="peer sr-only"
               />
-              <Icon className="size-4.5 shrink-0 rounded-sm peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-orange-600" />
+              <Icon className="size-4.5 shrink-0 rounded-sm peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary-600" />
               {option.label}
             </label>
           );

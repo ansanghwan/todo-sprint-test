@@ -23,7 +23,7 @@ const FormLabel = ({
   >
     {children}
     {isRequired && (
-      <span aria-hidden="true" className="text-orange-500">
+      <span aria-hidden="true" className="text-primary-500">
         *
       </span>
     )}

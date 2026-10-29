@@ -14,7 +14,7 @@ const PostDetailNotFound = () => {
       <p className="text-muted">{t('postNotFound')}</p>
       <Link
         href="/posts"
-        className="text-sm font-semibold text-orange-600 underline underline-offset-4"
+        className="text-sm font-semibold text-primary-600 underline underline-offset-4"
       >
         {t('backToList')}
       </Link>

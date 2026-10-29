@@ -38,7 +38,7 @@ export default function ThemeToggle({
           key={mode}
           value={mode}
           aria-label={t(mode)}
-          className="flex h-8 w-16 cursor-pointer items-center justify-center rounded-full text-grayscale-400 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 data-[state=checked]:bg-white data-[state=checked]:text-grayscale-700 data-[state=checked]:shadow-sm motion-reduce:transition-none"
+          className="flex h-8 w-16 cursor-pointer items-center justify-center rounded-full text-grayscale-400 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 data-[state=checked]:bg-white data-[state=checked]:text-grayscale-700 data-[state=checked]:shadow-sm motion-reduce:transition-none"
         >
           <span
             aria-hidden="true"

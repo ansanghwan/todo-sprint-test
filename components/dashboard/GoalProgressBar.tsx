@@ -34,7 +34,7 @@ export default function GoalProgressBar({ progress }: { progress: number }) {
       className="relative h-2 w-full overflow-hidden rounded-full bg-grayscale-200"
     >
       <span
-        className="absolute top-0 left-0 h-full rounded-full bg-orange-500 transition-[width] duration-700 ease-out motion-reduce:transition-none"
+        className="absolute top-0 left-0 h-full rounded-full bg-primary-500 transition-[width] duration-700 ease-out motion-reduce:transition-none"
         style={{ width: `${displayProgress}%` }}
       />
     </div>

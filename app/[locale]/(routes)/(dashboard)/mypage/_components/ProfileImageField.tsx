@@ -78,7 +78,7 @@ const ProfileImageField = ({
         aria-label={t('changeProfileImage')}
         onClick={() => inputRef.current?.click()}
         disabled={disabled}
-        className="absolute right-1.25 bottom-1.25 flex size-9 cursor-pointer items-center justify-center rounded-full bg-orange-500 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed"
+        className="absolute right-1.25 bottom-1.25 flex size-9 cursor-pointer items-center justify-center rounded-full bg-primary-500 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed"
       >
         <span aria-hidden className="material-symbols-rounded text-xl!">
           edit

@@ -44,19 +44,19 @@ export default function RecentTodosCard({
     <div className="min-w-0 md:flex-1 lg:flex-[1_1_28rem]">
       <div className="mb-2.5 flex flex-wrap px-2">
         <h2 className="mr-auto inline-flex items-center text-base font-medium text-heading md:text-lg">
-          <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-orange-300">
+          <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-primary-300">
             <Image src="/icons/icon_memo.svg" width={16} height={21} alt="" />
           </span>
           {nextIntlTodo('recentTodos')}
         </h2>
         <Link
           href="/todos"
-          className="ml-auto flex items-center text-sm font-semibold text-orange-600 dark:text-orange-300"
+          className="ml-auto flex items-center text-sm font-semibold text-primary-600 dark:text-primary-300"
         >
           {nextIntlTodo('viewAll')}
           <span>
             <svg
-              className="size-5 text-orange-500 dark:text-orange-300"
+              className="size-5 text-primary-500 dark:text-primary-300"
               viewBox="0 0 20 20"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"

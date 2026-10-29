@@ -14,7 +14,7 @@ const ALL_VALUE = 'all';
 const STATUS_ROW_CLASS = 'px-3.5 py-3.5 text-sm/5 text-muted';
 const ITEM_CLASS = 'group cursor-pointer p-1.5 outline-none ';
 const ITEM_TEXT_CLASS =
-  'block truncate rounded-xl p-2 text-base/6 font-medium text-foreground group-data-highlighted:bg-orange-200 dark:group-data-highlighted:bg-orange-alpha-20';
+  'block truncate rounded-xl p-2 text-base/6 font-medium text-foreground group-data-highlighted:bg-primary-200 dark:group-data-highlighted:bg-primary-alpha-20';
 
 interface FavoriteGoalFilterProps {
   value: FavoriteGoalFilterValue;
@@ -68,7 +68,7 @@ const FavoriteGoalFilter = ({ value, onChange }: FavoriteGoalFilterProps) => {
     >
       <Select.Trigger
         aria-label={t('goalFilter')}
-        className="flex h-13 w-full shrink-0 items-center gap-2 rounded-2xl border border-grayscale-100 bg-grayscale-50 px-4 text-left focus-visible:outline-2 focus-visible:outline-orange-600 md:h-auto md:py-3"
+        className="flex h-13 w-full shrink-0 items-center gap-2 rounded-2xl border border-grayscale-100 bg-grayscale-50 px-4 text-left focus-visible:outline-2 focus-visible:outline-primary-600 md:h-auto md:py-3"
       >
         <Image
           src="/icons/img_goal.svg"

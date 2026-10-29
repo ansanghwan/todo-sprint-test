@@ -12,34 +12,31 @@
   --color-grayscale-800: #262626;
   --color-grayscale-900: #121212;
 
-  /* BrickByBrick B안 컬러 적용 기준
-   * 기존 페이지·공용 컴포넌트가 참조하는 클래스명을 유지해, 여러 파일의 이름 변경과
-   * 그에 따른 누락·다른 작업과의 충돌 범위를 줄이고 색상값을 한곳에서 관리합니다.
-   * orange-*는 메인 Blue, blue-*는 보조 Yellow에 대응하며 실제 색상명이 아닙니다.
-   * 단계 번호와 기존 사용처는 유지하고, 독립적인 배경은 아래 역할 토큰으로 구분합니다.
-   * SVG·이미지 내부의 고정색은 이 토큰 변경만으로 바뀌지 않아 별도 확인이 필요합니다.
+  /* BrickByBrick B안 팔레트: primary는 메인 Blue, secondary는 보조 Yellow입니다.
+   * 기존 orange/blue 팔레트의 색상값과 단계 번호는 유지하고 역할에 맞게 이름을 정리했습니다.
+   * 독립적인 배경은 아래 역할 토큰으로 구분하며, SVG·이미지 내부의 고정색은 별도로 관리합니다.
    */
-  --color-orange-100: #f1f5fa;
-  --color-orange-200: #e2ebf4;
-  --color-orange-300: #c1d2e4;
-  --color-orange-400: #94b1ce;
-  --color-orange-500: #6489ae;
-  --color-orange-600: #31557a;
-  --color-orange-700: #233e59;
+  --color-primary-100: #f1f5fa;
+  --color-primary-200: #e2ebf4;
+  --color-primary-300: #c1d2e4;
+  --color-primary-400: #94b1ce;
+  --color-primary-500: #6489ae;
+  --color-primary-600: #31557a;
+  --color-primary-700: #233e59;
   /* 기존 메뉴 시안의 강조색: 라이트·다크에서 동일하게 유지합니다. */
-  --color-orange-menu-active: var(--color-orange-700);
-  --color-orange-menu-background: var(--color-orange-200);
+  --color-primary-menu-active: var(--color-primary-700);
+  --color-primary-menu-background: var(--color-primary-200);
   /* 두 alpha 토큰은 서로 다른 원본 색상에 불투명도를 적용한 값입니다. */
-  --color-orange-alpha-20: rgb(111 151 191 / 20%);
-  --color-orange-alpha-30: rgb(36 65 95 / 30%);
+  --color-primary-alpha-20: rgb(111 151 191 / 20%);
+  --color-primary-alpha-30: rgb(36 65 95 / 30%);
 
-  /* 기존 blue-* 이름을 유지하며 B안의 보조 Yellow 팔레트를 적용합니다. */
-  --color-blue-100: #fff2cf;
-  --color-blue-200: #ffc857;
-  --color-blue-300: #c78d20;
+  /* 보조 Yellow 팔레트입니다. */
+  --color-secondary-100: #fff2cf;
+  --color-secondary-200: #ffc857;
+  --color-secondary-300: #c78d20;
 
   /* B안에서 메인 팔레트와 독립적으로 사용하는 배경 역할입니다. */
-  --color-list-hover: var(--color-orange-200);
+  --color-list-hover: var(--color-primary-200);
   /* 배경 역할의 라이트·다크 값은 theme.css에서 관리합니다. */
 
   /* Badge(태그 칩) 의미 색: 피그마 Component colors/Utility의 단계만 옮겼습니다. */

@@ -114,7 +114,7 @@ export default function TodoItemSamplePage() {
               <h2 className="text-lg font-semibold">{preview.label}</h2>
               <code className="block text-sm text-muted">{`size="${preview.size}" style="${preview.style}"`}</code>
               <div
-                className={`${preview.size === 'small' ? 'max-w-93.75' : ''} ${preview.style === 'white' ? 'bg-orange-500' : 'bg-orange-100'} w-full rounded-2xl p-3`}
+                className={`${preview.size === 'small' ? 'max-w-93.75' : ''} ${preview.style === 'white' ? 'bg-primary-500' : 'bg-primary-100'} w-full rounded-2xl p-3`}
               >
                 <ul>
                   {todos.map((todo) => (

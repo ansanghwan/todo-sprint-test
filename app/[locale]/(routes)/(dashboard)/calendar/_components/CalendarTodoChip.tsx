@@ -16,7 +16,7 @@ const CalendarTodoChip = ({ todo }: CalendarTodoChipProps) => {
         'flex items-center gap-0.5 rounded-md border px-2 py-1 text-xs font-semibold',
         todo.done
           ? 'border-grayscale-300 bg-grayscale-50 text-grayscale-400'
-          : 'border-orange-300 bg-orange-100 text-orange-600',
+          : 'border-primary-300 bg-primary-100 text-primary-600',
       )}
     >
       {todo.done && (

@@ -9,7 +9,7 @@ import useAllGoals from '@/hooks/goal/useAllGoals';
 const ALL_GOALS_VALUE = 'all';
 const ITEM_CLASS_NAME = 'group cursor-pointer p-1.25 outline-none md:p-1.5';
 const ITEM_LABEL_CLASS_NAME =
-  'block truncate rounded-lg px-1.5 py-0.75 text-sm/5 font-medium tracking-[-0.03em] text-foreground group-data-highlighted:bg-orange-alpha-20 md:rounded-xl md:p-2 md:text-base/6';
+  'block truncate rounded-lg px-1.5 py-0.75 text-sm/5 font-medium tracking-[-0.03em] text-foreground group-data-highlighted:bg-primary-alpha-20 md:rounded-xl md:p-2 md:text-base/6';
 const STATUS_ROW_CLASS_NAME = 'px-3 py-2 text-sm/5 text-muted';
 
 interface CalendarGoalFilterProps {
@@ -34,7 +34,7 @@ const CalendarGoalFilter = ({
 
   return (
     <DropdownMenu.Root onOpenChange={handleOpenChange}>
-      <DropdownMenu.Trigger className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-2xl border border-orange-500 bg-muted-section px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 lg:w-87.5">
+      <DropdownMenu.Trigger className="flex w-full cursor-pointer items-center justify-between gap-2 rounded-2xl border border-primary-500 bg-muted-section px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 lg:w-87.5">
         <span className="flex min-w-0 items-center gap-2">
           <Image
             src="/icons/img_goal.svg"

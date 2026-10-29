@@ -32,7 +32,7 @@ const KebabMenu = ({ items, isWhite = false, ariaLabel }: KebabMenuProps) => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         aria-label={ariaLabel ?? t('more')}
-        className="flex size-6 shrink-0 items-center justify-center rounded-sm leading-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        className="flex size-6 shrink-0 items-center justify-center rounded-sm leading-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
       >
         <KebabIcon className="block size-6 shrink-0" />
       </DropdownMenu.Trigger>
@@ -50,7 +50,7 @@ const KebabMenu = ({ items, isWhite = false, ariaLabel }: KebabMenuProps) => {
               onSelect={onSelect}
               className="group cursor-pointer p-1.25 outline-none"
             >
-              <span className="block rounded-lg px-1.5 py-0.75 text-sm/5 font-medium tracking-[-0.03em] text-foreground group-data-highlighted:bg-orange-alpha-20">
+              <span className="block rounded-lg px-1.5 py-0.75 text-sm/5 font-medium tracking-[-0.03em] text-foreground group-data-highlighted:bg-primary-alpha-20">
                 {label}
               </span>
             </DropdownMenu.Item>

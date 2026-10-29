@@ -50,7 +50,7 @@ const CommentSection = ({ postId }: CommentSectionProps) => {
       <div className="flex flex-col gap-4">
         <h3 className="flex gap-0.5 text-base font-semibold md:gap-1 md:text-lg">
           <span className="text-heading">{t('comments')}</span>
-          <span className="text-orange-600">{commentCount}</span>
+          <span className="text-primary-600">{commentCount}</span>
         </h3>
         <CommentCreateForm postId={postId} />
       </div>

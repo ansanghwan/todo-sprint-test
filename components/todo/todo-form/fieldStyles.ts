@@ -19,7 +19,7 @@ export const fieldBoxVariants = cva(
       isError: {
         true: 'border-danger',
         false:
-          'border-input-border focus-within:border-orange-500 focus:border-orange-500 data-[state=open]:border-orange-500',
+          'border-input-border focus-within:border-primary-500 focus:border-primary-500 data-[state=open]:border-primary-500',
       },
     },
     defaultVariants: { tone: 'plain', isError: false },

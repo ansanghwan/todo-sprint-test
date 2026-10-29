@@ -60,8 +60,8 @@ const ConfirmModal = ({
             {title}
           </p>
           {description && (
-            <p className="flex items-center justify-center text-xs/4 font-medium text-orange-600 md:gap-1 md:text-base/6 md:tracking-[-0.03em]">
-              <IcReport className="size-4.5 shrink-0 text-orange-500 md:size-5" />
+            <p className="flex items-center justify-center text-xs/4 font-medium text-primary-600 md:gap-1 md:text-base/6 md:tracking-[-0.03em]">
+              <IcReport className="size-4.5 shrink-0 text-primary-500 md:size-5" />
               {description}
             </p>
           )}

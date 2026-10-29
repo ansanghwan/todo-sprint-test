@@ -23,7 +23,7 @@ export default function TodoProgressCard({
     <div className="min-w-0 max-md:mt-10 md:flex-1 lg:flex-[1_1_28rem]">
       <div className="mb-2.5 flex flex-wrap px-2">
         <h2 className="mr-auto inline-flex items-center text-base font-medium text-heading md:text-lg">
-          <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-blue-100">
+          <span className="mr-2 inline-flex size-8 items-center justify-center rounded-lg bg-secondary-100">
             <Image src="/icons/icon_chart.svg" width={16} height={21} alt="" />
           </span>{' '}
           {nextIntlTodo('myProgress')}

@@ -3,14 +3,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-full border border-solid leading-none font-semibold tracking-[-0.03em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed motion-reduce:transition-none',
+  'inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-full border border-solid leading-none font-semibold tracking-[-0.03em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed motion-reduce:transition-none',
   {
     variants: {
       variant: {
         primary:
-          'border-transparent bg-orange-500 text-white enabled:hover:bg-orange-600 disabled:bg-[#bbb]',
+          'border-transparent bg-primary-500 text-white enabled:hover:bg-primary-600 disabled:bg-[#bbb]',
         outline:
-          'border-orange-500 bg-transparent text-orange-600 enabled:hover:border-orange-600 disabled:border-[#bbb] disabled:text-[#bbb] dark:enabled:border-orange-400 dark:enabled:text-orange-300 dark:enabled:hover:border-orange-300 dark:enabled:hover:text-orange-200',
+          'border-primary-500 bg-transparent text-primary-600 enabled:hover:border-primary-600 disabled:border-[#bbb] disabled:text-[#bbb] dark:enabled:border-primary-400 dark:enabled:text-primary-300 dark:enabled:hover:border-primary-300 dark:enabled:hover:text-primary-200',
         neutral:
           'border-[#ccc] bg-transparent text-muted enabled:hover:border-[#bbb] enabled:hover:text-grayscale-600 disabled:border-[#ccc] disabled:text-[#bbb]',
       },

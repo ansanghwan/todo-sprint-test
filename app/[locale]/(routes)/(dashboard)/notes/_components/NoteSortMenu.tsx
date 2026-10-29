@@ -16,7 +16,7 @@ export default function NoteSortMenu({ value, onChange }: NoteSortMenuProps) {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         aria-label={t(value)}
-        className="ml-2 flex h-10 items-center justify-center rounded-full text-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        className="ml-2 flex h-10 items-center justify-center rounded-full text-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
       >
         {t(value)}
         <span

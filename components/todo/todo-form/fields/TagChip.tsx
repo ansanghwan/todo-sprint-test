@@ -51,7 +51,7 @@ const TagChip = ({ label, color, removeLabel, onRemove }: TagChipProps) => (
         type="button"
         aria-label={removeLabel}
         onClick={onRemove}
-        className="flex rounded-full focus-visible:outline-2 focus-visible:outline-orange-600"
+        className="flex rounded-full focus-visible:outline-2 focus-visible:outline-primary-600"
       >
         <span aria-hidden="true" className={removeIconVariants({ color })}>
           close

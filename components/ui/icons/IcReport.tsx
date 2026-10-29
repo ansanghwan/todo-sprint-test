@@ -8,7 +8,7 @@ interface IcReportProps extends SVGProps<SVGSVGElement> {
  * 경고(팔각형 느낌표) 아이콘. Figma popup의 `report_24dp` (4:9878)
  *
  * fill을 currentColor로 둬서 부모의 text 색을 따라갑니다.
- * 시안 기본값은 orange-500(#FF8442)입니다.
+ * 시안 기본값은 primary-500(#FF8442)입니다.
  */
 const IcReport = ({ className, ...props }: IcReportProps) => {
   return (

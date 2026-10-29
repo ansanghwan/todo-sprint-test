@@ -25,7 +25,7 @@ export default function DesignTokensPage() {
         type="button"
         onClick={() => void copy(value)}
         aria-label={`${value} 클래스 복사`}
-        className="max-w-full rounded-lg border border-grayscale-200 bg-white px-3 py-2 text-left font-mono text-xs break-all text-grayscale-700 hover:bg-grayscale-100 focus-visible:outline-2 focus-visible:outline-orange-600"
+        className="max-w-full rounded-lg border border-grayscale-200 bg-white px-3 py-2 text-left font-mono text-xs break-all text-grayscale-700 hover:bg-grayscale-100 focus-visible:outline-2 focus-visible:outline-primary-600"
       >
         {value}
       </button>
@@ -36,7 +36,7 @@ export default function DesignTokensPage() {
     <main className="min-h-dvh bg-grayscale-100 px-4 py-10 font-sans text-base text-grayscale-800 sm:px-8">
       <div className="mx-auto max-w-6xl space-y-10">
         <header className="space-y-4">
-          <p className="text-sm font-semibold text-orange-700">
+          <p className="text-sm font-semibold text-primary-700">
             TEAM STYLE GUIDE
           </p>
           <h1 className="text-3xl font-bold">
@@ -48,7 +48,7 @@ export default function DesignTokensPage() {
           </p>
           <nav
             aria-label="토큰 가이드 목차"
-            className="flex flex-wrap gap-4 text-sm font-semibold text-orange-700"
+            className="flex flex-wrap gap-4 text-sm font-semibold text-primary-700"
           >
             <a href="#theme">테마 색상</a>
             <a href="#palette">고정 컬러 팔레트</a>

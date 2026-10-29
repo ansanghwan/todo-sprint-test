@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 const COMMENT_MAX_LENGTH = 500;
 
 const commentInputVariants = cva(
-  'w-full min-w-0 border border-input-border bg-input text-foreground transition-colors outline-none placeholder:text-muted focus:border-orange-500 disabled:cursor-not-allowed',
+  'w-full min-w-0 border border-input-border bg-input text-foreground transition-colors outline-none placeholder:text-muted focus:border-primary-500 disabled:cursor-not-allowed',
   {
     variants: {
       size: {

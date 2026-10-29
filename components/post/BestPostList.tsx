@@ -20,7 +20,7 @@ const BestPostList = () => {
           <li key={post.id} className="flex">
             <Link
               href={`/posts/${post.id}`}
-              className="flex shrink-0 rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 md:rounded-4xl lg:w-full"
+              className="flex shrink-0 rounded-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 md:rounded-4xl lg:w-full"
             >
               <BestPostCard post={post} />
             </Link>

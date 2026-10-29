@@ -106,7 +106,7 @@ const TodoDetailContent = ({ todo }: TodoDetailContentProps) => {
                 href={todo.linkUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-1 text-base/6 tracking-[-0.02em] break-all text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-orange-600"
+                className="flex items-start gap-1 text-base/6 tracking-[-0.02em] break-all text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600"
               >
                 <span
                   aria-hidden="true"

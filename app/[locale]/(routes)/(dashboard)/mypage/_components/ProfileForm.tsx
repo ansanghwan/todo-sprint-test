@@ -88,7 +88,7 @@ const ProfileForm = () => {
               className={
                 nameError
                   ? 'min-h-5 text-sm text-danger'
-                  : 'min-h-5 text-sm text-blue-300'
+                  : 'min-h-5 text-sm text-secondary-300'
               }
             >
               {nameError ?? (isNameAvailable ? t('nameAvailable') : null)}

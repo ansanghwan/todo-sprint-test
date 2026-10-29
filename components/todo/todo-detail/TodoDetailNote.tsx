@@ -33,7 +33,7 @@ const TodoDetailNote = ({ noteId, onOpen }: TodoDetailNoteProps) => {
       <button
         type="button"
         onClick={() => onOpen(noteId)}
-        className="flex items-center gap-2 rounded-2xl border border-subtle bg-white-section p-4 text-left focus-visible:outline-2 focus-visible:outline-orange-600"
+        className="flex items-center gap-2 rounded-2xl border border-subtle bg-white-section p-4 text-left focus-visible:outline-2 focus-visible:outline-primary-600"
       >
         <Image
           src="/icons/img_note.svg"

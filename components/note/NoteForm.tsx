@@ -97,7 +97,7 @@ export default function NoteForm({
                     }
                   />
                   <span className={'ml-auto text-xs'}>
-                    {titleLength}/<span className={'text-orange-600'}>30</span>
+                    {titleLength}/<span className={'text-primary-600'}>30</span>
                   </span>
                 </div>
 

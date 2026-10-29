@@ -132,7 +132,7 @@ const GoalSelectField = ({
                   value={String(goal.id)}
                   className="group cursor-pointer p-1.5 outline-none"
                 >
-                  <span className="block truncate rounded-xl p-2 text-base/6 font-medium group-data-highlighted:bg-orange-200 dark:group-data-highlighted:bg-orange-alpha-20">
+                  <span className="block truncate rounded-xl p-2 text-base/6 font-medium group-data-highlighted:bg-primary-200 dark:group-data-highlighted:bg-primary-alpha-20">
                     <Select.ItemText>{goal.title}</Select.ItemText>
                   </span>
                 </Select.Item>

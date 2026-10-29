@@ -25,7 +25,7 @@ describe('toast', () => {
         el.textContent === '임시 저장이 완료되었습니다ㆍ1초전',
     );
     expect(screen.getByText('check')).toBeInTheDocument();
-    expect(message.closest('div')).toHaveClass('text-orange-600');
+    expect(message.closest('div')).toHaveClass('text-primary-600');
   });
 
   it('error 토스트에 ReactNode 내용을 렌더링한다', async () => {

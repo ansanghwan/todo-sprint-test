@@ -19,7 +19,7 @@ const getDateClassName = ({
   isOutsideMonth,
 }: DateState) => {
   if (isToday) {
-    return 'bg-orange-500 text-white';
+    return 'bg-primary-500 text-white';
   }
   if (isSelected) {
     return 'bg-grayscale-100 text-grayscale-600';
@@ -77,7 +77,7 @@ const CalendarCell = ({
         aria-current={isToday ? 'date' : undefined}
         onClick={handleSelect}
         className={cn(
-          'flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold after:absolute after:inset-0 after:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600',
+          'flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold after:absolute after:inset-0 after:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
           getDateClassName({ isToday, isSelected, isOutsideMonth }),
         )}
       >
@@ -93,7 +93,7 @@ const CalendarCell = ({
             key={todo.id}
             className={cn(
               'size-2 rounded-full',
-              todo.done ? 'bg-grayscale-400' : 'bg-orange-500',
+              todo.done ? 'bg-grayscale-400' : 'bg-primary-500',
             )}
           />
         ))}

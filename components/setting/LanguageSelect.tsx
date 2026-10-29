@@ -32,7 +32,7 @@ export default function LanguageSelect({
     >
       <Select.Trigger
         aria-labelledby={labelId}
-        className="flex h-11 w-full cursor-pointer items-center justify-between rounded-xl border border-input-border bg-input px-3 text-sm/5 text-foreground outline-none focus-visible:border-orange-500 data-[state=open]:border-orange-500"
+        className="flex h-11 w-full cursor-pointer items-center justify-between rounded-xl border border-input-border bg-input px-3 text-sm/5 text-foreground outline-none focus-visible:border-primary-500 data-[state=open]:border-primary-500"
       >
         <Select.Value />
         <Select.Icon
@@ -56,7 +56,7 @@ export default function LanguageSelect({
                 value={locale}
                 className="group cursor-pointer p-1.5 outline-none"
               >
-                <span className="block rounded-xl p-2 text-sm/5 font-medium text-foreground group-data-highlighted:bg-orange-200 group-data-highlighted:text-orange-600">
+                <span className="block rounded-xl p-2 text-sm/5 font-medium text-foreground group-data-highlighted:bg-primary-200 group-data-highlighted:text-primary-600">
                   <Select.ItemText>{LANGUAGE_LABELS[locale]}</Select.ItemText>
                 </span>
               </Select.Item>

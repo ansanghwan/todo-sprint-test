@@ -7,7 +7,7 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        success: 'bg-orange-100 text-orange-600',
+        success: 'bg-primary-100 text-primary-600',
         error: 'bg-[#FFF0F0] text-danger',
       },
     },

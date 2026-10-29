@@ -292,7 +292,7 @@ export default function Gnb({
                               ? 'page'
                               : undefined
                           }
-                          className="block truncate px-6 py-2 text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-orange-500 data-[active=false]:hover:bg-orange-menu-background/40 data-[active=false]:hover:text-orange-menu-active data-[active=true]:bg-orange-menu-background/60 data-[active=true]:font-bold data-[active=true]:text-orange-menu-active dark:data-[active=false]:hover:bg-orange-400/10 dark:data-[active=false]:hover:text-orange-300 dark:data-[active=true]:bg-orange-400/15 dark:data-[active=true]:text-orange-300"
+                          className="block truncate px-6 py-2 text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-primary-500 data-[active=false]:hover:bg-primary-menu-background/40 data-[active=false]:hover:text-primary-menu-active data-[active=true]:bg-primary-menu-background/60 data-[active=true]:font-bold data-[active=true]:text-primary-menu-active dark:data-[active=false]:hover:bg-primary-400/10 dark:data-[active=false]:hover:text-primary-300 dark:data-[active=true]:bg-primary-400/15 dark:data-[active=true]:text-primary-300"
                         >
                           {goal.title}
                         </Link>
@@ -308,7 +308,7 @@ export default function Gnb({
                         <button
                           type="button"
                           onClick={goalMenu.onRetry}
-                          className="text-orange-600 hover:underline"
+                          className="text-primary-600 hover:underline"
                         >
                           {nextIntlTodo('retry')}
                         </button>
@@ -429,7 +429,7 @@ export default function Gnb({
                   <Link
                     href="/mypage"
                     aria-label={nextIntlTodo('profile')}
-                    className="flex h-16 w-full items-center gap-2 rounded-full border border-solid border-subtle p-3 text-left text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+                    className="flex h-16 w-full items-center gap-2 rounded-full border border-solid border-subtle p-3 text-left text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
                   >
                     <Image
                       {...getProfileImageProps(userImage)}
@@ -491,7 +491,7 @@ function SideMenuLink({
       href={href}
       data-active={active}
       aria-current={active ? 'page' : undefined}
-      className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-orange-300"
+      className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 font-semibold text-foreground hover:text-primary-menu-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-primary-menu-background data-[active=true]:font-bold data-[active=true]:text-primary-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-primary-300"
     >
       <SideMenuIcon name={icon} active={active} />
       <span className="min-w-0 flex-1 truncate">{title}</span>
@@ -521,7 +521,7 @@ function SideMenuIcon({
     <span
       aria-hidden="true"
       data-active={active}
-      className="size-6 shrink-0 bg-grayscale-300 group-hover/menu-item:bg-orange-menu-active data-[active=true]:bg-orange-menu-active dark:data-[active=false]:group-hover/menu-item:bg-orange-300"
+      className="size-6 shrink-0 bg-grayscale-300 group-hover/menu-item:bg-primary-menu-active data-[active=true]:bg-primary-menu-active dark:data-[active=false]:group-hover/menu-item:bg-primary-300"
       style={{
         maskImage: `url(/icons/gnb/icon_${name}.svg)`,
         maskSize: 'contain',
@@ -590,7 +590,7 @@ function SideMenuAccordion({
           setIsExpanded(next);
           onExpand?.(next);
         }}
-        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-orange-menu-active focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-orange-menu-background data-[active=true]:font-bold data-[active=true]:text-orange-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-orange-300"
+        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-primary-menu-active focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-primary-menu-background data-[active=true]:font-bold data-[active=true]:text-primary-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-primary-300"
       >
         {icon && (
           <span className="flex shrink-0 items-center" aria-hidden="true">
@@ -601,7 +601,7 @@ function SideMenuAccordion({
         <span
           aria-hidden="true"
           data-active={active}
-          className="size-6 shrink-0 rotate-180 bg-grayscale-400 transition-transform duration-300 group-data-[open=true]/side-menu-accordion:rotate-0 data-[active=true]:bg-orange-700 motion-reduce:transition-none"
+          className="size-6 shrink-0 rotate-180 bg-grayscale-400 transition-transform duration-300 group-data-[open=true]/side-menu-accordion:rotate-0 data-[active=true]:bg-primary-700 motion-reduce:transition-none"
           style={{
             maskImage: 'url(/icons/gnb/icon_arrow_up.svg)',
             maskSize: 'contain',

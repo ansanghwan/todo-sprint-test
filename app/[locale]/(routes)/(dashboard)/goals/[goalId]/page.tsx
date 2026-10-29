@@ -33,7 +33,7 @@ import DashboardLoading from '@/components/dashboard/DashboardLoading';
 import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
 // 대시보드와 같은 행 강조와 케밥 버튼 배경을 사용합니다. 키보드 포커스도 함께 처리합니다.
 const goalTodoItemClass =
-  'group/goal-todo rounded-lg transition-colors hover:bg-list-hover focus-within:bg-list-hover hover:[&>button:nth-of-type(2)]:text-orange-600 focus-within:[&>button:nth-of-type(2)]:text-orange-600';
+  'group/goal-todo rounded-lg transition-colors hover:bg-list-hover focus-within:bg-list-hover hover:[&>button:nth-of-type(2)]:text-primary-600 focus-within:[&>button:nth-of-type(2)]:text-primary-600';
 const goalTodoKebabClass =
   'flex shrink-0 rounded-full transition-colors group-hover/goal-todo:bg-white group-focus-within/goal-todo:bg-white [&>button]:size-6 [&>button]:rounded-full [&>button[data-state=open]]:bg-white [&_svg>circle:first-child]:fill-transparent';
 
@@ -163,7 +163,7 @@ export default function GoalDetailPage() {
                 <div className="absolute top-1/2 left-0 z-10 flex w-full -translate-y-1/2 items-center gap-7.5 px-6">
                   <ProgressChart
                     progress={progress}
-                    trackColor="var(--color-orange-400)"
+                    trackColor="var(--color-primary-400)"
                     strokeWidth={16}
                     className="aspect-square w-[calc((100%+2.5rem)*0.268222)] shrink-0 md:size-23"
                   />
@@ -186,7 +186,7 @@ export default function GoalDetailPage() {
 
             <Link
               href={`/notes?goalId=${id}`}
-              className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-secondary-card-background pb-8 pl-10 text-secondary-card-foreground shadow-[0_0.625rem_2.5rem_0_var(--secondary-card-shadow-color)] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75 md:before:size-24.25"
+              className="relative isolate flex aspect-343/160 min-w-0 items-end overflow-hidden rounded-[1.75rem] bg-secondary-card-background pb-8 pl-10 text-secondary-card-foreground shadow-[0_0.625rem_2.5rem_0_var(--secondary-card-shadow-color)] before:pointer-events-none before:absolute before:top-1/2 before:right-4.5 before:aspect-square before:w-[30%] before:-translate-y-1/2 before:bg-[url('/images/goal/img_note.png')] before:bg-contain before:bg-center before:bg-no-repeat before:opacity-45 before:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-300 md:aspect-auto md:h-40 md:rounded-4xl md:pb-8.75 md:before:size-24.25"
             >
               <span className="relative z-10 inline-flex items-center gap-1.5 text-2xl font-bold">
                 {nextIntlTodo('notes')}
@@ -216,7 +216,7 @@ export default function GoalDetailPage() {
               <Link
                 href={`/calendar?goalId=${id}`}
                 className={cn(
-                  'inline-flex h-10 shrink-0 items-center justify-center gap-1 rounded-full border border-input-border px-4 text-sm leading-none font-semibold tracking-[-0.03em] whitespace-nowrap text-muted transition-colors hover:border-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600',
+                  'inline-flex h-10 shrink-0 items-center justify-center gap-1 rounded-full border border-input-border px-4 text-sm leading-none font-semibold tracking-[-0.03em] whitespace-nowrap text-muted transition-colors hover:border-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
                   isKorean ? 'w-34' : 'w-auto',
                 )}
               >
@@ -313,7 +313,7 @@ export default function GoalDetailPage() {
                   <div className="mt-4 flex shrink-0 justify-center">
                     <button
                       type="button"
-                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
+                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-wait disabled:opacity-60"
                       aria-busy={todoQuery.isFetching}
                       aria-label={
                         todoQuery.isError
@@ -423,7 +423,7 @@ export default function GoalDetailPage() {
                   <div className="mt-4 flex shrink-0 justify-center">
                     <button
                       type="button"
-                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-orange-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-wait disabled:opacity-60"
+                      className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg px-4 text-sm font-medium text-primary-600 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-wait disabled:opacity-60"
                       aria-busy={doneQuery.isFetching}
                       aria-label={
                         doneQuery.isError

@@ -122,7 +122,7 @@ export default function PostForm({
                     />
                     <span className={'ml-auto text-xs'}>
                       {titleLength}/
-                      <span className={'text-orange-600'}>30</span>
+                      <span className={'text-primary-600'}>30</span>
                     </span>
                   </div>
                 </PostEditor>

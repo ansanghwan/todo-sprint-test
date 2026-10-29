@@ -5,13 +5,13 @@ import LandingSmoothScroll from '@/components/landing/LandingSmoothScroll';
 
 // 반복되는 문구와 버튼 스타일은 함께 수정할 수 있도록 모았습니다.
 const eyebrowClass =
-  'text-base font-semibold text-orange-600 md:text-2xl lg:text-3xl';
+  'text-base font-semibold text-primary-600 md:text-2xl lg:text-3xl';
 const hdadingManinClass =
   'mt-4 text-[length:clamp(1.875rem,5.3vw,6.15rem)] leading-[1.25] font-extrabold text-[#292929]';
 const headingClass =
   'mt-2 text-xl font-bold leading-snug tracking-tight md:mt-6 md:text-display-md lg:text-6xl';
 const startClass =
-  'inline-flex h-10 w-34  items-center justify-center rounded-full bg-orange-500 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition-colors hover:bg-orange-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-600 md:h-14 md:w-56 md:text-base';
+  'inline-flex h-10 w-34  items-center justify-center rounded-full bg-primary-500 text-sm font-semibold text-white shadow-lg shadow-primary-500/20 transition-colors hover:bg-primary-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-600 md:h-14 md:w-56 md:text-base';
 const featureItemClass =
   'flex items-center gap-3.5 rounded-2xl border border-[#ffffff40] bg-[#ffffff26] px-4 py-3.5 text-[length:1rem] font-bold shadow-[0_0.25rem_0.75rem_#ae38100a] md:gap-5 md:px-6 md:py-5 md:text-[length:1.25rem]';
 const featureIconClass = 'size-9 shrink-0 md:size-10';
@@ -86,7 +86,7 @@ export default function Home() {
       {/* section02 */}
       <section
         data-landing-section="features"
-        className="flex min-h-svh items-center bg-orange-500 px-5 py-[clamp(3rem,7svh,6rem)] text-white md:px-10 lg:px-[clamp(2.5rem,5vw,5rem)]"
+        className="flex min-h-svh items-center bg-primary-500 px-5 py-[clamp(3rem,7svh,6rem)] text-white md:px-10 lg:px-[clamp(2.5rem,5vw,5rem)]"
       >
         <div
           data-reveal-trigger
@@ -168,7 +168,7 @@ export default function Home() {
           {/* 카드 내용은 개별 작성하고 카드 외형만 공통으로 적용합니다. */}
           <ol className="relative mt-10 grid gap-5 max-md:group-data-steps-pinned/steps:mt-6 md:grid-cols-3 md:gap-6 lg:mt-26">
             <li className={stepCardClass}>
-              <span className="flex size-9 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-md shadow-orange-500/15">
+              <span className="flex size-9 items-center justify-center rounded-full bg-primary-500 text-xl font-bold text-white shadow-md shadow-primary-500/15">
                 1
               </span>
               <Image
@@ -189,7 +189,7 @@ export default function Home() {
               </p>
             </li>
             <li className={stepCardClass}>
-              <span className="flex size-9 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-md shadow-orange-500/15">
+              <span className="flex size-9 items-center justify-center rounded-full bg-primary-500 text-xl font-bold text-white shadow-md shadow-primary-500/15">
                 2
               </span>
               <Image
@@ -210,7 +210,7 @@ export default function Home() {
               </p>
             </li>
             <li className={stepCardClass}>
-              <span className="flex size-9 items-center justify-center rounded-full bg-orange-500 text-xl font-bold text-white shadow-md shadow-orange-500/15">
+              <span className="flex size-9 items-center justify-center rounded-full bg-primary-500 text-xl font-bold text-white shadow-md shadow-primary-500/15">
                 3
               </span>
               <Image

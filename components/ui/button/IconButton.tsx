@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import ButtonIcon from './ButtonIcon';
 
 const styles = cva(
-  'relative inline-flex shrink-0 items-center justify-center rounded-full border border-solid bg-white-section focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 disabled:cursor-not-allowed',
+  'relative inline-flex shrink-0 items-center justify-center rounded-full border border-solid bg-white-section focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed',
   {
     variants: {
       icon: {
@@ -72,7 +72,7 @@ export default function IconButton({
         <span
           data-notification-dot=""
           aria-hidden="true"
-          className="absolute top-0.5 right-1 size-3 rounded-full bg-orange-500"
+          className="absolute top-0.5 right-1 size-3 rounded-full bg-primary-500"
         />
       )}
     </button>

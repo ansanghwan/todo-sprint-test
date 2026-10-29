@@ -18,7 +18,7 @@ const TodoStatusTabs = () => {
         <Tabs.Trigger
           key={value}
           value={value}
-          className="cursor-pointer rounded-2xl px-4 py-2 text-base/6 font-bold tracking-[-0.03em] text-grayscale-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 data-[state=active]:bg-orange-500/20 data-[state=active]:text-orange-600 dark:data-[state=active]:text-orange-300"
+          className="cursor-pointer rounded-2xl px-4 py-2 text-base/6 font-bold tracking-[-0.03em] text-grayscale-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 data-[state=active]:bg-primary-500/20 data-[state=active]:text-primary-600 dark:data-[state=active]:text-primary-300"
         >
           {t(labelKey)}
         </Tabs.Trigger>

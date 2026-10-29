@@ -4,7 +4,7 @@ import { getFirstDay, type MonthKey } from '../_lib/calendarDates';
 import CalendarGoalFilter from './CalendarGoalFilter';
 
 const MONTH_BUTTON_CLASS_NAME =
-  'flex rounded-sm text-subtle hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600';
+  'flex rounded-sm text-subtle hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600';
 
 interface CalendarHeaderProps {
   month: MonthKey;

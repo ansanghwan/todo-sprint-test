@@ -59,18 +59,18 @@ const DueDatePicker = ({ value, onConfirm, onCancel }: DueDatePickerProps) => {
           month_caption:
             'flex h-10 items-center justify-center text-sm/5 font-semibold text-foreground',
           button_previous:
-            'absolute top-0 left-0 flex size-10 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-orange-600',
+            'absolute top-0 left-0 flex size-10 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-primary-600',
           button_next:
-            'absolute top-0 right-0 flex size-10 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-orange-600',
+            'absolute top-0 right-0 flex size-10 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-primary-600',
           chevron: 'size-5 fill-grayscale-500',
           month_grid: 'w-full border-collapse',
           weekday: 'size-10 text-sm/5 font-medium text-foreground',
           day: 'size-10 p-0 text-center text-sm/5 text-foreground',
           day_button:
-            'size-10 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600',
+            'size-10 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600',
           outside: 'text-grayscale-400',
           today: '[&:not([data-selected])>button]:bg-muted-section',
-          selected: '[&>button]:bg-orange-500 [&>button]:text-white',
+          selected: '[&>button]:bg-primary-500 [&>button]:text-white',
         }}
       />
 
