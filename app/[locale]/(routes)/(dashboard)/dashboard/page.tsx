@@ -714,7 +714,7 @@ export default function Dashboard() {
                         ) : (
                           <div className="mt-2.5 grid gap-4 lg:mt-6 lg:grid-cols-2 lg:gap-8">
                             <div className="relative min-h-34 rounded-2xl bg-todo-background p-4 lg:min-h-48 lg:p-6">
-                              <p className="text-sm font-semibold tracking-[-0.03em] text-primary-600 lg:text-base dark:text-primary-400">
+                              <p className="text-sm font-semibold tracking-[-0.03em] text-point-soft lg:text-base">
                                 TO DO
                               </p>
                               {pendingState.error ? (
