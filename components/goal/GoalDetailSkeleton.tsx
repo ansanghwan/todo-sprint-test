@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 
-const placeholder = 'bg-grayscale-200 dark:bg-grayscale-800';
+const placeholder = 'bg-surface-subtle';
 const barAnimation = 'origin-left motion-safe:animate-skeleton-bar';
 const card = 'border border-subtle bg-white-section';
 const rowWidths = ['w-3/5', 'w-4/5', 'w-2/3', 'w-1/2', 'w-3/5'];
@@ -61,7 +61,7 @@ export default function GoalDetailSkeleton() {
         <div className="max-md:space-y-4 md:grid md:gap-6 lg:gap-8 xl:grid-cols-2 lg:max-[93.75rem]:[aside[data-open=false]~main_&]:grid-cols-1">
           <div
             className={cn(
-              'flex min-w-0 items-center gap-3 rounded-2xl p-4 md:rounded-3xl md:p-6 lg:gap-4 lg:rounded-[2rem] lg:py-15 lg:pr-12 lg:pl-10',
+              'flex min-w-0 items-center gap-3 rounded-2xl p-4 md:rounded-3xl md:p-6 lg:gap-4 lg:rounded-4xl lg:py-15 lg:pr-12 lg:pl-10',
               card,
             )}
           >
@@ -84,11 +84,11 @@ export default function GoalDetailSkeleton() {
           <div className="min-w-0 space-y-4 md:grid md:grid-cols-2 md:gap-5 md:space-y-0">
             <div
               className={cn(
-                'flex aspect-[343/160] min-w-0 items-center gap-6 rounded-[1.75rem] px-6 md:aspect-auto md:h-40 md:rounded-[2rem]',
+                'flex aspect-343/160 min-w-0 items-center gap-6 rounded-[1.75rem] px-6 md:aspect-auto md:h-40 md:rounded-4xl',
                 card,
               )}
             >
-              <div className="aspect-square w-[27%] shrink-0 rounded-full border-[1rem] border-grayscale-200 motion-safe:animate-pulse md:size-23 dark:border-grayscale-800" />
+              <div className="aspect-square w-[27%] shrink-0 rounded-full border-[1rem] border-subtle motion-safe:animate-pulse md:size-23" />
               <div className="min-w-0 flex-1 space-y-3 motion-safe:animate-pulse">
                 <div
                   className={cn(
@@ -104,7 +104,7 @@ export default function GoalDetailSkeleton() {
             </div>
             <div
               className={cn(
-                'flex aspect-[343/160] min-w-0 items-center gap-4 rounded-[1.75rem] px-6 md:aspect-auto md:h-40 md:rounded-[2rem]',
+                'flex aspect-343/160 min-w-0 items-center gap-4 rounded-[1.75rem] px-6 md:aspect-auto md:h-40 md:rounded-4xl',
                 card,
               )}
             >

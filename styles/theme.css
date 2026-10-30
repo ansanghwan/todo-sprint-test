@@ -23,6 +23,8 @@
 :root {
   --background: #f0f0f0; /* 기존 페이지 배경 유지 */
   --white-section: #ffffff;
+  /* 라이트 #DDDDDD 배경을 공유하는 요소의 공통 테마 색상입니다. */
+  --surface-subtle: #dddddd;
   /* 넓은 메인 컬러 카드만 분리해 버튼의 브랜드 색상은 유지합니다. */
   --todo-background: #f6f4ef;
   --primary-card-background: var(--color-primary-500);
@@ -54,6 +56,7 @@
 "시스템 설정"을 고르면 next-themes가 OS 설정을 읽어 같은 속성을 대신 붙입니다. */
 :root[data-theme='dark'] {
   --background: #0a0a0a; /* 기존 페이지 배경 유지 */
+  --surface-subtle: #535353;
   /* 글자·아이콘의 불투명도는 유지하고 카드 배경만 차분한 Blue로 조정합니다. */
   --primary-card-background: color-mix(
     in srgb,
@@ -90,6 +93,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-white-section: var(--white-section);
+  --color-surface-subtle: var(--surface-subtle);
   --color-todo-background: var(--todo-background);
   --color-primary-card-background: var(--primary-card-background);
   --color-primary-card-foreground: var(--primary-card-foreground);

@@ -251,7 +251,7 @@ export default function GoalDetailPage() {
             </div>
           </div>
 
-          <div className="relative min-h-34 rounded-2xl bg-todo-background p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6 dark:[&_li>button:nth-of-type(2)]:text-foreground">
+          <div className="relative min-h-34 rounded-2xl bg-todo-background p-4 md:flex md:max-h-144 md:flex-col lg:flex-1 lg:p-6">
             {todoQuery.isPending ? (
               <div role="status" aria-busy="true">
                 <span className="sr-only">{nextIntlTodo('loadingTodos')}</span>
