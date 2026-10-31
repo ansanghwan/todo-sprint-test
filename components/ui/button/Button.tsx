@@ -10,7 +10,7 @@ const buttonVariants = cva(
         primary:
           'border-transparent bg-primary-500 text-white enabled:hover:bg-primary-600 disabled:bg-[#bbb]',
         outline:
-          'border-primary-500 bg-transparent text-point enabled:hover:border-point enabled:hover:text-point-strong disabled:border-[#bbb] disabled:text-[#bbb] dark:enabled:border-primary-400',
+          'border-primary bg-transparent text-point enabled:hover:border-point enabled:hover:text-point-strong disabled:border-[#bbb] disabled:text-[#bbb]',
         neutral:
           'border-[#ccc] bg-transparent text-muted enabled:hover:border-[#bbb] enabled:hover:text-grayscale-600 disabled:border-[#ccc] disabled:text-[#bbb]',
       },

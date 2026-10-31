@@ -21,6 +21,10 @@
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 :root {
+  --theme-primary-border: var(--color-primary-500);
+  --theme-primary-soft-stroke: var(--color-primary-alpha-30);
+  --theme-primary-soft-bg: var(--color-primary-100);
+  --theme-gray-soft-bg: var(--color-grayscale-100);
   --menu-hover-bg: transparent;
   --menu-hover-col: var(--color-primary-700);
   --menu-active-bg: var(--color-primary-200);
@@ -74,6 +78,10 @@
 /* 설정 팝업에서 고른 테마를 따릅니다. next-themes가 <html data-theme="light|dark">를 붙입니다.
 "시스템 설정"을 고르면 next-themes가 OS 설정을 읽어 같은 속성을 대신 붙입니다. */
 :root[data-theme='dark'] {
+  --theme-primary-border: var(--color-primary-400);
+  --theme-primary-soft-stroke: var(--color-primary-400);
+  --theme-primary-soft-bg: var(--white-section);
+  --theme-gray-soft-bg: var(--color-grayscale-800);
   --menu-hover-bg: transparent;
   --menu-hover-col: var(--color-primary-300);
   --menu-active-bg: var(--color-primary-200);
@@ -129,6 +137,8 @@
 }
 
 @theme inline {
+  --color-primary-soft: var(--theme-primary-soft-bg);
+  --color-gray-soft: var(--theme-gray-soft-bg);
   --color-point: var(--theme-point-col);
   --color-point-soft: var(--theme-point-soft-col);
   --color-point-strong: var(--theme-point-strong-col);
@@ -148,6 +158,13 @@
   --color-muted: var(--text-muted);
   --color-subtle: var(--text-subtle);
   --color-default: var(--border-default);
+}
+
+@utility border-primary {
+  border-color: var(--theme-primary-border);
+}
+@utility stroke-primary-soft {
+  stroke: var(--theme-primary-soft-stroke);
 }
 
 /* 같은 상태 이름에서도 배경과 글자는 서로 다른 변수를 참조합니다. */

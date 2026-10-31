@@ -29,7 +29,7 @@ interface GoalSelectFieldProps {
   initialGoal?: GoalOption;
 }
 
-const STATUS_ROW_CLASS = 'px-3.5 py-3.5 text-sm/5 text-grayscale-500';
+const STATUS_ROW_CLASS = 'px-3.5 py-3.5 text-sm/5 text-muted';
 
 /**
  * 목표 선택 (FN-TD-22). Figma dropdown (4:9068)
@@ -103,7 +103,7 @@ const GoalSelectField = ({
           aria-describedby={error ? errorId : undefined}
           className={cn(
             fieldBoxVariants({ isError: Boolean(error) }),
-            'justify-between text-left data-placeholder:text-grayscale-500',
+            'justify-between text-left text-foreground data-placeholder:text-muted',
           )}
         >
           <span className="min-w-0 truncate">
@@ -113,7 +113,7 @@ const GoalSelectField = ({
           </span>
           <Select.Icon
             aria-hidden="true"
-            className="material-symbols-outlined text-[1.5rem] text-grayscale-500"
+            className="material-symbols-outlined text-[1.5rem] text-muted"
           >
             keyboard_arrow_down
           </Select.Icon>
@@ -132,7 +132,7 @@ const GoalSelectField = ({
                   value={String(goal.id)}
                   className="group cursor-pointer p-1.5 outline-none"
                 >
-                  <span className="block truncate rounded-xl p-2 text-base/6 font-medium group-data-highlighted:bg-list-hover group-data-highlighted:text-primary-600">
+                  <span className="block truncate rounded-xl p-2 text-base/6 font-medium text-foreground group-data-highlighted:bg-list-hover group-data-highlighted:text-primary-600">
                     <Select.ItemText>{goal.title}</Select.ItemText>
                   </span>
                 </Select.Item>
