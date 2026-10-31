@@ -292,7 +292,7 @@ export default function Gnb({
                               ? 'page'
                               : undefined
                           }
-                          className="block truncate px-6 py-2 text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-primary-500 data-[active=false]:hover:bg-primary-menu-background/40 data-[active=false]:hover:text-primary-menu-active data-[active=true]:bg-primary-menu-background/60 data-[active=true]:font-bold data-[active=true]:text-primary-menu-active dark:data-[active=false]:hover:bg-primary-400/10 dark:data-[active=false]:hover:text-primary-300 dark:data-[active=true]:bg-primary-400/15 dark:data-[active=true]:text-primary-300"
+                          className="block truncate px-6 py-2 text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-primary-500 data-[active=false]:hover:bg-submenu-hover data-[active=false]:hover:text-submenu-hover data-[active=true]:bg-submenu-active data-[active=true]:font-bold data-[active=true]:text-submenu-active"
                         >
                           {goal.title}
                         </Link>
@@ -491,7 +491,7 @@ function SideMenuLink({
       href={href}
       data-active={active}
       aria-current={active ? 'page' : undefined}
-      className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 font-semibold text-foreground hover:text-primary-menu-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-primary-menu-background data-[active=true]:font-bold data-[active=true]:text-primary-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-primary-300"
+      className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-grayscale-500 data-[active=false]:hover:bg-menu-hover data-[active=false]:hover:text-menu-hover data-[active=true]:bg-menu-active data-[active=true]:font-bold data-[active=true]:text-menu-active md:h-14 md:py-3.5 md:text-lg"
     >
       <SideMenuIcon name={icon} active={active} />
       <span className="min-w-0 flex-1 truncate">{title}</span>
@@ -521,7 +521,7 @@ function SideMenuIcon({
     <span
       aria-hidden="true"
       data-active={active}
-      className="size-6 shrink-0 bg-grayscale-300 group-hover/menu-item:bg-primary-menu-active data-[active=true]:bg-primary-menu-active dark:data-[active=false]:group-hover/menu-item:bg-primary-300"
+      className="size-6 shrink-0 bg-current text-grayscale-300 data-[active=false]:group-hover/menu-item:text-menu-hover data-[active=true]:text-menu-active"
       style={{
         maskImage: `url(/icons/gnb/icon_${name}.svg)`,
         maskSize: 'contain',
@@ -590,7 +590,7 @@ function SideMenuAccordion({
           setIsExpanded(next);
           onExpand?.(next);
         }}
-        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground hover:text-primary-menu-active focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=true]:bg-primary-menu-background data-[active=true]:font-bold data-[active=true]:text-primary-menu-active md:h-14 md:py-3.5 md:text-lg dark:data-[active=false]:hover:text-primary-300"
+        className="group/menu-item flex h-11 w-full items-center gap-2 overflow-hidden rounded-[20px] px-4 py-0 text-left font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-grayscale-500 data-[active=false]:hover:bg-menu-hover data-[active=false]:hover:text-menu-hover data-[active=true]:bg-menu-active data-[active=true]:font-bold data-[active=true]:text-menu-active md:h-14 md:py-3.5 md:text-lg"
       >
         {icon && (
           <span className="flex shrink-0 items-center" aria-hidden="true">

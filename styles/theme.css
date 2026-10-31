@@ -21,6 +21,22 @@
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 :root {
+  --menu-hover-bg: transparent;
+  --menu-hover-col: var(--color-primary-700);
+  --menu-active-bg: var(--color-primary-200);
+  --menu-active-col: var(--color-primary-700);
+  --submenu-hover-bg: color-mix(
+    in srgb,
+    var(--color-primary-200) 40%,
+    transparent
+  );
+  --submenu-hover-col: var(--color-primary-700);
+  --submenu-active-bg: color-mix(
+    in srgb,
+    var(--color-primary-200) 60%,
+    transparent
+  );
+  --submenu-active-col: var(--color-primary-700);
   --theme-point-col: var(--color-primary-600);
   --theme-point-soft-col: var(--color-primary-600);
   --theme-point-strong-col: var(--color-primary-600);
@@ -58,6 +74,22 @@
 /* 설정 팝업에서 고른 테마를 따릅니다. next-themes가 <html data-theme="light|dark">를 붙입니다.
 "시스템 설정"을 고르면 next-themes가 OS 설정을 읽어 같은 속성을 대신 붙입니다. */
 :root[data-theme='dark'] {
+  --menu-hover-bg: transparent;
+  --menu-hover-col: var(--color-primary-300);
+  --menu-active-bg: var(--color-primary-200);
+  --menu-active-col: var(--color-primary-700);
+  --submenu-hover-bg: color-mix(
+    in srgb,
+    var(--color-primary-400) 10%,
+    transparent
+  );
+  --submenu-hover-col: var(--color-primary-300);
+  --submenu-active-bg: color-mix(
+    in srgb,
+    var(--color-primary-400) 15%,
+    transparent
+  );
+  --submenu-active-col: var(--color-primary-300);
   --theme-point-col: var(--color-primary-300);
   --theme-point-soft-col: var(--color-primary-400);
   --theme-point-strong-col: var(--color-primary-200);
@@ -116,6 +148,32 @@
   --color-muted: var(--text-muted);
   --color-subtle: var(--text-subtle);
   --color-default: var(--border-default);
+}
+
+/* 같은 상태 이름에서도 배경과 글자는 서로 다른 변수를 참조합니다. */
+@utility bg-menu-hover {
+  background-color: var(--menu-hover-bg);
+}
+@utility text-menu-hover {
+  color: var(--menu-hover-col);
+}
+@utility bg-menu-active {
+  background-color: var(--menu-active-bg);
+}
+@utility text-menu-active {
+  color: var(--menu-active-col);
+}
+@utility bg-submenu-hover {
+  background-color: var(--submenu-hover-bg);
+}
+@utility text-submenu-hover {
+  color: var(--submenu-hover-col);
+}
+@utility bg-submenu-active {
+  background-color: var(--submenu-active-bg);
+}
+@utility text-submenu-active {
+  color: var(--submenu-active-col);
 }
 
 /* --color-subtle에서 자동 생성되는 border-subtle보다 테두리 전용 규칙이 우선하도록 선택자 우선순위를 높입니다.
