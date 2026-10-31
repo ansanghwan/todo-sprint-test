@@ -1,51 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BrickByBrick
 
-## Getting Started
+코드잇 프론트엔드 단기심화과정 16기 프로젝트
 
-### Prerequisites
+- **기간:** 2026. 08 ~ 2026. 10
+- **개인 개선 버전 배포:** [todo-sprint-test.vercel.app](https://todo-sprint-test.vercel.app/)
+- **팀 원본 저장소:** [ljisu1107/todo-sprint](https://github.com/ljisu1107/todo-sprint)
 
-- Node.js 22
-- pnpm 10.34.5
-- [nvm](https://github.com/nvm-sh/nvm)
+## 서비스 소개
 
-If you are using nvm, run the following command in the project root to use the project's Node.js version:
+프로젝트별 할 일과 작업 기록을 관리하고, 진행 상황을 확인할 수 있는 To-do 웹 서비스입니다.
 
-```bash
- nvm install
- nvm use
- corepack enable
- pnpm install
-```
+이 저장소는 팀 프로젝트를 포크한 개인 개선 저장소입니다. 팀 프로젝트에서 제가 담당한 작업과 수료 후 진행한 리팩터링을 정리합니다.
 
-Then, install the dependencies:
+## 팀 프로젝트에서 맡은 역할
 
-```bash
-pnpm install
-```
+### 1. 공통 스타일 기반 구축
 
-Finally, run the development server:
+- Tailwind CSS 설정
+- 컬러·폰트 디자인 토큰 정의
+- 다크 테마용 CSS 변수 구성
+- Pretendard 폰트 적용
 
-```bash
-pnpm dev
-```
+### 2. 기본 레이아웃 구축
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- GNB 마크업 및 반응형 구현
+- 대시보드형·인증형 레이아웃 마크업
+- 관련 파일·디렉터리 구조 구성
 
-You can start editing the page by modifying `app/[locale]/page.tsx`. The page auto-updates as you edit the file.
+### 3. 페이지 구현
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-nextjs-app/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 랜딩페이지
+- 대시보드
+- 목표 상세 페이지
 
-## Learn More
+## 주요 구현 역량
 
-To learn more about Next.js, take a look at the following resources:
+### 테마 확장성을 고려한 스타일 설계
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Next.js Learn](https://nextjs.org/learn) - interactive tutorial.
+- 메인·보조 컬러를 공통 토큰으로 관리해 디자인 변경 시 일괄 수정 가능한 구조 구성
+- CSS 변수로 라이트·다크 테마의 배경·글자·테두리와 상태별 색상 관리
+- 별도 다크 테마 시안 없이 화면 간 톤과 대비를 검토해 컬러 구성·조정
+- 팀 프로젝트 이후 `primary-*`·`secondary-*`로 팔레트명을 정리하고, 색상 관련 `dark:` 분기를 공통 테마 변수로 통합
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback is welcome!
+### 반응형 레이아웃 설계·구현
 
-## Deploy on Vercel
+- 주요 화면의 마크업과 모바일·태블릿·PC 레이아웃 직접 구성
+- 기기별 GNB 배치와 열기·닫기 동작, 애니메이션 설계·구현
+- AI를 활용해 Tailwind 스타일과 동작 코드 작성을 보조하고, 결과를 설계 의도와 디자인 시안에 맞게 검토·수정
 
-The easiest way to deploy your app is to use the [Vercel Platform](https://vercel.com/new) to deploy your project.
+### Next.js 기반 기능 구현
 
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js App Router 환경에서 페이지와 공통 컴포넌트를 연결해 기능 구현
+- API 명세와 TypeScript 응답 타입을 확인하고 사용자·프로젝트·할 일·진행률 데이터를 대시보드에 연결
+- 비동기 요청에 따른 로딩·오류·빈 목록·추가 조회 상태 처리
+- 공통 할 일 컴포넌트와 생성·수정·삭제·노트 기능을 화면에 연결해 재사용
